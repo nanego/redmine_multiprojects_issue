@@ -1,0 +1,24 @@
+<table>
+  <tbody>
+  <tr>
+    <th style="text-align: right;"><%= l("available_custom_fields") %> :</th>
+    <td>
+      <%
+         all_fields = CustomField.select("id, name").where(:type => "ProjectCustomField")
+         options = []
+         all_fields.each do |f|
+           options << f.name
+         end
+      %>
+      <%= select_tag "settings[custom_fields]", options_for_select(options, Setting['plugin_redmine_templates']['custom_fields']), :id => "settings_custom_fields", :multiple => true, :size => 10 %>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<script type="text/javascript">
+  $(function() {
+    $('#settings_custom_fields').select2({
+      containerCss: {minWidth: '300px'}
+    });
+  });
+</script>

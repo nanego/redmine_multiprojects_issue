@@ -1,0 +1,98 @@
+<% issue_projects = @issue.projects|[@issue.project]
+   allowed_projects =  @issue.allowed_target_projects - [@issue.project]
+   custom_fields = CustomField.select("id, name").where(:type => "ProjectCustomField").where("name IN (?)", Setting["plugin_redmine_multiprojects_issue"]['custom_fields'])
+   options_for_selects = {}
+   custom_fields.each do |field|
+     options_for_selects.merge!(field.name.parameterize => [])
+   end
+
+   nested_projects_list = render_project_nested_lists(allowed_projects|issue_projects) do |project|
+     custom_fields_data = {}
+     if allowed_projects.include?(project)
+       custom_fields.each do |f|
+         value = project.custom_field_value(f)
+         custom_fields_data.merge!(f.name.parameterize => value)
+         options_for_selects[f.name.parameterize] << value unless options_for_selects[f.name.parameterize].include?(value) || value==""
+       end
+     end
+     content_tag('label',
+       check_box_tag(
+           'project_ids[]',
+           project.id,
+           @issue != nil && issue_projects.include?(project),
+           disabled: allowed_projects.include?(project) ? false : true,
+           :class => ("inactive" unless allowed_projects.include?(project)),
+           data: custom_fields_data
+       ) + ' ' + h(project.name), :class => ("inactive" unless allowed_projects.include?(project))
+     )
+   end
+%>
+
+  <h3 class="title"><%=l(:field_project).pluralize%></h3>
+
+  <div class="actions_links">
+  <%= l("Selection") %> :
+  <%= link_to l("select_all"), '#', id: "link_select_all", :onclick=> "select_all()" %>
+  |
+  <%= link_to l("select_none"), '#', id: "link_select_all", :onclick=> "select_none()" %>
+  <% custom_fields.each do |field| %>
+    |
+    <%= select_tag field.name.parameterize, options_for_select(options_for_selects[field.name.parameterize]), :prompt=>field.name, :id => "select_#{field.name.parameterize}", :class => "select_box_custom_field_value", :onchange=> "select_from_custom_field('#{field.name.parameterize}')" %>
+  <% end %>
+</div>
+
+<div class="projects_container">
+  <div class="columns" id="project_nested_list">
+    <%= nested_projects_list %>
+  </div>
+</div>
+
+<p class="buttons">
+  <%= submit_tag l(:button_apply), :name => nil, :onclick => "updateSelectedProjects();hideModal(this);", :type => 'button', :id=> 'button_apply_projects' %>
+</p>
+
+<script type="text/javascript">
+
+  function updateSelectedProjects() {
+    $("select#issue_template_project_ids option").each(function() { this.selected = ""; });
+    var htmlContent = "";
+    $("input:checkbox[name='project_ids[]']:checked").each(function()
+    {
+      $("#issue_template_project_ids option[value=" + $(this).val() +"]").attr("selected","selected");
+    });
+    $("input:checkbox[name='project_ids[]']:checked:not(.inactive)").each(function()
+    {
+      htmlContent += "<span class=\"list_templates_projects_names\">"+ $(this).closest('label').text() + "</span>";
+    });
+    $("#my_projects").html(htmlContent);
+    if (htmlContent == ""){
+      $(".and_x_other_projects").css("display", "none");
+    } else{
+      $(".and_x_other_projects").css("display","inline");
+    }
+  }
+
+  function select_all(){
+    $("input:checkbox[name='project_ids[]']").each(function()
+    {
+      $(this).attr("checked","checked") ;
+    });
+  }
+
+  function select_none(){
+    $("input:checkbox[name='project_ids[]']:checked:not(.inactive)").each(function()
+    {
+      $(this).attr("checked",false) ;
+    });
+  }
+
+  function select_from_custom_field(id) {
+    select_none();
+    $("input:checkbox[name='project_ids[]']:checkbox[data-"+id+"='"+ $("#select_" + id).val() +"']").each(function()
+    {
+      $(this).attr("checked","checked") ;
+    });
+    $(".select_box_custom_field_value").prop('selectedIndex',0);
+  }
+
+</script>
