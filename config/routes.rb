@@ -1,5 +1,3 @@
 RedmineApp::Application.routes.draw do
-  resources :issues do
-    member {get :load_projects_selection}
-  end
+  get :plugin_multiprojects_issue_load_projects_selection, :to => "issues#load_projects_selection"
 end
