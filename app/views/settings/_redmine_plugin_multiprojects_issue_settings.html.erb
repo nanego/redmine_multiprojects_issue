@@ -10,7 +10,7 @@
            options << f.name
          end
       %>
-      <%= select_tag "settings[custom_fields]", options_for_select(options, Setting['plugin_redmine_templates']['custom_fields']), :id => "settings_custom_fields", :multiple => true, :size => 10 %>
+      <%= select_tag "settings[custom_fields]", options_for_select(options, Setting['plugin_redmine_multiprojects_issue']['custom_fields']), :id => "settings_custom_fields", :multiple => true, :size => 10 %>
     </td>
   </tr>
   </tbody>

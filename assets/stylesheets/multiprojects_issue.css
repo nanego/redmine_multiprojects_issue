@@ -1,0 +1,20 @@
+.list_projects_names{
+    padding: 2px 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background: #ffffff;
+    border: 1px solid #d3d3d3;
+    line-height: 24px;
+}
+a.list_projects_names.hover{
+    color: #ffffff;
+    background-color: darkgrey;
+    text-decoration: none;
+    border: 1px solid darkgrey;
+}
+a.list_projects_names.current{
+    color: #ffffff;
+    background-color: #707070;
+    border: 1px solid #707070;
+}

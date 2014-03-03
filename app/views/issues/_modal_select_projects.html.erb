@@ -54,15 +54,15 @@
 <script type="text/javascript">
 
   function updateSelectedProjects() {
-    $("select#issue_template_project_ids option").each(function() { this.selected = ""; });
+    $("select#issue_project_ids option").each(function() { this.selected = ""; });
     var htmlContent = "";
     $("input:checkbox[name='project_ids[]']:checked").each(function()
     {
-      $("#issue_template_project_ids option[value=" + $(this).val() +"]").attr("selected","selected");
+      $("#issue_project_ids option[value=" + $(this).val() +"]").attr("selected","selected");
     });
-    $("input:checkbox[name='project_ids[]']:checked:not(.inactive)").each(function()
+    $("input:checkbox[name='project_ids[]']:checked").each(function()
     {
-      htmlContent += "<span class=\"list_templates_projects_names\">"+ $(this).closest('label').text() + "</span>";
+      htmlContent += "<span class=\"list_projects_names\">"+ $(this).closest('label').text() + "</span>";
     });
     $("#my_projects").html(htmlContent);
     if (htmlContent == ""){

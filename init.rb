@@ -1,6 +1,7 @@
 require 'redmine'
 
 ActionDispatch::Callbacks.to_prepare do
+  require_dependency 'redmine_multiprojects_issue/hooks'
   require_dependency 'redmine_multiprojects_issue/issue_patch'
   require_dependency 'redmine_multiprojects_issue/issues_controller_patch'
   require_dependency 'redmine_multiprojects_issue/query_patch'
