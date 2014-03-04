@@ -73,6 +73,7 @@
   }
 
   function select_all(){
+    event.preventDefault();
     $("input:checkbox[name='project_ids[]']").each(function()
     {
       $(this).attr("checked","checked") ;
@@ -80,6 +81,7 @@
   }
 
   function select_none(){
+    event.preventDefault();
     $("input:checkbox[name='project_ids[]']:checked:not(.inactive)").each(function()
     {
       $(this).attr("checked",false) ;
@@ -87,6 +89,7 @@
   }
 
   function select_from_custom_field(id) {
+    event.preventDefault();
     select_none();
     $("input:checkbox[name='project_ids[]']:checkbox[data-"+id+"='"+ $("#select_" + id).val() +"']").each(function()
     {
