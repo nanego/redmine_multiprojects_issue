@@ -8,7 +8,7 @@ class Query
     project_clauses = core_project_statement
 
     if project_clauses
-      "((#{project_clauses}) OR issues.id IN (SELECT issue_id FROM issues_projects WHERE project_id = #{project.id}))"
+      "((#{project_clauses}) OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE project_id = #{project.id}))"
     else
       nil
     end
