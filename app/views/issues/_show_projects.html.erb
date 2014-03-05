@@ -1,0 +1,5 @@
+<% if @issue.projects.present? %>
+  <div id="projects_list">
+    <span id="label_concerned_projects"><%= l("concerned_projects") + ":" %></span><%= render 'projects_list' %>
+  </div>
+<% end %>

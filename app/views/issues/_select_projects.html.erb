@@ -1,40 +1,7 @@
-<%
-   nb_other_projects = 0
-   nb_visible_projects = 0
-   issue_projects = @issue.projects|[@issue.project]
-   allowed_projects = @issue.allowed_target_projects
-%>
-
 <p>
-  <%= f.select :project_ids, project_tree_options(@issue.allowed_target_projects|issue_projects, :selected => issue_projects), {:required => true, :label => l("concerned_projects")},
+  <%= f.select :project_ids, project_tree_options(@issue.allowed_target_projects|[@issue.project]|@issue.projects, :selected => [@issue.project]|@issue.projects), {:required => true, :label => l("concerned_projects")},
                {:multiple => true, :size => 10, style: "display:none;"} %>
-  <span id="my_projects">
-    <% issue_projects.each do |project| %>
-      <% if allowed_projects.include?(project) %>
-        <%= content_tag("span", project.name.gsub(/ /,"&nbsp;").html_safe, class: "list_projects_names") %>
-        <% nb_visible_projects += 1 %>
-      <% else %>
-        <% nb_other_projects += 1 %>
-      <% end %>
-    <% end %>
-  </span>
-  <% if nb_other_projects > 0 %>
-    <span class="list_other_projects">
-      <% if nb_visible_projects>0 %>
-        <span class="and_x_other_projects"><%= l("support.array.sentence_connector") %></span>
-        <%= nb_other_projects %>
-        <span class="and_x_other_projects"><%= nb_other_projects>1 ? l("other").pluralize : l("other") %></span>
-      <% else %>
-        <span class="and_x_other_projects" style="display: none;"><%= l("support.array.sentence_connector") %></span>
-        <%= nb_other_projects %>
-        <span class="and_x_other_projects" style="display: none;"><%= nb_other_projects>1 ? l("other").pluralize : l("other") %></span>
-      <% end %>
-      <%= nb_other_projects>1 ? l("project").pluralize : l("project") %>
-    </span>
-  <% end %>
-
+  <%= render 'projects_list' %>
   <br/>
-
   <%= link_to l("modify_projects"), plugin_multiprojects_issue_load_projects_selection_path(:issue_id => @issue.id, :project_id => @issue.project.id), remote: true, id: "loadModalProjectsSelection" %>
-
 </p>
