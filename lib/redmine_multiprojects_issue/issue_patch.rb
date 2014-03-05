@@ -9,10 +9,10 @@ class Issue
 
   # Returns true if usr or current user is allowed to view the issue
   def visible?(usr=nil)
-    core_visible? || other_project_visible?
+    core_visible?(usr) || other_project_visible?(usr)
   end
 
-  def other_project_visible?
+  def other_project_visible?(usr=nil)
     other_projects = self.projects - [self.project]
     other_projects_visibility = false
     other_projects.each do |p|
