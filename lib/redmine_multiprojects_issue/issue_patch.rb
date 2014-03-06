@@ -51,7 +51,12 @@ class Issue
     end
     authorized_projects = statement_by_role.values.join(' OR ')
 
-    "(#{core_visible_condition(user, options)} OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE (#{authorized_projects}) ))"
+    if authorized_projects.present?
+      "(#{core_visible_condition(user, options)} OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE (#{authorized_projects}) ))"
+    else
+      core_visible_condition(user, options)
+    end
+
   end
 
   # Returns the users that should be notified
