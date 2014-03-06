@@ -19,9 +19,35 @@ a.list_projects_names.current{
     border: 1px solid #707070;
 }
 #label_concerned_projects{
-    color: #666;
-    min-width: 220px;
+    /* color: #666; */
+    width: 22%;
     font-weight: bold;
-    margin: 0 0 0 3px;
     display: inline-block;
+    vertical-align: super;
+}
+
+.projects_container{
+    max-height: 500px;
+    overflow: auto;
+
+    border-bottom: 1px solid #d3d3d3;
+}
+#project_nested_list.columns {
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+    padding-bottom: 10px;
+}
+#project_nested_list label.inactive{
+    color: #d3d3d3;
+}
+
+#my_projects_per_issue{
+    max-height: 150px;
+    overflow: auto;
+    display: inline-block;
+    width: 77%;
+}
+#projects_form #my_projects_per_issue{
+    width: auto;
 }

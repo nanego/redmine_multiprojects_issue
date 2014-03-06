@@ -64,7 +64,7 @@
     {
       htmlContent += "<span class=\"list_projects_names\">"+ $(this).closest('label').text() + "</span>";
     });
-    $("#my_projects").html(htmlContent);
+    $("#projects_form #list_of_projects_per_issue").html(htmlContent);
     if (htmlContent == ""){
       $(".and_x_other_projects").css("display", "none");
     } else{

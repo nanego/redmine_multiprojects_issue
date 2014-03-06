@@ -1,5 +1,5 @@
-<p>
-  <%= f.select :project_ids, project_tree_options(@issue.allowed_target_projects|[@issue.project]|@issue.projects, :selected => [@issue.project]|@issue.projects), {:required => true, :label => l("concerned_projects")},
+<p id="projects_form">
+  <%= f.select :project_ids, multiprojects_issue_project_tree_options(@issue.allowed_target_projects|[@issue.project]|@issue.projects, :selected => [@issue.project]|@issue.projects), {:required => true, :label => l("concerned_projects")},
                {:multiple => true, :size => 10, style: "display:none;"} %>
   <%= render 'projects_list' %>
   <br/>

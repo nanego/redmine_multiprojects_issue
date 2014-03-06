@@ -1,3 +1,9 @@
 # English strings go here for Rails i18n
 en:
   concerned_projects: "Impacted projects"
+  modify_projects: "Edit projects list"
+  select_none: "None"
+  select_all: "All"
+  Selection: "Select"
+  other: "other"
+  project: "project"

@@ -1,3 +1,9 @@
 # French strings go here for Rails i18n
 fr:
   concerned_projects: "Projets concernés"
+  modify_projects: "Modifier la liste"
+  select_none: "Aucun"
+  select_all: "Tous"
+  Selection: "Sélection"
+  other: "autre"
+  project: "projet"

@@ -5,6 +5,7 @@ class Issue
   has_and_belongs_to_many :projects
 
   alias_method :core_visible?, :visible?
+  alias_method :core_notified_users, :notified_users
   self.singleton_class.send(:alias_method, :core_visible_condition, :visible_condition)
 
   # Returns true if usr or current user is allowed to view the issue
@@ -51,6 +52,25 @@ class Issue
     authorized_projects = statement_by_role.values.join(' OR ')
 
     "(#{core_visible_condition(user, options)} OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE (#{authorized_projects}) ))"
+  end
+
+  # Returns the users that should be notified
+  def notified_users
+    notified = notified_users_from_other_projects
+    notified.reject! {|user| !visible?(user)} # Remove users that can not view the issue
+    notified += core_notified_users
+    notified.uniq!
+    notified
+  end
+
+  def notified_users_from_other_projects
+    notified = []
+    other_projects = self.projects - [self.project]
+    other_projects.each do |p|
+      notified += p.notified_users
+    end
+    notified.uniq!
+    notified
   end
 
 end

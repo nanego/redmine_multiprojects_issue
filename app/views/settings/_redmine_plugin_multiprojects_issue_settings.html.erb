@@ -1,7 +1,7 @@
 <table>
   <tbody>
   <tr>
-    <th style="text-align: right;"><%= l("available_custom_fields") %> :</th>
+    <th style="text-align: right;"><%= l("multiprojects_selection_available_custom_fields") %> :</th>
     <td>
       <%
          all_fields = CustomField.select("id, name").where(:type => "ProjectCustomField")
