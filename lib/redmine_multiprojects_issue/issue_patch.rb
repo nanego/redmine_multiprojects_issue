@@ -62,7 +62,7 @@ class Issue
   # Returns the users that should be notified
   def notified_users
     notified = notified_users_from_other_projects
-    # notified.reject! {|user| !visible?(user)} # Remove users that can not view the issue  # cause performance issues when too many projects
+    notified.reject! {|user| !visible?(user)} # Remove users that can not view the issue  # TODO Improve performance when the issue has many projects
     notified += core_notified_users
     notified.uniq!
     notified
