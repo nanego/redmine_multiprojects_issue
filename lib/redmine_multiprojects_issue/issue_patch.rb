@@ -61,20 +61,18 @@ class Issue
 
   # Returns the users that should be notified
   def notified_users
-    notified = notified_users_from_other_projects
-    notified.reject! {|user| !visible?(user)} # Remove users that can not view the issue  # TODO Improve performance when the issue has many projects
-    notified += core_notified_users
-    notified.uniq!
-    notified
+    notified = core_notified_users
+    notified_only_from_other_projects = notified_users_from_other_projects - notified
+    notified_only_from_other_projects.reject! {|user| !other_project_visible?(user)} # Remove users that can not view the issue  # TODO Improve performance when the issue has many projects
+    notified_only_from_other_projects | notified
   end
 
   def notified_users_from_other_projects
     notified = []
     other_projects = self.projects - [self.project]
     other_projects.each do |p|
-      notified += p.notified_users
+      notified = notified | p.notified_users
     end
-    notified.uniq!
     notified
   end
 

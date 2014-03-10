@@ -21,8 +21,11 @@ class IssuesController
       @projects = []
       @projects << Project.find(params[:project_id]) if params[:project_id]
       if params[:issue] && params[:issue][:project_ids]
-        Project.find((params[:issue][:project_ids]).reject!(&:blank?)).each do |p|
-          @projects << p
+        params[:issue][:project_ids].reject!(&:blank?)
+        if params[:issue][:project_ids].present?
+          Project.find(params[:issue][:project_ids]).each do |p|
+            @projects << p
+          end
         end
       end
       @projects.uniq!
