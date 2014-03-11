@@ -63,7 +63,7 @@ class Issue
   def notified_users
     notified = core_notified_users
     notified_only_from_other_projects = notified_users_from_other_projects - notified
-    notified_only_from_other_projects.reject! {|user| !other_project_visible?(user)} # Remove users that can not view the issue  # TODO Improve performance when the issue has many projects
+    notified_only_from_other_projects.reject! {|user| !other_project_visible?(user)} # Remove users who cannot view the issue  # TODO Improve performance when the issue has many projects
     notified_only_from_other_projects | notified
   end
 

@@ -18,9 +18,9 @@ class QueryTest < ActiveSupport::TestCase
   def test_issue_visibility_from_other_project
 
     #setup - create multiproject issue
-    updated_issue = Issue.find(2)
-    updated_issue.projects = [updated_issue.project, Project.find(5)]
-    updated_issue.save!
+    multiproject_issue = Issue.find(2)
+    multiproject_issue.projects = [multiproject_issue.project, Project.find(5)]
+    multiproject_issue.save!
     assert Issue.find(2).projects.size > 1
 
     User.current = User.find(8)
@@ -33,7 +33,7 @@ class QueryTest < ActiveSupport::TestCase
     assert result.present?
 
     assert_not_nil result.detect {|issue| !User.current.member_of?(issue.project) }
-    assert_equal result.detect {|issue| !User.current.member_of?(issue.project) }, updated_issue
+    assert_equal result.detect {|issue| !User.current.member_of?(issue.project) }, multiproject_issue
   end
 
 end

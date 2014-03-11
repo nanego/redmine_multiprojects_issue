@@ -2,80 +2,104 @@ require File.expand_path('../../test_helper', __FILE__)
 require 'redmine_multiprojects_issue/issues_controller_patch.rb'
 require 'redmine_multiprojects_issue/issue_patch.rb'
 
-class IssuesControllerTest < ActionController::IntegrationTest
+class IssuesControllerTest < ActionController::TestCase
 
   fixtures :projects,
            :users,
            :roles,
            :members,
-           :member_roles,
-           :trackers,
-           :projects_trackers,
-           :enabled_modules,
-           :issue_statuses,
-           :issues,
-           :enumerations,
-           :custom_fields,
-           :custom_values,
-           :custom_fields_trackers
+           :member_roles
 
-  # create an issue with multiple projects
-  def test_create_issue_with_multiple_projects
-    log_user('jsmith', 'jsmith')
-    get 'projects/1/issues/new', :tracker_id => '1'
-    assert_response :success
-    assert_template 'issues/new'
+  def test_post_create_should_send_a_notification_to_other_projects_users
+    ActionMailer::Base.deliveries.clear
+    @request.session[:user_id] = 2
 
-    post 'projects/1/issues', :tracker_id => "1",
-         :issue => { :start_date => "2006-12-26",
-                     :priority_id => "4",
-                     :subject => "new multiproject test issue",
-                     :category_id => "",
-                     :description => "new issue",
-                     :done_ratio => "0",
-                     :due_date => "",
-                     :assigned_to_id => "",
-                     :project_ids => [2, 3, 4]
-         },
-         :custom_fields => {'2' => 'Value for field 2'}
+    assert_difference 'Issue.count' do
+      post :create, :project_id => 1,
+           :issue => {:tracker_id => 3,
+                      :subject => 'This is the test_new issue',
+                      :description => 'This is the description',
+                      :priority_id => 5,
+                      :estimated_hours => '',
+                      :project_ids => [1, 5],
+                      :custom_field_values => {'2' => 'Value for field 2'}}
+    end
+    assert_redirected_to :controller => 'issues', :action => 'show', :id => Issue.last.id
 
-    # find created issue
-    issue = Issue.find_by_subject("new multiproject test issue")
-    assert_kind_of Issue, issue
+    assert_equal 1, ActionMailer::Base.deliveries.size
 
-    # check redirection
-    assert_redirected_to :controller => 'issues', :action => 'show', :id => issue
-    follow_redirect!
-    assert_equal issue, assigns(:issue)
-
-    # check issue attributes
-    assert_equal 'jsmith', issue.author.login
-    assert_equal 1, issue.project.id
-    assert_equal [1,2,3,4], issue.projects.collect(&:id)
+    mail = ActionMailer::Base.deliveries.last
+    assert mail['bcc'].to_s.include?(User.find(2).mail)
+    assert mail['bcc'].to_s.include?(User.find(3).mail)
+    assert mail['bcc'].to_s.include?(User.find(1).mail)
+    assert !mail['bcc'].to_s.include?(User.find(8).mail) # member but notifications disabled
   end
 
-  # update an issue and set several projects
-  def test_update_projects
-    log_user('jsmith', 'jsmith')
-    get 'issues/1/edit'
-    assert_response :success
-    assert_template 'issues/edit'
+  def test_post_create_should_NOT_send_a_notification_to_non_member_users
+    ActionMailer::Base.deliveries.clear
+    @request.session[:user_id] = 2
 
-    put 'issues/1', {:issue => { :project_ids => [2, 3, 4]}, :project_id => 1 }
+    assert_difference 'Issue.count' do
+      post :create, :project_id => 1,
+           :issue => {:tracker_id => 3,
+                      :subject => 'This is the test_new issue',
+                      :description => 'This is the description',
+                      :priority_id => 5,
+                      :estimated_hours => '',
+                      :project_ids => [1, 2, 3, 4, 6], # user 1 is member of project 5 only
+                      :custom_field_values => {'2' => 'Value for field 2'}}
+    end
+    assert_redirected_to :controller => 'issues', :action => 'show', :id => Issue.last.id
 
-    # find updated issue
+    assert_equal 1, ActionMailer::Base.deliveries.size
+
+    mail = ActionMailer::Base.deliveries.last
+    assert mail['bcc'].to_s.include?(User.find(2).mail)
+    assert mail['bcc'].to_s.include?(User.find(3).mail)
+    assert !mail['bcc'].to_s.include?(User.find(1).mail)
+    assert !mail['bcc'].to_s.include?(User.find(8).mail)
+  end
+
+  def test_put_update_should_send_a_notification_to_members_on_other_projects
+    @request.session[:user_id] = 2
+    ActionMailer::Base.deliveries.clear
     issue = Issue.find(1)
-    assert_kind_of Issue, issue
+    old_subject = issue.subject
+    new_subject = 'Subject modified by IssuesControllerTest#test_post_edit'
 
-    # check redirection
-    assert_redirected_to :controller => 'issues', :action => 'show', :id => issue
-    follow_redirect!
-    assert_equal issue, assigns(:issue)
+    put :update, :id => 1, :issue => {:subject => new_subject,
+                                      :priority_id => '6',
+                                      :project_ids => [1, 5],
+                                      :category_id => '1' # no change
+    }
+    assert_equal 1, ActionMailer::Base.deliveries.size
 
-    # check issue attributes
-    assert_equal 'jsmith', issue.author.login
-    assert_equal 1, issue.project.id
-    assert_equal [1,2,3,4], issue.projects.collect(&:id)
+    mail = ActionMailer::Base.deliveries.last
+    assert mail['bcc'].to_s.include?(User.find(2).mail)
+    assert mail['bcc'].to_s.include?(User.find(3).mail)
+    assert mail['bcc'].to_s.include?(User.find(1).mail)
+    assert !mail['bcc'].to_s.include?(User.find(8).mail) # member but notifications disabled
+  end
+
+  def test_put_update_should_NOT_send_a_notification_to_non_member_users
+    @request.session[:user_id] = 2
+    ActionMailer::Base.deliveries.clear
+    issue = Issue.find(1)
+    old_subject = issue.subject
+    new_subject = 'Subject modified by IssuesControllerTest#test_post_edit'
+
+    put :update, :id => 1, :issue => {:subject => new_subject,
+                                      :priority_id => '6',
+                                      :project_ids => [1, 4],
+                                      :category_id => '1' # no change
+    }
+    assert_equal 1, ActionMailer::Base.deliveries.size
+
+    mail = ActionMailer::Base.deliveries.last
+    assert mail['bcc'].to_s.include?(User.find(2).mail)
+    assert mail['bcc'].to_s.include?(User.find(3).mail)
+    assert !mail['bcc'].to_s.include?(User.find(1).mail)
+    assert !mail['bcc'].to_s.include?(User.find(8).mail) # member but notifications disabled
   end
 
 end
