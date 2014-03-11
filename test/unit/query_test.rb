@@ -33,7 +33,7 @@ class QueryTest < ActiveSupport::TestCase
     assert result.present?
 
     assert_not_nil result.detect {|issue| !User.current.member_of?(issue.project) }
-    assert_equal result.detect {|issue| !User.current.member_of?(issue.project) }, multiproject_issue
+    assert_equal result.detect {|issue| !User.current.member_of?(issue.project) }, Issue.find(2)
   end
 
 end
