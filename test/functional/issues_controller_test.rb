@@ -20,7 +20,7 @@ class IssuesControllerTest < ActionController::IntegrationTest
            :custom_fields_trackers
 
   # create an issue with multiple projects
-  def test_add_issue_with_multiple_projects
+  def test_create_issue_with_multiple_projects
     log_user('jsmith', 'jsmith')
     get 'projects/1/issues/new', :tracker_id => '1'
     assert_response :success
@@ -41,6 +41,30 @@ class IssuesControllerTest < ActionController::IntegrationTest
 
     # find created issue
     issue = Issue.find_by_subject("new multiproject test issue")
+    assert_kind_of Issue, issue
+
+    # check redirection
+    assert_redirected_to :controller => 'issues', :action => 'show', :id => issue
+    follow_redirect!
+    assert_equal issue, assigns(:issue)
+
+    # check issue attributes
+    assert_equal 'jsmith', issue.author.login
+    assert_equal 1, issue.project.id
+    assert_equal [1,2,3,4], issue.projects.collect(&:id)
+  end
+
+  # update an issue and set several projects
+  def test_update_projects
+    log_user('jsmith', 'jsmith')
+    get 'issues/1/edit'
+    assert_response :success
+    assert_template 'issues/edit'
+
+    put 'issues/1', {:issue => { :project_ids => [2, 3, 4]}, :project_id => 1 }
+
+    # find updated issue
+    issue = Issue.find(1)
     assert_kind_of Issue, issue
 
     # check redirection
