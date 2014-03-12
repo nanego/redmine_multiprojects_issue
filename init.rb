@@ -5,6 +5,7 @@ ActionDispatch::Callbacks.to_prepare do
   require_dependency 'redmine_multiprojects_issue/issue_patch'
   require_dependency 'redmine_multiprojects_issue/issues_controller_patch'
   require_dependency 'redmine_multiprojects_issue/query_patch'
+  require_dependency 'redmine_multiprojects_issue/application_helper_patch'
 end
 
 # Little hack for using the 'deface' gem in redmine:
