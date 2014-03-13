@@ -7,3 +7,7 @@ en:
   Selection: "Select"
   other: "other"
   project: "project"
+  text_journal_projects_deleted: "deleted projects"
+  text_journal_projects_added: "added projects"
+  text_journal_project_deleted: "deleted project"
+  text_journal_project_added: "added project"

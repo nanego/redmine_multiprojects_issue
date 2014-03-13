@@ -77,3 +77,34 @@ class Issue
   end
 
 end
+
+module IssuesHelper
+
+  alias_method :core_show_detail, :show_detail
+
+  # Returns the textual representation of a single journal detail
+  def show_detail(detail, no_html=false, options={})
+
+    if detail.property == 'projects'
+      value = detail.value
+      old_value = detail.old_value
+      if value.present?
+        value = value.split(',')
+        list = content_tag("span", h(value.join(', ')), class: "journal_projects_details", data: {detail_id: detail.id}, style: value.size>1 ? "display:none;":"")
+        link = link_to l(:label_details).downcase, "#", class: "show_journal_details", data: {detail_id: detail.id} if value.size>1
+        details = "(#{link}#{list})" unless no_html
+        "#{value.size} #{value.size>1 ? l(:text_journal_projects_added) : l(:text_journal_project_added)} #{details}".html_safe
+      elsif old_value.present?
+        old_value = old_value.split(',')
+        list = content_tag("del", h(old_value.join(', ')), class: "journal_projects_details", data: {detail_id: detail.id}, style: old_value.size>1 ? "display:none;":"")
+        link = link_to l(:label_details).downcase, "#", class: "show_journal_details", data: {detail_id: detail.id} if old_value.size>1
+        details = "(#{link}#{list})" unless no_html
+        "#{old_value.size} #{old_value.size>1 ? l(:text_journal_projects_deleted) : l(:text_journal_project_deleted)} #{details}".html_safe
+      end
+    else
+      core_show_detail(detail, no_html, options)
+    end
+
+  end
+
+end

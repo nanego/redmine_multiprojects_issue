@@ -29,7 +29,21 @@ class IssuesController
         end
       end
       @projects.uniq!
+      update_journal_with_projects unless @issue.new_record?
       @issue.projects = @projects
+    end
+
+    def update_journal_with_projects
+      @current_journal = @issue.init_journal(User.current)
+      @projects_before_change = @issue.projects
+      # projects removed
+      @current_journal.details << JournalDetail.new(:property => 'projects',
+                                                    :old_value => (@projects_before_change - @projects).reject(&:blank?).join(","),
+                                                    :value => nil) if (@projects_before_change - @projects).present?
+      # projects added
+      @current_journal.details << JournalDetail.new(:property => 'projects',
+                                                    :old_value => nil,
+                                                    :value => (@projects - @projects_before_change).reject(&:blank?).join(","))  if (@projects - @projects_before_change).present?
     end
 
     def set_project

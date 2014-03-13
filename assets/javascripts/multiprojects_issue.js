@@ -7,4 +7,10 @@ $(document).ready(function(){
             return false;
         }
     });
+
+    $('.details').on("click", ".show_journal_details", function(e) {
+        e.preventDefault();
+        $('.journal_projects_details[data-detail-id='+$(this).data('detail-id')+']').show();
+        $('.show_journal_details[data-detail-id='+$(this).data('detail-id')+']').hide();
+    });
 });
