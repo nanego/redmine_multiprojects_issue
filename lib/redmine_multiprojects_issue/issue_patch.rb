@@ -78,6 +78,8 @@ class Issue
 
 end
 
+require_dependency 'issues_helper'
+
 module IssuesHelper
 
   alias_method :core_show_detail, :show_detail
