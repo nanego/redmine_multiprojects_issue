@@ -94,13 +94,15 @@ module IssuesHelper
         value = value.split(',')
         list = content_tag("span", h(value.join(', ')), class: "journal_projects_details", data: {detail_id: detail.id}, style: value.size>1 ? "display:none;":"")
         link = link_to l(:label_details).downcase, "#", class: "show_journal_details", data: {detail_id: detail.id} if value.size>1
-        details = "(#{link}#{list})" unless no_html
+        linkHide = link_to l(:label_hide_details).downcase, "#", class: "hide_journal_details", data: {detail_id: detail.id} if value.size>1
+        details = "(#{link}#{linkHide}#{list})" unless no_html
         "#{value.size} #{value.size>1 ? l(:text_journal_projects_added) : l(:text_journal_project_added)} #{details}".html_safe
       elsif old_value.present?
         old_value = old_value.split(',')
         list = content_tag("del", h(old_value.join(', ')), class: "journal_projects_details", data: {detail_id: detail.id}, style: old_value.size>1 ? "display:none;":"")
         link = link_to l(:label_details).downcase, "#", class: "show_journal_details", data: {detail_id: detail.id} if old_value.size>1
-        details = "(#{link}#{list})" unless no_html
+        linkHide = link_to l(:label_hide_details).downcase, "#", class: "hide_journal_details", data: {detail_id: detail.id} if old_value.size>1
+        details = "(#{link}#{linkHide}#{list})" unless no_html
         "#{old_value.size} #{old_value.size>1 ? l(:text_journal_projects_deleted) : l(:text_journal_project_deleted)} #{details}".html_safe
       end
     else

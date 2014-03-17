@@ -6,7 +6,7 @@ module ApplicationHelper
     if (project.is_public? || User.current.admin? || User.current.member_of?(project))
       core_link_to_project(project, options, html_options)
     else
-      h(project.name)
+      "<span class='disabled_project'>#{h(project.name)}</span>".html_safe
     end
   end
 

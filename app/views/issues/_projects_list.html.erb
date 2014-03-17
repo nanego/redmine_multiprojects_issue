@@ -20,16 +20,17 @@
   </span>
   <% if nb_other_projects > 0 %>
     <span class="list_other_projects">
-        <% if nb_visible_projects>0 %>
-          <span class="and_x_other_projects"><%= l("support.array.sentence_connector") %></span>
+      <% if nb_visible_projects>0 %>
+        <span class="and_x_other_projects"><%= l("support.array.sentence_connector") %></span>
         <%= nb_other_projects %>
         <span class="and_x_other_projects"><%= nb_other_projects>1 ? l("other").pluralize : l("other") %></span>
-        <% else %>
-          <span class="and_x_other_projects" style="display: none;"><%= l("support.array.sentence_connector") %></span>
+      <% else %>
+        <span class="and_x_other_projects" style="display: none;"><%= l("support.array.sentence_connector") %></span>
         <%= nb_other_projects %>
         <span class="and_x_other_projects" style="display: none;"><%= nb_other_projects>1 ? l("other").pluralize : l("other") %></span>
-        <% end %>
+      <% end %>
       <%= nb_other_projects>1 ? l("project").pluralize : l("project") %>
+      <%= l('you_are_not_a_member') %>
       </span>
   <% end %>
 </span>

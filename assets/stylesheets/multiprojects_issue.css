@@ -52,3 +52,13 @@ a.list_projects_names.current{
 #projects_form #my_projects_per_issue{
     width: auto;
 }
+
+td.project .disabled_project{
+    color: #808080;
+    font-style: italic;
+}
+
+.hide_journal_details{
+    display: none;
+    margin-right: 5px;
+}
