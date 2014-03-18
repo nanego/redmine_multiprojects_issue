@@ -1,5 +1,6 @@
 module MultiprojectsIssueHelper
 
+  # TODO: simplify this method or split it into multiple parts
   def multiprojects_issue_project_tree_options(projects, options = {})
     s = ''
     project_tree(projects) do |project, level|
@@ -15,6 +16,7 @@ module MultiprojectsIssueHelper
       else
         tag_options[:disabled] = nil
       end
+      # TODO: the following two lines made my brain explode
       tag_options.merge!(yield(project)) if block_given?
       s << content_tag('option', name_prefix + h(project), tag_options)
     end

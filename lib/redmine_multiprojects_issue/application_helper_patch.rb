@@ -2,6 +2,7 @@ module ApplicationHelper
 
   alias_method :core_link_to_project, :link_to_project
 
+  # TODO: explain this patch, I don't understand it...
   def link_to_project(project, options={}, html_options = nil)
     if (project.is_public? || User.current.admin? || User.current.member_of?(project))
       core_link_to_project(project, options, html_options)

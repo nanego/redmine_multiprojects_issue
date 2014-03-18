@@ -15,6 +15,9 @@ class QueryTest < ActiveSupport::TestCase
            :projects_trackers,
            :custom_fields_trackers
 
+  # TODO: explain how it related to the code in the patch... I obviously see
+  # "multiproject_issue" but I don't understand where overridden core methods
+  # get tested
   def test_issue_visibility_from_other_project
 
     #setup - create multiproject issue
@@ -36,4 +39,7 @@ class QueryTest < ActiveSupport::TestCase
     assert_equal result.detect {|issue| !User.current.member_of?(issue.project) }, Issue.find(2)
   end
 
+  def test_project_statement
+    assert false # TODO
+  end
 end

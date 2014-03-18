@@ -22,6 +22,8 @@ class Query
 
 end
 
+# TODO: why is it here ? maybe it's a good idea to group the patches but it needs
+# to be explicitly explained because it goes against common conventions/expectations
 require_dependency 'issue_query'
 
 class IssueQuery < Query

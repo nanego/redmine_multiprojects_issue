@@ -14,6 +14,7 @@ class Issue
   end
 
   def other_project_visible?(usr=nil)
+    # TODO: this method is super complex and has a lot in common with Issue#visible? => simplify it
     other_projects = self.projects - [self.project]
     other_projects_visibility = false
     other_projects.each do |p|
@@ -35,6 +36,7 @@ class Issue
           end
         end
       else
+        # TODO: remove this, there should be a simpler/cleaner way no ? (with Array#detect or Array#inject for instance)
         break
       end
     end
@@ -78,6 +80,7 @@ class Issue
 
 end
 
+# TODO: why is it here ??
 require_dependency 'issues_helper'
 
 module IssuesHelper
@@ -85,8 +88,10 @@ module IssuesHelper
   alias_method :core_show_detail, :show_detail
 
   # Returns the textual representation of a single journal detail
+  # TODO: simplify this method and/or explain the patch
   def show_detail(detail, no_html=false, options={})
 
+    # TODO: add comments around parts of the method that have been modified for future review
     if detail.property == 'projects'
       value = detail.value
       old_value = detail.old_value
