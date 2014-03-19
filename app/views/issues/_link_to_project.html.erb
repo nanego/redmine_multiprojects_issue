@@ -1,0 +1,5 @@
+<% unless (issue.project.is_public? || User.current.admin? || User.current.member_of?(issue.project)) %>
+  <script>
+    $('#issue-<%= issue.id %> td.project').html("<span class='disabled_project'><%= h(issue.project.name) %></span>");
+  </script>
+<% end %>

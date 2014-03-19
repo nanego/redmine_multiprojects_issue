@@ -58,6 +58,10 @@ td.project .disabled_project{
     font-style: italic;
 }
 
+tr:hover td.project .disabled_project, tr.context-menu-selection td.project .disabled_project{
+    color: inherit;
+}
+
 .hide_journal_details{
     display: none;
     margin-right: 5px;

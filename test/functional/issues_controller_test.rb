@@ -102,4 +102,25 @@ class IssuesControllerTest < ActionController::TestCase
     assert !mail['bcc'].to_s.include?(User.find(8).mail) # member but notifications disabled
   end
 
+  def test_load_projects_selection
+    assert false # TODO
+  end
+
+  # The following methods are private but they are very complex so they should
+  # be tested imho to ensure they don't break in the future. Maybe they are
+  # fully tested above?? An other solution would be to isolate them in a service
+  # object and unit test that object in isolation
+  def test_set_projects
+    assert false # TODO
+  end
+
+  def test_update_journal_with_projects
+    assert false # TODO
+  end
+
+  def test_set_project
+    # ok maybe this one is simple enough so it doesn't need extensive testing ;)
+    assert false # TODO
+  end
+
 end
