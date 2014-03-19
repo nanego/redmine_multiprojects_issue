@@ -103,24 +103,50 @@ class IssuesControllerTest < ActionController::TestCase
   end
 
   def test_load_projects_selection
-    assert false # TODO
+    @request.session[:user_id] = 2
+    get :load_projects_selection, format: :js, :issue_id => 1, :project_id => 1
+    assert_response :success
+    assert_template 'load_projects_selection'
+    assert_equal 'text/javascript', response.content_type
+    assert_include "$('#ajax-modal')", response.body
+    assert_not_nil assigns(:issue)
+    assert_equal 1, assigns(:issue).id
+    assert_equal 1, assigns(:project).id # test set_project private method
   end
 
-  # The following methods are private but they are very complex so they should
-  # be tested imho to ensure they don't break in the future. Maybe they are
-  # fully tested above?? An other solution would be to isolate them in a service
-  # object and unit test that object in isolation
-  def test_set_projects
-    assert false # TODO
-  end
+  def test_put_update_should_create_journals_and_journal_details
 
-  def test_update_journal_with_projects
-    assert false # TODO
-  end
+    @request.session[:user_id] = 2
+    issue = Issue.find(1)
+    old_projects_ids = issue.project_ids
+    new_projects_ids = [1, 4, 5]
 
-  def test_set_project
-    # ok maybe this one is simple enough so it doesn't need extensive testing ;)
-    assert false # TODO
+    assert_difference 'Journal.count' do
+      assert_difference('JournalDetail.count', 2) do
+        put :update, :id => 1, :issue => {:priority_id => '6',
+                                          :project_ids => new_projects_ids,
+                                          :category_id => '1' # no change
+        }
+      end
+    end
+
+    assert_equal new_projects_ids, Issue.find(1).project_ids
+
+    issue = Issue.find(1)
+    old_projects_ids = issue.project_ids
+    new_projects_ids = [1, 6]
+
+    assert_difference 'Journal.count' do
+      assert_difference('JournalDetail.count', 3) do # 3 changes : priority, added projects, deleted projects
+        put :update, :id => 1, :issue => {:priority_id => '4',
+                                           :project_ids => new_projects_ids,
+                                           :category_id => '1' # no change
+        }
+      end
+    end
+
+    assert_equal new_projects_ids, Issue.find(1).project_ids
+
   end
 
 end
