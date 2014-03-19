@@ -15,30 +15,25 @@ class Issue
 
   def other_project_visible?(usr=nil)
     other_projects = self.projects - [self.project]
-    other_projects_visibility = false
-    other_projects.each do |p|
-      if other_projects_visibility == false
-        other_projects_visibility = (usr || User.current).allowed_to?(:view_issues, p) do |role, user|
-          if user.logged?
-            case role.issues_visibility
-              when 'all'
-                true
-              when 'default'
-                !self.is_private? || (self.author == user || user.is_or_belongs_to?(assigned_to))
-              when 'own'
-                self.author == user || user.is_or_belongs_to?(assigned_to)
-              else
-                false
-            end
-          else
-            !self.is_private?
+    visible_projects = other_projects.detect do |p|
+      (usr || User.current).allowed_to?(:view_issues, p) do |role, user|
+        if user.logged?
+          case role.issues_visibility
+            when 'all'
+              true
+            when 'default'
+              !self.is_private? || (self.author == user || user.is_or_belongs_to?(assigned_to))
+            when 'own'
+              self.author == user || user.is_or_belongs_to?(assigned_to)
+            else
+              false
           end
+        else
+          !self.is_private?
         end
-      else
-        break
       end
     end
-    other_projects_visibility
+    visible_projects.present?
   end
 
   def self.visible_condition(user, options={})
@@ -61,54 +56,39 @@ class Issue
 
   # Returns the users that should be notified
   def notified_users
-    notified = core_notified_users
-    notified_only_from_other_projects = notified_users_from_other_projects - notified
-    notified_only_from_other_projects.reject! {|user| !other_project_visible?(user)} # Remove users who cannot view the issue  # TODO Improve performance when the issue has many projects
-    notified_only_from_other_projects | notified
+    core_notified_users | notified_users_from_other_projects
   end
 
   def notified_users_from_other_projects
     notified = []
     other_projects = self.projects - [self.project]
     other_projects.each do |p|
-      notified = notified | p.notified_users
-    end
-    notified
-  end
 
-end
-
-require_dependency 'issues_helper'
-
-module IssuesHelper
-
-  alias_method :core_show_detail, :show_detail
-
-  # Returns the textual representation of a single journal detail
-  def show_detail(detail, no_html=false, options={})
-
-    if detail.property == 'projects'
-      value = detail.value
-      old_value = detail.old_value
-      if value.present?
-        value = value.split(',')
-        list = content_tag("span", h(value.join(', ')), class: "journal_projects_details", data: {detail_id: detail.id}, style: value.size>1 ? "display:none;":"")
-        link = link_to l(:label_details).downcase, "#", class: "show_journal_details", data: {detail_id: detail.id} if value.size>1
-        linkHide = link_to l(:label_hide_details).downcase, "#", class: "hide_journal_details", data: {detail_id: detail.id} if value.size>1
-        details = "(#{link}#{linkHide}#{list})" unless no_html
-        "#{value.size} #{value.size>1 ? l(:text_journal_projects_added) : l(:text_journal_project_added)} #{details}".html_safe
-      elsif old_value.present?
-        old_value = old_value.split(',')
-        list = content_tag("del", h(old_value.join(', ')), class: "journal_projects_details", data: {detail_id: detail.id}, style: old_value.size>1 ? "display:none;":"")
-        link = link_to l(:label_details).downcase, "#", class: "show_journal_details", data: {detail_id: detail.id} if old_value.size>1
-        linkHide = link_to l(:label_hide_details).downcase, "#", class: "hide_journal_details", data: {detail_id: detail.id} if old_value.size>1
-        details = "(#{link}#{linkHide}#{list})" unless no_html
-        "#{old_value.size} #{old_value.size>1 ? l(:text_journal_projects_deleted) : l(:text_journal_project_deleted)} #{details}".html_safe
+      notified_by_role = []
+      p.users_by_role.each do |role, members|
+        if role.allowed_to?(:view_issues)
+          case role.issues_visibility
+            when 'all'
+              notified_by_role = notified_by_role | members
+            when 'default'
+              notified_by_role = notified_by_role | members if !self.is_private?
+            when 'own'
+              nil
+            else
+              nil
+          end
+        end
       end
-    else
-      core_show_detail(detail, no_html, options)
-    end
 
+      # users are notified only if :
+      # - they are member and they have appropriate role
+      # or
+      # - they are member and they are admin
+      members = p.notified_users
+      notified = notified | (notified_by_role & members) | (User.where("admin = ?", true).all & members)
+
+    end
+    notified.compact
   end
 
 end

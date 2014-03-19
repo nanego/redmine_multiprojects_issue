@@ -1,4 +1,5 @@
 require_dependency 'query'
+require_dependency 'issue_query'
 
 class Query
 
@@ -22,19 +23,14 @@ class Query
 
 end
 
-require_dependency 'issue_query'
-
 class IssueQuery < Query
-
-  # Returns the versions
-  # Valid options are :conditions
+  # Returns the versions, bypassing the project_statement method patched above
   def versions(options={})
     Version.visible.where(options[:conditions]).all(
         :include => :project,
-        :conditions => core_project_statement
+        :conditions => core_project_statement # bypass patched method
     )
   rescue ::ActiveRecord::StatementInvalid => e
     raise StatementInvalid.new(e.message)
   end
-
 end

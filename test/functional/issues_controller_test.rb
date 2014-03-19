@@ -31,7 +31,7 @@ class IssuesControllerTest < ActionController::TestCase
     mail = ActionMailer::Base.deliveries.last
     assert mail['bcc'].to_s.include?(User.find(2).mail)
     assert mail['bcc'].to_s.include?(User.find(3).mail)
-    assert mail['bcc'].to_s.include?(User.find(1).mail)
+    assert mail['bcc'].to_s.include?(User.find(1).mail) #admin, member, but his role has no view_issue permission
     assert !mail['bcc'].to_s.include?(User.find(8).mail) # member but notifications disabled
   end
 
