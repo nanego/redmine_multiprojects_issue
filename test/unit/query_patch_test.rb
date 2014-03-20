@@ -4,7 +4,7 @@ require 'redmine_multiprojects_issue/issues_controller_patch.rb'
 require 'redmine_multiprojects_issue/issue_patch.rb'
 require 'redmine_multiprojects_issue/query_patch.rb'
 
-class QueryTest < ActiveSupport::TestCase
+class QueryPatchTest < ActiveSupport::TestCase
   include Redmine::I18n
 
   fixtures :projects, :enabled_modules, :users, :members,
