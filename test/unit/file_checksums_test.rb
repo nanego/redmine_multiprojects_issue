@@ -15,12 +15,11 @@ class FileChecksumsTest < ActiveSupport::TestCase
     assert_checksum %w(32325432e247c968e3926bea6898f9d8), "app/models/issue.rb"
   end
 
-  def test_core_issues_helper_checksum
+  # tests have been added to the issue_helper_patch_test file, no need to check the checksum
+  #def test_core_issues_helper_checksum
     # "show_detail" method is overridden
-    # and should be reviewed if this test breaks
-    # 2.3.3 is ok
-    assert_checksum %w(9ef285e8ecc7986993cd31d8bd84b156), "app/helpers/issues_helper.rb"
-  end
+    # assert_checksum %w(9ef285e8ecc7986993cd31d8bd84b156), "app/helpers/issues_helper.rb"
+  #end
 
   def test_core_query_model_checksum
     # "project_statement" method is overridden
