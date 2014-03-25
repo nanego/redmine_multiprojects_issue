@@ -25,6 +25,7 @@ class IssuesTest < ActionController::IntegrationTest
     get 'projects/1/issues/new', :tracker_id => '1'
     assert_response :success
     assert_template 'issues/new'
+    assert_select "p#projects_form", :count => 1
 
     post 'projects/1/issues', :tracker_id => "1",
          :issue => { :start_date => "2006-12-26",
@@ -60,6 +61,7 @@ class IssuesTest < ActionController::IntegrationTest
     get 'issues/1/edit'
     assert_response :success
     assert_template 'issues/edit'
+    assert_select "p#projects_form", :count => 1
 
     put 'issues/1', {:issue => { :project_ids => [2, 3, 4]}, :project_id => 1 }
 
@@ -76,6 +78,34 @@ class IssuesTest < ActionController::IntegrationTest
     assert_equal 'jsmith', issue.author.login
     assert_equal 1, issue.project.id
     assert_equal [1,2,3,4], issue.projects.collect(&:id)
+  end
+
+  def test_show_issue_with_several_projects
+    multiproject_issue = Issue.find(4) # project_id = 2
+    multiproject_issue.projects = [multiproject_issue.project, Project.find(5)]
+    multiproject_issue.save!
+
+    log_user('jsmith', 'jsmith')
+    get 'issues/4'
+    assert_response :success
+    assert_template 'issues/show'
+    assert_not_nil assigns(:issue).projects
+    assert assigns(:issue).projects.present?
+    assert_select 'div#current_projects_list', :count => 1
+  end
+
+  def test_show_issue_with_no_other_projects
+    monoproject_issue = Issue.find(4) # project_id = 2
+    monoproject_issue.projects = [monoproject_issue.project]
+    monoproject_issue.save!
+
+    log_user('jsmith', 'jsmith')
+    get 'issues/4'
+    assert_response :success
+    assert_template 'issues/show'
+    assert assigns(:issue)
+    assert_equal assigns(:issue).projects, [Project.find(2)]
+    assert_select 'div#current_projects_list', :count => 0
   end
 
 end

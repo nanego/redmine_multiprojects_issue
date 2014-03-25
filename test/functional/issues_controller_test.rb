@@ -115,12 +115,11 @@ class IssuesControllerTest < ActionController::TestCase
   end
 
   def test_put_update_should_create_journals_and_journal_details
-
     @request.session[:user_id] = 2
+
     issue = Issue.find(1)
     old_projects_ids = issue.project_ids
     new_projects_ids = [1, 4, 5]
-
     assert_difference 'Journal.count' do
       assert_difference('JournalDetail.count', 2) do
         put :update, :id => 1, :issue => {:priority_id => '6',
@@ -129,13 +128,11 @@ class IssuesControllerTest < ActionController::TestCase
         }
       end
     end
-
     assert_equal new_projects_ids, Issue.find(1).project_ids
 
     issue = Issue.find(1)
     old_projects_ids = issue.project_ids
     new_projects_ids = [1, 6]
-
     assert_difference 'Journal.count' do
       assert_difference('JournalDetail.count', 3) do # 3 changes : priority, added projects, deleted projects
         put :update, :id => 1, :issue => {:priority_id => '4',
@@ -144,9 +141,23 @@ class IssuesControllerTest < ActionController::TestCase
         }
       end
     end
-
     assert_equal new_projects_ids, Issue.find(1).project_ids
+  end
 
+  def test_put_update_should_NOT_create_journals_and_journal_details_if_only_main_project_is_added_to_projects
+    @request.session[:user_id] = 2
+    issue = Issue.find(1)
+    old_projects_ids = issue.project_ids
+    new_projects_ids = [issue.project_id]
+    assert_difference 'Journal.count' do
+      assert_difference('JournalDetail.count', 1) do
+        put :update, :id => 1, :issue => {:priority_id => '6',
+                                          :project_ids => new_projects_ids, #change, but no journal cause only main project
+                                          :category_id => '1' # no change
+        }
+      end
+    end
+    assert_equal new_projects_ids, Issue.find(1).project_ids
   end
 
 end
