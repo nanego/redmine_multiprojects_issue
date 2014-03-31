@@ -29,8 +29,10 @@ class IssuesController
         end
       end
       @projects.uniq!
-      update_journal_with_projects unless @issue.new_record?
-      @issue.projects = @projects
+      if @projects.present?
+        update_journal_with_projects unless @issue.new_record?
+        @issue.projects = @projects
+      end
     end
 
     def update_journal_with_projects
