@@ -160,4 +160,31 @@ class IssuesControllerTest < ActionController::TestCase
     assert_equal new_projects_ids, Issue.find(1).project_ids
   end
 
+  def test_put_update_status_should_not_create_projects_journal_details
+    @request.session[:user_id] = 2
+
+    #setup multiprojects issue
+    new_projects_ids = [1, 4, 5]
+    assert_difference 'Journal.count' do
+      assert_difference('JournalDetail.count', 2) do
+        put :update, :id => 1, :issue => {:priority_id => '6',
+                                          :project_ids => new_projects_ids,
+                                          :category_id => '1' # no change
+        }
+      end
+    end
+    assert_equal new_projects_ids, Issue.find(1).project_ids
+
+    assert_difference 'Journal.count' do
+      assert_difference('JournalDetail.count', 1) do
+        put :update, :id => 1, :issue => {:status_id => '6'
+        }
+      end
+    end
+
+    updated_issue = Issue.find(1)
+    assert_equal updated_issue.project_ids, new_projects_ids
+    assert_equal updated_issue.status_id, 6
+
+  end
 end
