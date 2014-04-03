@@ -13,3 +13,4 @@ en:
   text_journal_project_deleted: "deleted project"
   text_journal_project_added: "added project"
   label_hide_details: "hide"
+  field_projects: "Projects"

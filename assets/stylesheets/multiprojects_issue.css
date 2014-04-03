@@ -62,6 +62,14 @@ tr:hover td.project .disabled_project, tr.context-menu-selection td.project .dis
     color: inherit;
 }
 
+td.projects{
+    width: 150px;
+    max-width: 250px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 .hide_journal_details{
     display: none;
     margin-right: 5px;

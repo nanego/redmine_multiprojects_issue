@@ -33,4 +33,7 @@ class IssueQuery < Query
   rescue ::ActiveRecord::StatementInvalid => e
     raise StatementInvalid.new(e.message)
   end
+
+  sort_projects_by_count = "(SELECT count(i.id) FROM #{Issue.table_name} as i INNER JOIN issues_projects ON i.id = issue_id WHERE #{Issue.table_name}.id = i.id)"
+  self.available_columns << QueryColumn.new(:projects, :sortable => sort_projects_by_count)
 end
