@@ -37,9 +37,9 @@ class Issue
   end
 
   def self.visible_condition(user, options={})
-
     statement_by_role = {}
     user.projects_by_role.each do |role, projects|
+      projects = projects & [options[:project]] if options[:project]
       if role.allowed_to?(:view_issues) && projects.any?
         statement_by_role[role] = "project_id IN (#{projects.collect(&:id).join(',')})"
       end
@@ -51,7 +51,6 @@ class Issue
     else
       core_visible_condition(user, options)
     end
-
   end
 
   # Returns the users that should be notified
