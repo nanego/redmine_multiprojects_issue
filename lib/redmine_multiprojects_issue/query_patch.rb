@@ -26,10 +26,11 @@ end
 class IssueQuery < Query
   # Returns the versions, bypassing the project_statement method patched above
   def versions(options={})
-    Version.visible.where(options[:conditions]).all(
-        :include => :project,
-        :conditions => core_project_statement # bypass patched method
-    )
+    Version.visible.
+        where(core_project_statement).  # bypass patched method
+        where(options[:conditions]).
+        includes(:project).
+        all
   rescue ::ActiveRecord::StatementInvalid => e
     raise StatementInvalid.new(e.message)
   end
