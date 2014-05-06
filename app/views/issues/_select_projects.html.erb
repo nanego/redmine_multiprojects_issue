@@ -3,6 +3,16 @@
   <%= f.select :project_ids, select_options, {:required => true, :label => l("concerned_projects")},
                {:multiple => true, style: "display:none;"} %>
   <%= render 'projects_list' %>
-  <br/>
-  <%= link_to l("modify_projects"), plugin_multiprojects_issue_load_projects_selection_path(:issue_id => @issue.id, :project_id => @issue.project.id), remote: true, id: "loadModalProjectsSelection" %>
+  <%= link_to l('modify_projects'), plugin_multiprojects_issue_load_projects_selection_path(:issue_id => @issue.id, :project_id => @issue.project.id), remote: true, id: "loadModalProjectsSelection", style: 'vertical-align:sub;' %>
 </p>
+
+<script>
+  $("#loadModalProjectsSelection").click(function(e) {
+    var ids = $('#issue_project_ids').val();
+    if(ids==null) {
+      ids=''
+    }
+    var sep = ($(this).attr('href').indexOf('?') != -1) ? '&' : '?';
+    $(this).attr('href', $(this).attr('href') + sep + 'project_ids=' + ids );
+  });
+</script>

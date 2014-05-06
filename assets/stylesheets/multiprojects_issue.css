@@ -46,7 +46,7 @@ a.list_projects_names.current{
 #my_projects_per_issue{
     max-height: 150px;
     overflow: auto;
-    display: inline-block;
+    display: flex;
     width: 77%;
 }
 #projects_form #my_projects_per_issue{

@@ -1,4 +1,8 @@
-<% issue_projects = @issue.projects
+<% if params[:project_ids]
+     issue_projects = (params[:project_ids].split(',').present? ? Project.find(params[:project_ids].split(',')) : [] )
+   else
+     issue_projects = @issue.projects
+   end
    allowed_projects =  @issue.allowed_target_projects - [@issue.project]
    custom_fields = CustomField.select("id, name").where(:type => "ProjectCustomField").where("name IN (?)", Setting["plugin_redmine_multiprojects_issue"]['custom_fields'])
    options_for_selects = {}
