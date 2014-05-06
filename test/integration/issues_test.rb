@@ -52,7 +52,7 @@ class IssuesTest < ActionController::IntegrationTest
     # check issue attributes
     assert_equal 'jsmith', issue.author.login
     assert_equal 1, issue.project.id
-    assert_equal [1,2,3,4], issue.projects.collect(&:id)
+    assert_equal [2,3,4], issue.projects.collect(&:id)
   end
 
   # update an issue and set several projects
@@ -77,7 +77,7 @@ class IssuesTest < ActionController::IntegrationTest
     # check issue attributes
     assert_equal 'jsmith', issue.author.login
     assert_equal 1, issue.project.id
-    assert_equal [1,2,3,4], issue.projects.collect(&:id)
+    assert_equal [2,3,4], issue.projects.collect(&:id)
   end
 
   def test_show_issue_with_several_projects

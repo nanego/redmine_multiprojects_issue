@@ -1,4 +1,4 @@
-<% issue_projects = @issue.projects|[@issue.project]
+<% issue_projects = @issue.projects
    allowed_projects =  @issue.allowed_target_projects - [@issue.project]
    custom_fields = CustomField.select("id, name").where(:type => "ProjectCustomField").where("name IN (?)", Setting["plugin_redmine_multiprojects_issue"]['custom_fields'])
    options_for_selects = {}
@@ -59,15 +59,9 @@
     {
       $("#issue_project_ids option[value=" + $(this).val() +"]").attr("selected","selected");
     });
-    var htmlContent = "<span class=\"list_projects_names\"><%= @issue.project.name %></span> ";
-    var first_project = true;
-    $("input:checkbox[name='project_ids[]']:checked").each(function()
-    {
-      if ($(this).closest('label').text().substring(1) != "<%= @issue.project.name %>") {
-        if(first_project==true){htmlContent += " + ";}
-        htmlContent += " <span class=\"list_projects_names\">"+ $(this).closest('label').text() + "</span>";
-        first_project = false;
-      }
+    var htmlContent = "";
+    $("input:checkbox[name='project_ids[]']:checked").each(function() {
+      htmlContent += " <span class=\"list_projects_names\">"+ $(this).closest('label').text() + "</span>";
     });
     $("#projects_form #list_of_projects_per_issue").html(htmlContent);
     if (htmlContent == ""){

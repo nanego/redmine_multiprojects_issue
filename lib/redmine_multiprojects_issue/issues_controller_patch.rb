@@ -19,12 +19,11 @@ class IssuesController
 
     def set_projects
       @projects = []
-      @projects << Project.find(params[:project_id]) if params[:project_id]
       if params[:issue] && params[:issue][:project_ids]
         params[:issue][:project_ids].reject!(&:blank?)
         if params[:issue][:project_ids].present?
           Project.find(params[:issue][:project_ids]).each do |p|
-            @projects << p
+            @projects << p unless (params[:project_id] == p.id.to_s || params[:issue][:project_id]  == p.id.to_s)
           end
         end
       end

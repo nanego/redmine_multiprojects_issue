@@ -1,7 +1,7 @@
 <%
    nb_other_projects = 0
    nb_visible_projects = 0
-   issue_projects = [@issue.project] | @issue.projects
+   issue_projects = @issue.projects
    allowed_projects = [@issue.project] | @issue.allowed_target_projects
 %>
 <span id="my_projects_per_issue">
@@ -9,10 +9,7 @@
     <% issue_projects.each do |project| %>
       <% if allowed_projects.include?(project) %>
         <%= content_tag("span", project.name.gsub(/ /,"&nbsp;").html_safe, class: "list_projects_names") %>
-        <% if issue_projects.size>1 && issue_projects.first == project %>
-          +
-        <% end %>
-      <% nb_visible_projects += 1 %>
+        <% nb_visible_projects += 1 %>
       <% else %>
         <% nb_other_projects += 1 %>
       <% end %>

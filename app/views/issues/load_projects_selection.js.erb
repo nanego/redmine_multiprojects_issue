@@ -2,5 +2,4 @@ $(document).ready(function(){
   $('#ajax-modal').html('<%= escape_javascript(render :partial => 'issues/modal_select_projects') %>');
   showModal("ajax-modal", "1000px");
   $("#button_apply_projects").focus();
-  projectsSelectionAlreadyLoaded = true;
 });
