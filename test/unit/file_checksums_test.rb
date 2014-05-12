@@ -42,7 +42,8 @@ class FileChecksumsTest < ActiveSupport::TestCase
     # "update_form.js.erb" is completely overridden
     # and should be reviewed if this test breaks
     # 2.3.3 is ok
-    assert_checksum %w(9f56556a894c788d7bf2b00ed5e9023e), "app/views/issues/update_form.js.erb"
+    # 2.5.1 is ok
+    assert_checksum %w(9f56556a894c788d7bf2b00ed5e9023e 0a92d0609b883d43daf5e825bc08cb01), "app/views/issues/update_form.js.erb"
   end
 
 end
