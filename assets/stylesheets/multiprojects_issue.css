@@ -18,6 +18,10 @@ a.list_projects_names.current{
     background-color: #707070;
     border: 1px solid #707070;
 }
+.list_other_projects{
+    margin: 4px 0 0 7px;
+}
+
 #label_concerned_projects{
     /* color: #666; */
     width: 22%;
