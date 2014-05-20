@@ -37,12 +37,12 @@
 
   <div class="actions_links">
   <%= l("Selection") %> :
-  <%= link_to l("select_all"), '#', id: "link_select_all", :onclick=> "select_all()" %>
+  <%= link_to l("select_all"), '#', id: "link_select_all", :onclick=> "select_all(event)" %>
   |
-  <%= link_to l("select_none"), '#', id: "link_select_all", :onclick=> "select_none()" %>
+  <%= link_to l("select_none"), '#', id: "link_select_all", :onclick=> "select_none(event)" %>
   <% custom_fields.each do |field| %>
     |
-    <%= select_tag field.name.parameterize, options_for_select(options_for_selects[field.name.parameterize]), :prompt=>field.name, :id => "select_#{field.name.parameterize}", :class => "select_box_custom_field_value", :onchange=> "select_from_custom_field('#{field.name.parameterize}')" %>
+    <%= select_tag field.name.parameterize, options_for_select(options_for_selects[field.name.parameterize]), :prompt=>field.name, :id => "select_#{field.name.parameterize}", :class => "select_box_custom_field_value", :onchange=> "select_from_custom_field(event, '#{field.name.parameterize}')" %>
   <% end %>
 </div>
 
@@ -78,7 +78,7 @@
     }
   }
 
-  function select_all(){
+  function select_all(event){
     event.preventDefault();
     $("input:checkbox[name='project_ids[]']").each(function()
     {
@@ -86,7 +86,7 @@
     });
   }
 
-  function select_none(){
+  function select_none(event){
     event.preventDefault();
     $("input:checkbox[name='project_ids[]']:checked:not(.inactive)").each(function()
     {
@@ -94,9 +94,9 @@
     });
   }
 
-  function select_from_custom_field(id) {
+  function select_from_custom_field(event, id) {
     event.preventDefault();
-    select_none();
+    select_none(event);
     $("input:checkbox[name='project_ids[]']:checkbox[data-"+id+"='"+ $("#select_" + id).val() +"']").each(function()
     {
       $(this).attr("checked","checked") ;
