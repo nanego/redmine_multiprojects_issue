@@ -80,6 +80,48 @@ class IssuesTest < ActionController::IntegrationTest
     assert_equal [2,3,4], issue.projects.collect(&:id)
   end
 
+  # remove the unique other project
+  def test_remove_unique_other_project
+    log_user('jsmith', 'jsmith')
+    get 'issues/1/edit'
+    assert_response :success
+    assert_template 'issues/edit'
+    assert_select "p#projects_form", :count => 1
+
+    put 'issues/1', {:issue => { :project_ids => [2]}, :project_id => 1 }
+
+    # find updated issue
+    issue = Issue.find(1)
+    assert_kind_of Issue, issue
+
+    # check redirection
+    assert_redirected_to :controller => 'issues', :action => 'show', :id => issue
+    follow_redirect!
+    assert_equal issue, assigns(:issue)
+
+    # check issue attributes
+    assert_equal 'jsmith', issue.author.login
+    assert_equal 1, issue.project.id
+    assert_equal [2], issue.projects.collect(&:id)
+
+    ### Remove other project
+    put 'issues/1', {:issue => { :project_ids => [""]}, :project_id => 1 }
+
+    # find updated issue
+    issue = Issue.find(1)
+    assert_kind_of Issue, issue
+
+    # check redirection
+    assert_redirected_to :controller => 'issues', :action => 'show', :id => issue
+    follow_redirect!
+    assert_equal issue, assigns(:issue)
+
+    # check issue attributes
+    assert_equal 'jsmith', issue.author.login
+    assert_equal 1, issue.project.id
+    assert_equal [], issue.projects.collect(&:id)
+  end
+
   def test_show_issue_with_several_projects
     multiproject_issue = Issue.find(4) # project_id = 2
     multiproject_issue.projects = [multiproject_issue.project, Project.find(5)]

@@ -26,9 +26,7 @@ class IssuesController
             @projects << p unless (params[:project_id] == p.id.to_s || params[:issue][:project_id]  == p.id.to_s)
           end
         end
-      end
-      @projects.uniq!
-      if @projects.present?
+        @projects.uniq!
         update_journal_with_projects unless @issue.new_record?
         @issue.projects = @projects
       end
