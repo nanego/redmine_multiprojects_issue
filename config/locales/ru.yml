@@ -1,0 +1,17 @@
+# Russian strings go here for Rails i18n
+ru:
+  concerned_projects: "Отображается в проектах"
+  modify_projects: "Редактировать список проектов"
+  select_none: "Ни одного"
+  select_all: "Все"
+  Selection: "Выбрать"
+  other: "другой"
+  project: "проект"
+  you_are_not_a_member: "вы не являетесь участником"
+  text_journal_projects_deleted: "проекты удалены"
+  text_journal_projects_added: "проекты добавлены"
+  text_journal_project_deleted: "проект удален"
+  text_journal_project_added: "проект добавлен"
+  label_hide_details: "скрыть"
+  field_projects: "Связанные проекты"
+  multiprojects_selection_available_custom_fields: "Доступные настраиваемые поля для быстрого выбора проектов"
