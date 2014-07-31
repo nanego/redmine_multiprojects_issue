@@ -12,8 +12,8 @@ class FileChecksumsTest < ActiveSupport::TestCase
     # "notified_users", "visible_condition" and "visible?" methods are overridden
     # and should be reviewed if this test breaks
     # 2.3.3 is ok
-    # 2.5.1 is ok
-    assert_checksum %w(7265e9dcb488ac8ea89ed7c3c92c8c88 31b05314384ac3bbe273ae9a0b0f7e24), "app/models/issue.rb"
+    # 2.5.1 and 2.5.2 are ok
+    assert_checksum %w(7265e9dcb488ac8ea89ed7c3c92c8c88 31b05314384ac3bbe273ae9a0b0f7e24 f93d75a3bb8f60360e957d9335c15f43), "app/models/issue.rb"
   end
 
   # tests have been added to the issue_helper_patch_test file, no need to check the checksum
