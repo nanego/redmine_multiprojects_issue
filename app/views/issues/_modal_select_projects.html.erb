@@ -16,8 +16,11 @@
      if allowed_projects.include?(project)
        custom_fields.each do |f|
          value = project.custom_field_value(f)
+         value = value.join(",") if value.is_a?(Array)
          custom_fields_data.merge!(f.name.parameterize => value)
-         options_for_selects[f.name.parameterize] << value unless options_for_selects[f.name.parameterize].include?(value) || value==""
+         value.split(",").each do |val|
+           options_for_selects[f.name.parameterize] << val unless options_for_selects[f.name.parameterize].include?(val) || val.blank?
+         end
        end
      end
      content_tag('label',
@@ -97,8 +100,15 @@
   function select_from_custom_field(event, id) {
     event.preventDefault();
     select_none(event);
-    $("input:checkbox[name='project_ids[]']:checkbox[data-"+id+"='"+ $("#select_" + id).val() +"']").each(function()
-    {
+    //build a selector ; as we now accept "array" values, we must match foo OR *,foo OR *,foo,* OR foo,*...
+    var selectors, selector, val
+    val = $("#select_"+id).val()
+    selectors = [ "='"+val+"'", "^='"+val+",'", "$=',"+val+"'", "*=',"+val+",'" ]
+    selector = $.map(selectors, function(e) {
+      return "input:checkbox[name='project_ids[]']:checkbox[data-"+id+e+"]"
+    }).join(", ")
+    //for each matching value, select the checkbox
+    $(selector).each(function() {
       $(this).attr("checked","checked") ;
     });
     $(".select_box_custom_field_value").prop('selectedIndex',0);
