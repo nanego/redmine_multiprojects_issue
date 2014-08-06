@@ -4,13 +4,12 @@ class Issue
 
   has_and_belongs_to_many :projects
 
-  alias_method :core_visible?, :visible?
-  alias_method :core_notified_users, :notified_users
-  self.singleton_class.send(:alias_method, :core_visible_condition, :visible_condition)
-
-  # Returns true if usr or current user is allowed to view the issue
-  def visible?(usr=nil)
-    core_visible?(usr) || other_project_visible?(usr)
+  unless instance_methods.include?(:visible_with_multiproject_issues?)
+    # Returns true if usr or current user is allowed to view the issue
+    def visible_with_multiproject_issues?(usr=nil)
+      visible_without_multiproject_issues?(usr) || other_project_visible?(usr)
+    end
+    alias_method_chain :visible?, :multiproject_issues
   end
 
   def other_project_visible?(usr=nil)
@@ -36,26 +35,32 @@ class Issue
     visible_projects.present?
   end
 
-  def self.visible_condition(user, options={})
-    statement_by_role = {}
-    user.projects_by_role.each do |role, projects|
-      projects = projects & [options[:project]] if options[:project]
-      if role.allowed_to?(:view_issues) && projects.any?
-        statement_by_role[role] = "project_id IN (#{projects.collect(&:id).join(',')})"
+  unless methods.include?(:visible_condition_with_multiproject_issues)
+    def self.visible_condition_with_multiproject_issues(user, options={})
+      statement_by_role = {}
+      user.projects_by_role.each do |role, projects|
+        projects = projects & [options[:project]] if options[:project]
+        if role.allowed_to?(:view_issues) && projects.any?
+          statement_by_role[role] = "project_id IN (#{projects.collect(&:id).join(',')})"
+        end
+      end
+      authorized_projects = statement_by_role.values.join(' OR ')
+
+      if authorized_projects.present?
+        "(#{visible_condition_without_multiproject_issues(user, options)} OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE (#{authorized_projects}) ))"
+      else
+        visible_condition_without_multiproject_issues(user, options)
       end
     end
-    authorized_projects = statement_by_role.values.join(' OR ')
-
-    if authorized_projects.present?
-      "(#{core_visible_condition(user, options)} OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE (#{authorized_projects}) ))"
-    else
-      core_visible_condition(user, options)
-    end
+    self.singleton_class.send(:alias_method_chain, :visible_condition, :multiproject_issues)
   end
 
-  # Returns the users that should be notified
-  def notified_users
-    core_notified_users | notified_users_from_other_projects
+  unless instance_methods.include?(:notified_users_with_multiproject_issues)
+    # Returns the users that should be notified
+    def notified_users_with_multiproject_issues
+      notified_users_without_multiproject_issues | notified_users_from_other_projects
+    end
+    alias_method_chain :notified_users, :multiproject_issues
   end
 
   def notified_users_from_other_projects
