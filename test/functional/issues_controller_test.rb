@@ -7,6 +7,7 @@ class IssuesControllerTest < ActionController::TestCase
   fixtures :projects,
            :users,
            :roles,
+           :workflows,
            :members,
            :member_roles
 
@@ -177,8 +178,7 @@ class IssuesControllerTest < ActionController::TestCase
 
     assert_difference 'Journal.count' do
       assert_difference('JournalDetail.count', 1) do
-        put :update, :id => 1, :issue => {:status_id => '6'
-        }
+        put :update, :id => 1, :issue => {:status_id => '6'}
       end
     end
 
