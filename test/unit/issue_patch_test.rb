@@ -244,4 +244,23 @@ class IssueMultiprojectsPatchTest < ActiveSupport::TestCase
     assert !copy.notified_users.include?(copy.author)
   end
 
+  def test_editable_allows_member_of_secondary_project_to_edit_issue
+    issue = Issue.find(4)
+    issue.update_attribute(:answers_on_secondary_projects, true)
+    user = User.find(4) #member of project(5)
+    assert !user.member_of?(issue.project) #but not member of main project
+    #go
+    assert issue.editable?(user), "user(4) should be able to edit issue(4) as it is editable on secondary projects"
+    assert issue.safe_attribute_names(user).include?("notes")
+  end
+
+  def test_editable_doesnt_allow_member_of_secondary_project_to_edit_issue_if_forbidden
+    issue = Issue.find(4)
+    issue.update_attribute(:answers_on_secondary_projects, false)
+    user = User.find(4) #member of project(5)
+    assert !user.member_of?(issue.project) #but not member of main project
+    #go
+    assert !issue.editable?(user), "user(4) should be able to edit issue(4) as it is editable on secondary projects"
+    assert !issue.safe_attribute_names(user).include?("notes")
+  end
 end

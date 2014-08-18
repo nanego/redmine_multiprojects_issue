@@ -4,6 +4,9 @@ class Issue
 
   has_and_belongs_to_many :projects
 
+  #adds a new "safe_attributes condition to handle the case of secondary projects
+  safe_attributes 'notes', :if => lambda {|issue, user| issue.editable?(user)}
+
   unless instance_methods.include?(:visible_with_multiproject_issues?)
     # Returns true if usr or current user is allowed to view the issue
     def visible_with_multiproject_issues?(usr=nil)
@@ -95,4 +98,11 @@ class Issue
     notified.compact
   end
 
+  def editable_with_secondary_projects?(user=User.current)
+    editable_without_secondary_projects?(user) ||
+      (answers_on_secondary_projects && projects.any?{|p|
+        user.allowed_to?(:edit_issues, p) || user.allowed_to?(:add_issue_notes, p)
+      })
+  end
+  alias_method_chain :editable?, :secondary_projects
 end

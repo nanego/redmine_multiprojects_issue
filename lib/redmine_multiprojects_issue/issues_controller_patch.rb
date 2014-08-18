@@ -52,4 +52,13 @@ class IssuesController
       render_404
     end
 
+    # Override #authorize method locally to handle answers on secondary project
+    # Note that this is NOT a good idea if other plugins override it :/
+    def authorize(ctrl = params[:controller], action = params[:action], global = false)
+      if ctrl == "issues" && action == "update"
+        @issue.editable?
+      else
+        super
+      end
+    end
 end

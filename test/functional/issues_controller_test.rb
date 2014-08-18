@@ -187,4 +187,37 @@ class IssuesControllerTest < ActionController::TestCase
     assert_equal updated_issue.status_id, 6
 
   end
+
+  def test_edit_link_when_issue_allows_answers_on_secondary_projects
+    prepare_context_where_user_can_only_update_through_secondary_project
+    #normally we shouldn't see a link without our Issue#editable? patch!
+    get :show, :id => @issue.id
+    assert_select 'div.contextual a.icon-edit'
+  end
+
+  def test_edit_link_when_issue_doesnt_answers_on_secondary_projects
+    prepare_context_where_user_can_only_update_through_secondary_project
+    #no link, since the issue doesn't authorize editing..!
+    @issue.update_attribute(:answers_on_secondary_projects, false)
+    get :show, :id => @issue.id
+    assert_select 'div.contextual a.icon-edit', :count => 0
+
+  end
+
+  def test_authorization_patch_that_allows_answers_on_secondary_projects
+    prepare_context_where_user_can_only_update_through_secondary_project
+    assert_difference 'Journal.count', 1 do
+      put :update, :id => @issue.id, :issue => {:notes => 'bla bla bla'}
+    end
+    assert_redirected_to :controller => 'issues', :action => 'show', :id => @issue.id
+    assert_equal 'bla bla bla', @issue.reload.journals.last.notes
+  end
+
+  private
+  def prepare_context_where_user_can_only_update_through_secondary_project
+    @user, @issue, @secondary_project = User.find(6), Issue.find(4), Project.find(3)
+    @request.session[:user_id] = @user.id
+    @issue.update_attribute(:project_ids, [@secondary_project.id])
+    @issue.reload
+  end
 end
