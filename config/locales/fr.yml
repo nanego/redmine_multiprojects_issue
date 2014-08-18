@@ -14,4 +14,5 @@ fr:
   text_journal_project_added: "projet ajouté"
   label_hide_details: "masquer"
   field_projects: "Projets liés"
+  field_answers_on_secondary_projects: "Réponses autorisées"
   multiprojects_selection_available_custom_fields: "Champs personnalisés disponibles pour sélectionner les projets"

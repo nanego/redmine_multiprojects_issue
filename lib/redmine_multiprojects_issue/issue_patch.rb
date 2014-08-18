@@ -4,6 +4,7 @@ class Issue
 
   has_and_belongs_to_many :projects
 
+  safe_attributes 'answers_on_secondary_projects'
   #adds a new "safe_attributes condition to handle the case of secondary projects
   safe_attributes 'notes', :if => lambda {|issue, user| issue.editable?(user)}
 

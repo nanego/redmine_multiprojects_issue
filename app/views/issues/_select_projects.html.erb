@@ -4,6 +4,7 @@
                {:multiple => true, style: "display:none;"} %>
   <%= render 'projects_list' %>
   <%= link_to l('modify_projects'), plugin_multiprojects_issue_load_projects_selection_path(:issue_id => @issue.id, :project_id => @issue.project.id), remote: true, id: "loadModalProjectsSelection", style: 'vertical-align:sub;' %>
+  <label class=inline style="line-height:100%;color:#888;font-size:90%;"><%= f.check_box :answers_on_secondary_projects, :no_label => true %><%= l(:field_answers_on_secondary_projects) %></label>
 </p>
 
 <script>
