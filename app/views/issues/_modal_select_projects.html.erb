@@ -76,8 +76,10 @@
     $("#projects_form #list_of_projects_per_issue").html(htmlContent);
     if (htmlContent == ""){
       $(".and_x_other_projects").css("display", "none");
+      $("#answers-on-secondary-projects").hide()
     } else{
       $(".and_x_other_projects").css("display","inline");
+      $("#answers-on-secondary-projects").show()
     }
   }
 
