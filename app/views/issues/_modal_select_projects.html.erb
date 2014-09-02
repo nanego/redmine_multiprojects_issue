@@ -20,7 +20,7 @@
          custom_fields_data.merge!(f.name.parameterize => value)
          value.split(",").each do |val|
            options_for_selects[f.name.parameterize] << val unless options_for_selects[f.name.parameterize].include?(val) || val.blank?
-         end
+         end if value.present?
        end
      end
      content_tag('label',
