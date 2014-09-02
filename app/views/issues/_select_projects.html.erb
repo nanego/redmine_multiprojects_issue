@@ -3,8 +3,8 @@
   <%= f.select :project_ids, select_options, {:required => true, :label => l("concerned_projects")},
                {:multiple => true, style: "display:none;"} %>
   <%= render 'projects_list' %>
-  <%= link_to l('modify_projects'), plugin_multiprojects_issue_load_projects_selection_path(:issue_id => @issue.id, :project_id => @issue.project.id), remote: true, id: "loadModalProjectsSelection", style: 'vertical-align:sub;' %>
-  <label id=answers-on-secondary-projects class=inline style="line-height:100%;color:#888;font-size:90%;<%= "display:none;" if @issue.projects.none? %>"><%= f.check_box :answers_on_secondary_projects, :no_label => true %><%= l(:field_answers_on_secondary_projects) %></label>
+  <%= link_to l('modify_projects'), plugin_multiprojects_issue_load_projects_selection_path(:issue_id => @issue.id, :project_id => @issue.project.id), remote: true, id: "loadModalProjectsSelection", class: "load-modal-projects-selection" %>
+  <label id=answers-on-secondary-projects class="inline answers-on-secondary-projects" style="<%= "display:none;" if @issue.projects.none? %>"><%= f.check_box :answers_on_secondary_projects, :no_label => true %><%= l(:field_answers_on_secondary_projects) %></label>
 </p>
 
 <script>

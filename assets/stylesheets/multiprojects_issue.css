@@ -78,3 +78,13 @@ td.projects{
     display: none;
     margin-right: 5px;
 }
+
+.answers-on-secondary-projects {
+  line-height: 2em;
+  color: #777;
+  padding:0 4px;
+}
+
+.load-modal-projects-selection {
+  line-height:2em;
+}
