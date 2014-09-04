@@ -1,3 +1,6 @@
+require File.dirname(__FILE__) + '/../../app/helpers/multiprojects_issue_helper'
+include MultiprojectsIssueHelper
+
 module RedmineMultiprojectsIssue
   class Hooks < Redmine::Hook::ViewListener
     def view_layouts_base_html_head(context)
