@@ -4,7 +4,7 @@ class IssuesController
 
   before_filter :authorize, :except => [:index, :load_projects_selection, :show]
   before_filter :set_project, :only => [:load_projects_selection]
-  append_before_filter :set_projects, :only => [:create, :update]
+  append_before_filter :set_assignable_projects, :only => [:create, :update]
 
   def load_projects_selection
     if params[:issue_id]
@@ -17,9 +17,9 @@ class IssuesController
 
   private
 
-    def set_projects
-      @projects = []
+    def set_assignable_projects
       if params[:issue] && params[:issue][:project_ids]
+        @projects = []
         params[:issue][:project_ids].reject!(&:blank?)
         if params[:issue][:project_ids].present?
           Project.find(params[:issue][:project_ids]).each do |p|
@@ -28,7 +28,7 @@ class IssuesController
         end
         @projects.uniq!
         update_journal_with_projects unless @issue.new_record?
-        @issue.projects = @projects
+        @issue.assignable_projects = @projects
       end
     end
 

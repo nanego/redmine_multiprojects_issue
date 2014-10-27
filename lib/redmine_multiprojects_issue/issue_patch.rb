@@ -3,6 +3,8 @@ require_dependency 'issue'
 class Issue
 
   has_and_belongs_to_many :projects
+  attr_accessor :assignable_projects #List related projects before save
+  after_save :set_projects
 
   safe_attributes 'answers_on_secondary_projects'
   #adds a new "safe_attributes condition to handle the case of secondary projects
@@ -69,7 +71,10 @@ class Issue
 
   def notified_users_from_other_projects
     notified = []
-    other_projects = self.projects - [self.project]
+    other_projects = []
+    other_projects |= self.assignable_projects unless self.assignable_projects == nil
+    other_projects |= self.projects
+    other_projects -= [self.project]
     other_projects.each do |p|
 
       notified_by_role = []
@@ -106,4 +111,11 @@ class Issue
       })
   end
   alias_method_chain :editable?, :secondary_projects
+
+  private
+
+    def set_projects
+      self.projects = self.assignable_projects unless self.assignable_projects == nil
+    end
+
 end
