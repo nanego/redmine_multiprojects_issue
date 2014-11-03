@@ -13,7 +13,8 @@ class FileChecksumsTest < ActiveSupport::TestCase
     # and should be reviewed if this test breaks
     # 2.3.3 is ok
     # 2.5.1 and 2.5.2 are ok
-    assert_checksum %w(7265e9dcb488ac8ea89ed7c3c92c8c88 31b05314384ac3bbe273ae9a0b0f7e24 f93d75a3bb8f60360e957d9335c15f43), "app/models/issue.rb"
+    # 2.6.0 is ok
+    assert_checksum %w(7265e9dcb488ac8ea89ed7c3c92c8c88 31b05314384ac3bbe273ae9a0b0f7e24 f93d75a3bb8f60360e957d9335c15f43 2ebfdef98d98062124c77cc12f61519f), "app/models/issue.rb"
   end
 
   # tests have been added to the issue_helper_patch_test file, no need to check the checksum
@@ -25,17 +26,15 @@ class FileChecksumsTest < ActiveSupport::TestCase
   def test_core_query_model_checksum
     # "project_statement" method is overridden
     # and should be reviewed if this test breaks
-    # 2.3.3 is ok
-    # 2.5.1 is ok
-    assert_checksum %w(4c224b8cf3777fe2708139cfa77684eb 01fe00cf132446c39f0485148ddaf8f7), "app/models/query.rb"
+    # 2.3.3, 2.5.1 and 2.6.0 are ok
+    assert_checksum %w(4c224b8cf3777fe2708139cfa77684eb 01fe00cf132446c39f0485148ddaf8f7 cb76a735b8d9304cadf1fc40e641dc7e), "app/models/query.rb"
   end
 
   def test_core_issue_query_model_checksum
     # "versions" method is overridden
     # and should be reviewed if this test breaks
-    # 2.3.3 is ok
-    # 2.5.1 is ok
-    assert_checksum %w(640fbc448f8d90093d05685aa4292893 6c1ba80a5f4e22680ecb946a6509599a), "app/models/issue_query.rb"
+    # 2.3.3, 2.5.1 and 2.6.0 are ok
+    assert_checksum %w(640fbc448f8d90093d05685aa4292893 6c1ba80a5f4e22680ecb946a6509599a 683cedbb78c368325997a6fe11d27d5c), "app/models/issue_query.rb"
   end
 
   def test_core_update_form_js_checksum
