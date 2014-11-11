@@ -19,7 +19,7 @@ This plugin has been tested with Redmine 2.3.0+.
 
 Please apply general instructions for plugins [here](http://www.redmine.org/wiki/redmine/Plugins).
 
-Note that this plugin now depends on
+Note that this plugin now depends on:
 
 * **redmine_base_select2** which can be found [here](https://github.com/jbbarth/redmine_base_select2)
 and 
