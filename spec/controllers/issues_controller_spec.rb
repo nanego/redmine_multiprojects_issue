@@ -116,8 +116,6 @@ describe IssuesController, type: :controller do
 
   it "should load projects selection" do
     @request.session[:user_id] = 2
-    @request.env["HTTP_ACCEPT"] = "text/javascript, text/html"
-    @request.env["CONTENT_TYPE"] = "text/javascript"
     get :load_projects_selection, format: :js, :issue_id => 1, :project_id => 1
     expect(response).to be_success
     assert_template 'load_projects_selection'

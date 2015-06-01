@@ -2,7 +2,7 @@ require_dependency 'issues_controller'
 
 class IssuesController
 
-  before_filter :authorize, :except => [:index, :load_projects_selection, :show]
+  before_filter :authorize, :except => [:index, :new, :create, :load_projects_selection, :show]
   before_filter :set_project, :only => [:load_projects_selection]
   append_before_filter :set_assignable_projects, :only => [:create, :update]
 
