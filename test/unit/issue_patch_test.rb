@@ -170,21 +170,21 @@ class IssueMultiprojectsPatchTest < ActiveSupport::TestCase
   def test_other_project_visible_method_user_should_not_see_private_multiproject_issues_with_issues_visibility_set_to_default
     assert Member.find(7).roles.first.update_attribute(:issues_visibility, 'default')
     issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true, project_ids: [2,5])
-    assert_not_nil Issue.where(:id => issue.id).visible(User.find(8)).first
+    refute_nil Issue.where(:id => issue.id).visible(User.find(8)).first
     assert !issue.other_project_visible?(User.find(8))
   end
 
   def test_other_project_visible_method_member_should_not_see_private_multiproject_issues_with_issues_visibility_set_to_own
     assert Member.find(7).roles.first.update_attribute(:issues_visibility, 'own')
     issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true, project_ids: [2,5])
-    assert_not_nil Issue.where(:id => issue.id).visible(User.find(8)).first
+    refute_nil Issue.where(:id => issue.id).visible(User.find(8)).first
     assert !issue.other_project_visible?(User.find(8))
   end
 
   def test_other_project_visible_method_member_should_see_private_projects_issues_with_issues_visibility_set_to_all
     assert Member.find(7).roles.first.update_attribute(:issues_visibility, 'all')
     issue = Issue.generate!(:is_private => false, project: Project.find(2), projects: [Project.find(2),Project.find(5)]) # multiprojects issue
-    assert_not_nil Issue.where(:id => issue.id).visible(User.find(8)).first
+    refute_nil Issue.where(:id => issue.id).visible(User.find(8)).first
     assert issue.other_project_visible?(User.find(8))
   end
 
@@ -203,7 +203,7 @@ class IssueMultiprojectsPatchTest < ActiveSupport::TestCase
   def test_notified_users_from_other_projects
     issue = Issue.find(4)
     notified_users_from_other_projects = issue.notified_users_from_other_projects
-    assert_not_nil notified_users_from_other_projects
+    refute_nil notified_users_from_other_projects
     assert_not_includes notified_users_from_other_projects, User.anonymous
     assert_includes notified_users_from_other_projects, User.find(1) # member of project 5 only, but admin
     assert_not_includes notified_users_from_other_projects, User.find(3) # not a member
@@ -214,7 +214,7 @@ class IssueMultiprojectsPatchTest < ActiveSupport::TestCase
   def test_notified_users_from_main_project
     issue = Issue.find(4)
     notified_users_from_main_project = issue.notified_users_without_multiproject_issues
-    assert_not_nil notified_users_from_main_project
+    refute_nil notified_users_from_main_project
     assert_not_includes notified_users_from_main_project, User.anonymous
     assert_not_includes notified_users_from_main_project, User.find(1) # member of project 5 only, but admin
     assert_includes notified_users_from_main_project, User.find(2) # member of main project 2

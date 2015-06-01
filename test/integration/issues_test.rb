@@ -131,7 +131,7 @@ class IssuesTest < ActionController::IntegrationTest
     get 'issues/4'
     assert_response :success
     assert_template 'issues/show'
-    assert_not_nil assigns(:issue).projects
+    refute_nil assigns(:issue).projects
     assert assigns(:issue).projects.present?
     assert_select 'div#current_projects_list', :count => 1
   end

@@ -31,8 +31,8 @@ class ActivitiesControllerTest < ActionController::TestCase
 
     assert_response :success
     assert_template 'index'
-    assert_not_nil assigns(:events_by_day)
-    assert_not_nil assigns(:project)
+    refute_nil assigns(:events_by_day)
+    refute_nil assigns(:project)
 
     assert_select "span.project", false, "This page must contain no project class when there is no multiproject issues related to the current project"
   end

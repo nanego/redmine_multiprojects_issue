@@ -26,13 +26,13 @@ class QueryPatchTest < ActiveSupport::TestCase
     User.current = User.find(8)
     query = IssueQuery.new(:name => '_')
     filter = query.available_filters['project_id']
-    assert_not_nil filter
+    refute_nil filter
 
     query.project = Project.find(5)
     result = query.issues
     assert result.present?
 
-    assert_not_nil result.detect {|issue| !User.current.member_of?(issue.project) }
+    refute_nil result.detect {|issue| !User.current.member_of?(issue.project) }
     assert_equal result.detect {|issue| !User.current.member_of?(issue.project) }, Issue.find(2)
   end
 

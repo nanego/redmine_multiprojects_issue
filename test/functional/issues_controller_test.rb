@@ -110,7 +110,7 @@ class IssuesControllerTest < ActionController::TestCase
     assert_template 'load_projects_selection'
     assert_equal 'text/javascript', response.content_type
     assert_include "$('#ajax-modal')", response.body
-    assert_not_nil assigns(:issue)
+    refute_nil assigns(:issue)
     assert_equal 1, assigns(:issue).id
     assert_equal 1, assigns(:project).id # test set_project private method
   end
