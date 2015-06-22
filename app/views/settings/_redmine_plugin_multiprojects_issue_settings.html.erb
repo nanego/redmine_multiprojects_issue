@@ -17,8 +17,10 @@
 </table>
 <script type="text/javascript">
   $(function() {
-    $('#settings_custom_fields').select2({
-      containerCss: {minWidth: '300px'}
-    });
+    if ((typeof $().select2) === 'function') {
+      $('#settings_custom_fields').select2({
+        containerCss: {minWidth: '300px'}
+      });
+    }
   });
 </script>

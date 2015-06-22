@@ -16,7 +16,6 @@ Redmine::Plugin.register :redmine_multiprojects_issue do
   version '0.1'
   url 'https://github.com/nanego/redmine_multiprojects_issue'
   author_url 'mailto:contact@vincent-robert.com'
-  requires_redmine_plugin :redmine_base_select2, :version_or_higher => '0.0.1'
   requires_redmine_plugin :redmine_base_deface, :version_or_higher => '0.0.1'
   settings :default => { 'custom_fields' => []},
            :partial => 'settings/redmine_plugin_multiprojects_issue_settings'
