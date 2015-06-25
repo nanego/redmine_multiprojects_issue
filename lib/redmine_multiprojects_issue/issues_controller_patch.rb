@@ -6,6 +6,8 @@ class IssuesController
   before_filter :set_project, :only => [:load_projects_selection]
   append_before_filter :set_assignable_projects, :only => [:create, :update]
 
+  protect_from_forgery except: :load_projects_selection
+
   def load_projects_selection
     if params[:issue_id]
       @issue = Issue.find(params[:issue_id])

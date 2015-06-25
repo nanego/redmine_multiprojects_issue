@@ -13,7 +13,7 @@ Redmine::Plugin.register :redmine_multiprojects_issue do
   name 'Redmine Multiple Projects per Issue plugin'
   author 'Vincent ROBERT'
   description 'This plugin for Redmine allows more than one project per issue.'
-  version '0.1'
+  version '0.2'
   url 'https://github.com/nanego/redmine_multiprojects_issue'
   author_url 'mailto:contact@vincent-robert.com'
   requires_redmine_plugin :redmine_base_deface, :version_or_higher => '0.0.1'
