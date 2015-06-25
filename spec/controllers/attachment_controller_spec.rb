@@ -1,13 +1,14 @@
-require File.expand_path('../../test_helper', __FILE__)
+require "spec_helper"
 require 'redmine_multiprojects_issue/acts_as_attachable_patch'
 
-class AttachmentsControllerTest < ActionController::TestCase
+describe AttachmentsController do
+  render_views
 
   fixtures :users, :projects, :roles, :members, :member_roles,
            :enabled_modules, :issues, :trackers, :attachments,
            :versions, :wiki_pages, :wikis, :documents
 
-  def setup # create multiproject issue
+  before do
     multiproject_issue = Issue.find(4) # project_id = 2
     multiproject_issue.projects = [multiproject_issue.project, Project.find(5)]
     multiproject_issue.save!
@@ -16,7 +17,7 @@ class AttachmentsControllerTest < ActionController::TestCase
     new_member.save!
   end
 
-  def test_show_text_file_utf_8
+  it "should show text file utf 8" do
 
     # test setup
     multiproject_issue = Issue.find(4) # project_id = 2
@@ -31,21 +32,30 @@ class AttachmentsControllerTest < ActionController::TestCase
 
     set_tmp_attachments_directory
     a = Attachment.new(:container => multiproject_issue,
-                       :file => uploaded_test_file("japanese-utf-8.txt", "text/plain"),
+                       :file => fixture_file_upload("files/japanese-utf-8.txt", "text/plain", true),
                        :author => User.find(1))
     assert a.save
-    assert_equal 'japanese-utf-8.txt', a.filename
+    expect(a.filename).to eq 'japanese-utf-8.txt'
 
     str_japanese = "\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e".force_encoding('UTF-8')
 
     get :show, :id => a.id
-    assert_response :success
+    expect(response).to be_success
     assert_template 'file'
-    assert_equal 'text/html', @response.content_type
+    expect(@response.content_type).to eq 'text/html'
     assert_select 'tr#L1' do
       assert_select 'th.line-num', :text => '1'
       assert_select 'td', :text => /#{str_japanese}/
     end
+  end
+
+  # Use a temporary directory for attachment related tests
+  def set_tmp_attachments_directory
+    Dir.mkdir "#{Rails.root}/tmp/test" unless File.directory?("#{Rails.root}/tmp/test")
+    unless File.directory?("#{Rails.root}/tmp/test/attachments")
+      Dir.mkdir "#{Rails.root}/tmp/test/attachments"
+    end
+    Attachment.storage_path = "#{Rails.root}/tmp/test/attachments"
   end
 
 end

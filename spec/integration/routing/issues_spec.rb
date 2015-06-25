@@ -1,7 +1,7 @@
-require File.expand_path('../../../test_helper', __FILE__)
+require "spec_helper"
 
-class RoutingIssuesTest < ActionController::IntegrationTest
-  def test_issues_ajax_action
+describe "RoutingIssues" do
+  it "should issues ajax action" do
     assert_routing(
         { :method => 'get', :remote => true, :path => "/plugin_multiprojects_issue_load_projects_selection" },
         { :controller => 'issues', :action => 'load_projects_selection' }

@@ -1,10 +1,10 @@
-require File.expand_path('../../test_helper', __FILE__)
+require "spec_helper"
 
 require 'redmine_multiprojects_issue/issues_controller_patch.rb'
 require 'redmine_multiprojects_issue/issue_patch.rb'
 require 'redmine_multiprojects_issue/query_patch.rb'
 
-class QueryPatchTest < ActiveSupport::TestCase
+describe "QueryPatch" do
   include Redmine::I18n
 
   fixtures :projects, :enabled_modules, :users, :members,
@@ -15,7 +15,7 @@ class QueryPatchTest < ActiveSupport::TestCase
            :projects_trackers,
            :custom_fields_trackers
 
-  def test_issue_visibility_from_other_project
+  it "should issue visibility from other project" do
 
     #setup - create multiproject issue
     multiproject_issue = Issue.find(2)
@@ -33,7 +33,7 @@ class QueryPatchTest < ActiveSupport::TestCase
     assert result.present?
 
     refute_nil result.detect {|issue| !User.current.member_of?(issue.project) }
-    assert_equal result.detect {|issue| !User.current.member_of?(issue.project) }, Issue.find(2)
+    expect(Issue.find(2)).to eq result.detect {|issue| !User.current.member_of?(issue.project) }
   end
 
 end

@@ -1,8 +1,26 @@
-require File.expand_path('../../test_helper', __FILE__)
+require "spec_helper"
 
 require 'redmine_multiprojects_issue/issue_patch.rb'
 
-class IssueMultiprojectsPatchTest < ActiveSupport::TestCase
+# Generates an unsaved Issue
+def Issue.generate(attributes={})
+  issue = Issue.new(attributes)
+  issue.project ||= Project.find(1)
+  issue.tracker ||= issue.project.trackers.first
+  issue.subject = 'Generated' if issue.subject.blank?
+  issue.author ||= User.find(2)
+  yield issue if block_given?
+  issue
+end
+
+# Generates a saved Issue
+def Issue.generate!(attributes={}, &block)
+  issue = Issue.generate(attributes, &block)
+  issue.save!
+  issue
+end
+
+describe "IssueMultiprojectsPatch" do
 
   fixtures :projects, :enabled_modules, :users, :members,
            :member_roles, :roles, :trackers, :issue_statuses,
@@ -12,7 +30,7 @@ class IssueMultiprojectsPatchTest < ActiveSupport::TestCase
            :projects_trackers,
            :custom_fields_trackers
 
-  def setup # create multiproject issue
+  before do
     multiproject_issue = Issue.find(4) # project_id = 2
     multiproject_issue.projects = [multiproject_issue.project, Project.find(5)]
     multiproject_issue.save!
@@ -21,20 +39,20 @@ class IssueMultiprojectsPatchTest < ActiveSupport::TestCase
     new_member.save!
   end
 
-  def test_visible_patch_when_project_is_public
+  it "should visible patch when project is public" do
     issue = Issue.find(1) # project_id = 1
     assert issue.visible?(User.anonymous)
     assert issue.visible?(User.find(8))
   end
 
-  def test_visible_patch_when_project_is_private
+  it "should visible patch when project is private" do
     issue = Issue.generate!(:is_private => false, project: Project.find(2))
     assert !issue.visible?(User.anonymous), ": issue (#{issue.inspect}) should not be visible when user is not set and project is private"
     assert issue.visible?(User.find(8)) # member of project 2
     assert !issue.visible?(User.find(3)) # not a member
   end
 
-  def test_visible_patch_when_issue_has_several_projects
+  it "should visible patch when issue has several projects" do
     multiproject_issue = Issue.find(4) # project_id = 2
     assert multiproject_issue.projects.size > 1
     assert !multiproject_issue.visible?(User.anonymous)
@@ -44,55 +62,55 @@ class IssueMultiprojectsPatchTest < ActiveSupport::TestCase
     assert !multiproject_issue.visible?(User.find(3)) # not a member
   end
 
-  def test_anonymous_should_not_see_private_issues_with_issues_visibility_set_to_default
+  it "should anonymous should not see private issues with issues visibility set to default" do
     assert Role.anonymous.update_attribute(:issues_visibility, 'default')
     issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true)
     assert_nil Issue.where(:id => issue.id).visible(User.anonymous).first
     assert !issue.visible?(User.anonymous)
   end
 
-  def test_anonymous_should_not_see_private_issues_with_issues_visibility_set_to_own
+  it "should anonymous should not see private issues with issues visibility set to own" do
     assert Role.anonymous.update_attribute(:issues_visibility, 'own')
     issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true)
     assert_nil Issue.where(:id => issue.id).visible(User.anonymous).first
     assert !issue.visible?(User.anonymous)
   end
 
-  def test_anonymous_should_not_see_private_multiproject_issues_with_issues_visibility_set_to_default
+  it "should anonymous should not see private multiproject issues with issues visibility set to default" do
     assert Role.anonymous.update_attribute(:issues_visibility, 'default')
     issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true, project_ids: [2,5])
     assert_nil Issue.where(:id => issue.id).visible(User.anonymous).first
     assert !issue.visible?(User.anonymous)
   end
 
-  def test_anonymous_should_not_see_private_multiproject_issues_with_issues_visibility_set_to_own
+  it "should anonymous should not see private multiproject issues with issues visibility set to own" do
     assert Role.anonymous.update_attribute(:issues_visibility, 'own')
     issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true, project_ids: [2,5])
     assert_nil Issue.where(:id => issue.id).visible(User.anonymous).first
     assert !issue.visible?(User.anonymous)
   end
 
-  def test_anonymous_should_not_see_private_projects_issues_with_issues_visibility_set_to_all
+  it "should anonymous should not see private projects issues with issues visibility set to all" do
     assert Role.anonymous.update_attribute(:issues_visibility, 'all')
     issue = Issue.generate!(:is_private => false, project: Project.find(2), projects: [Project.find(2),Project.find(5)]) # multiprojects issue
     assert_nil Issue.where(:id => issue.id).visible(User.anonymous).first
     assert !issue.visible?(User.anonymous)
   end
 
-  def test_core_visible_method_when_project_is_public
+  it "should core visible method when project is public" do
     issue = Issue.find(1) # project_id = 1
     assert issue.visible_without_multiproject_issues?(User.anonymous)
     assert issue.visible_without_multiproject_issues?(User.find(8))
   end
 
-  def test_core_visible_method_when_project_is_private
+  it "should core visible method when project is private" do
     issue = Issue.generate!(:is_private => false, project: Project.find(2))
     assert !issue.visible_without_multiproject_issues?(User.anonymous), ": issue (#{issue.inspect}) should not be visible when user is not set and project is private"
     assert issue.visible_without_multiproject_issues?(User.find(8)) # member of project 2
     assert !issue.visible_without_multiproject_issues?(User.find(3)) # not a member
   end
 
-  def test_core_visible_method_when_issue_has_several_projects
+  it "should core visible method when issue has several projects" do
     multiprojects_issue = Issue.find(4) # project_id = 2
     assert multiprojects_issue.projects.size > 1
     assert !multiprojects_issue.visible_without_multiproject_issues?(User.anonymous)
@@ -102,48 +120,48 @@ class IssueMultiprojectsPatchTest < ActiveSupport::TestCase
     assert !multiprojects_issue.visible_without_multiproject_issues?(User.find(3)) # not a member
   end
 
-  def test_core_visible_method_anonymous_should_not_see_private_issues_with_issues_visibility_set_to_default
+  it "should core visible method anonymous should not see private issues with issues visibility set to default" do
     assert Role.anonymous.update_attribute(:issues_visibility, 'default')
     issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true)
     assert_nil Issue.where(:id => issue.id).visible(User.anonymous).first
     assert !issue.visible_without_multiproject_issues?(User.anonymous)
   end
 
-  def test_core_visible_method_anonymous_should_not_see_private_issues_with_issues_visibility_set_to_own
+  it "should core visible method anonymous should not see private issues with issues visibility set to own" do
     assert Role.anonymous.update_attribute(:issues_visibility, 'own')
     issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true)
     assert_nil Issue.where(:id => issue.id).visible(User.anonymous).first
     assert !issue.visible_without_multiproject_issues?(User.anonymous)
   end
 
-  def test_core_visible_method_anonymous_should_not_see_private_multiproject_issues_with_issues_visibility_set_to_default
+  it "should core visible method anonymous should not see private multiproject issues with issues visibility set to default" do
     assert Role.anonymous.update_attribute(:issues_visibility, 'default')
     issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true, project_ids: [2,5])
     assert_nil Issue.where(:id => issue.id).visible(User.anonymous).first
     assert !issue.visible_without_multiproject_issues?(User.anonymous)
   end
 
-  def test_core_visible_method_anonymous_should_not_see_private_multiproject_issues_with_issues_visibility_set_to_own
+  it "should core visible method anonymous should not see private multiproject issues with issues visibility set to own" do
     assert Role.anonymous.update_attribute(:issues_visibility, 'own')
     issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true, project_ids: [2,5])
     assert_nil Issue.where(:id => issue.id).visible(User.anonymous).first
     assert !issue.visible_without_multiproject_issues?(User.anonymous)
   end
 
-  def test_core_visible_method_anonymous_should_not_see_private_projects_issues_with_issues_visibility_set_to_all
+  it "should core visible method anonymous should not see private projects issues with issues visibility set to all" do
     assert Role.anonymous.update_attribute(:issues_visibility, 'all')
     issue = Issue.generate!(:is_private => false, project: Project.find(2), projects: [Project.find(2),Project.find(5)]) # multiprojects issue
     assert_nil Issue.where(:id => issue.id).visible(User.anonymous).first
     assert !issue.visible_without_multiproject_issues?(User.anonymous)
   end
 
-  def test_other_project_visible_method_when_issue_has_no_other_project
+  it "should other project visible method when issue has no other project" do
     issue = Issue.find(1)
     assert !issue.other_project_visible?(User.anonymous)
     assert !issue.other_project_visible?(User.find(8))
   end
 
-  def test_other_project_visible_method_when_issue_has_several_projects
+  it "should other project visible method when issue has several projects" do
     multiprojects_issue = Issue.find(4) # project_id = 2
     assert multiprojects_issue.projects.size > 1
     assert !multiprojects_issue.other_project_visible?(User.anonymous)
@@ -153,89 +171,89 @@ class IssueMultiprojectsPatchTest < ActiveSupport::TestCase
     assert !multiprojects_issue.other_project_visible?(User.find(3)) # not a member
   end
 
-  def test_other_project_visible_method_user_should_not_see_private_issues_with_issues_visibility_set_to_default
+  it "should other project visible method user should not see private issues with issues visibility set to default" do
     assert Member.find(7).roles.first.update_attribute(:issues_visibility, 'default')
     issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true)
     assert_nil Issue.where(:id => issue.id).visible(User.find(8)).first
     assert !issue.other_project_visible?(User.find(8))
   end
 
-  def test_other_project_visible_method_user_should_not_see_private_issues_with_issues_visibility_set_to_own
+  it "should other project visible method user should not see private issues with issues visibility set to own" do
     assert Member.find(7).roles.first.update_attribute(:issues_visibility, 'own')
     issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true)
     assert_nil Issue.where(:id => issue.id).visible(User.find(8)).first
     assert !issue.other_project_visible?(User.find(8))
   end
 
-  def test_other_project_visible_method_user_should_not_see_private_multiproject_issues_with_issues_visibility_set_to_default
+  it "should other project visible method user should not see private multiproject issues with issues visibility set to default" do
     assert Member.find(7).roles.first.update_attribute(:issues_visibility, 'default')
     issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true, project_ids: [2,5])
     refute_nil Issue.where(:id => issue.id).visible(User.find(8)).first
     assert !issue.other_project_visible?(User.find(8))
   end
 
-  def test_other_project_visible_method_member_should_not_see_private_multiproject_issues_with_issues_visibility_set_to_own
+  it "should other project visible method member should not see private multiproject issues with issues visibility set to own" do
     assert Member.find(7).roles.first.update_attribute(:issues_visibility, 'own')
     issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true, project_ids: [2,5])
     refute_nil Issue.where(:id => issue.id).visible(User.find(8)).first
     assert !issue.other_project_visible?(User.find(8))
   end
 
-  def test_other_project_visible_method_member_should_see_private_projects_issues_with_issues_visibility_set_to_all
+  it "should other project visible method member should see private projects issues with issues visibility set to all" do
     assert Member.find(7).roles.first.update_attribute(:issues_visibility, 'all')
     issue = Issue.generate!(:is_private => false, project: Project.find(2), projects: [Project.find(2),Project.find(5)]) # multiprojects issue
     refute_nil Issue.where(:id => issue.id).visible(User.find(8)).first
     assert issue.other_project_visible?(User.find(8))
   end
 
-  def test_visible_condition_when_there_are_authorized_projects
-    assert_include "issues_projects", Issue.visible_condition(User.find(4)) # should include issues_projects table name
+  it "should visible condition when there are authorized projects" do
+    Issue.visible_condition(User.find(4)) # should include issues_projects table name.should include("issues_projects")
   end
 
-  def test_visible_condition_when_there_are_no_authorized_projects
-    assert_not_include "issues_projects", Issue.visible_condition(User.anonymous) # should not include issues_projects table name
+  it "should visible condition when there are no authorized projects" do
+    expect("issues_projects").to_not include Issue.visible_condition(User.anonymous) # should not include issues_projects table name
   end
 
-  def test_core_visible_condition_when_there_are_no_authorized_projects
-    assert_not_include "issues_projects", Issue.visible_condition_without_multiproject_issues(User.find(4)) # should not include issues_projects table name
+  it "should core visible condition when there are no authorized projects" do
+    expect("issues_projects").to_not include Issue.visible_condition_without_multiproject_issues(User.find(4)) # should not include issues_projects table name
   end
 
-  def test_notified_users_from_other_projects
+  it "should notified users from other projects" do
     issue = Issue.find(4)
     notified_users_from_other_projects = issue.notified_users_from_other_projects
     refute_nil notified_users_from_other_projects
-    assert_not_includes notified_users_from_other_projects, User.anonymous
-    assert_includes notified_users_from_other_projects, User.find(1) # member of project 5 only, but admin
-    assert_not_includes notified_users_from_other_projects, User.find(3) # not a member
-    assert_includes notified_users_from_other_projects, User.find(4) # member of project 5 only, not admin
-    assert_not_includes notified_users_from_other_projects, User.find(8) # member of project 2 and 5 but mail_notification = only_my_events
+    expect(notified_users_from_other_projects).to_not include User.anonymous
+    expect(notified_users_from_other_projects).to include User.find(1) # member of project 5 only, but admin
+    expect(notified_users_from_other_projects).to_not include User.find(3) # not a member
+    expect(notified_users_from_other_projects).to include User.find(4) # member of project 5 only, not admin
+    expect(notified_users_from_other_projects).to_not include User.find(8) # member of project 2 and 5 but mail_notification = only_my_events
   end
 
-  def test_notified_users_from_main_project
+  it "should notified users from main project" do
     issue = Issue.find(4)
     notified_users_from_main_project = issue.notified_users_without_multiproject_issues
     refute_nil notified_users_from_main_project
-    assert_not_includes notified_users_from_main_project, User.anonymous
-    assert_not_includes notified_users_from_main_project, User.find(1) # member of project 5 only, but admin
-    assert_includes notified_users_from_main_project, User.find(2) # member of main project 2
-    assert_not_includes notified_users_from_main_project, User.find(3) # not a member
-    assert_not_includes notified_users_from_main_project, User.find(4) # member of project 5 only, not admin
-    assert_not_includes notified_users_from_main_project, User.find(8) # member of project 2 and 5 but mail_notification = only_my_events
+    expect(notified_users_from_main_project).to_not include User.anonymous
+    expect(notified_users_from_main_project).to_not include User.find(1) # member of project 5 only, but admin
+    expect(notified_users_from_main_project).to include User.find(2) # member of main project 2
+    expect(notified_users_from_main_project).to_not include User.find(3) # not a member
+    expect(notified_users_from_main_project).to_not include User.find(4) # member of project 5 only, not admin
+    expect(notified_users_from_main_project).to_not include User.find(8) # member of project 2 and 5 but mail_notification = only_my_events
   end
 
-  def test_notified_users_should_include_previous_assignee
+  it "should notified users should include previous assignee" do
     user = User.find(3)
     user.members.update_all ["mail_notification = ?", false]
     user.update_attribute :mail_notification, 'only_assigned'
 
     issue = Issue.find(2)
     issue.assigned_to = nil
-    assert_include user, issue.notified_users
+    expect(issue.notified_users).to include user
     issue.save!
     assert !issue.notified_users.include?(user)
   end
 
-  def test_notified_users_should_not_include_users_that_cannot_view_the_issue
+  it "should notified users should not include users that cannot view the issue" do
     issue = Issue.find(12)
     assert issue.notified_users.include?(issue.author)
     # copy the issue to a private project
@@ -244,7 +262,7 @@ class IssueMultiprojectsPatchTest < ActiveSupport::TestCase
     assert !copy.notified_users.include?(copy.author)
   end
 
-  def test_editable_allows_member_of_secondary_project_to_edit_issue
+  it "should editable allows member of secondary project to edit issue" do
     issue = Issue.find(4)
     issue.update_attribute(:answers_on_secondary_projects, true)
     user = User.find(4) #member of project(5)
@@ -254,7 +272,7 @@ class IssueMultiprojectsPatchTest < ActiveSupport::TestCase
     assert issue.safe_attribute_names(user).include?("notes")
   end
 
-  def test_editable_doesnt_allow_member_of_secondary_project_to_edit_issue_if_forbidden
+  it "should editable doesnt allow member of secondary project to edit issue if forbidden" do
     issue = Issue.find(4)
     issue.update_attribute(:answers_on_secondary_projects, false)
     user = User.find(4) #member of project(5)
