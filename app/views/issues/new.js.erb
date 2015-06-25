@@ -1,0 +1,23 @@
+var involved_project_ids = $('#issue_project_ids').val();
+if(involved_project_ids==null) {
+  involved_project_ids='';
+}
+
+/** Start Standard Redmine */
+replaceIssueFormWith('<%= escape_javascript(render :partial => 'form') %>');
+/** End Standard Redmine */
+
+$('#issue_project_ids').val(involved_project_ids);
+
+var htmlContent = "";
+$.each(involved_project_ids, function(key, name) {
+  htmlContent += " <span class=\"list_projects_names\">"+ $('#issue_project_ids option[value='+name+']').html().replace(/&nbsp;/g, '').replace("» ","") + "</span>";
+});
+$("#projects_form #list_of_projects_per_issue").html(htmlContent);
+if (htmlContent == ""){
+  $(".and_x_other_projects").css("display", "none");
+  $("#answers-on-secondary-projects").hide()
+} else{
+  $(".and_x_other_projects").css("display","inline");
+  $("#answers-on-secondary-projects").show()
+}

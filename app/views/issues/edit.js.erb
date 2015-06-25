@@ -4,11 +4,7 @@ if(involved_project_ids==null) {
 }
 
 /** Start Standard Redmine */
-<% if Redmine::VERSION.to_s >= "2.5.0" %>
-  replaceIssueFormWith('<%= escape_javascript(render :partial => 'form') %>');
-<% else #redmine 2.4.x or lower %>
-  $('#all_attributes').html('<%= escape_javascript(render :partial => 'form') %>');
-<% end %>
+replaceIssueFormWith('<%= escape_javascript(render :partial => 'form') %>');
 
 <% if User.current.allowed_to?(:log_time, @issue.project) %>
   $('#log_time').show();

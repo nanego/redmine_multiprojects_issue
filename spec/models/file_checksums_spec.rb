@@ -48,4 +48,12 @@ describe "FileChecksums" do
                        53ab195fad836aae2ad7f6aeb273ca17), "app/models/issue_query.rb"
   end
 
+  it "should core edit and new form js checksum" do
+    # "new.js.erb" and "edit.js.erb" are completely overridden
+    # and should be reviewed if these tests breaks
+    # 3.0.3 is ok
+    assert_checksum %w(c6f78d63d0c029a215c0c577ecc42f7f), "app/views/issues/new.js.erb"
+    assert_checksum %w(0a92d0609b883d43daf5e825bc08cb01), "app/views/issues/edit.js.erb"
+  end
+
 end
