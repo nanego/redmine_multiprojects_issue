@@ -6,6 +6,7 @@ ActionDispatch::Callbacks.to_prepare do
   require_dependency 'redmine_multiprojects_issue/issues_helper_patch'
   require_dependency 'redmine_multiprojects_issue/issues_controller_patch'
   require_dependency 'redmine_multiprojects_issue/query_patch'
+  require_dependency 'redmine_multiprojects_issue/queries_helper_patch'
   require_dependency 'redmine_multiprojects_issue/acts_as_attachable_patch'
 end
 
