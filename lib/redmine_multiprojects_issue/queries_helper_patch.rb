@@ -18,9 +18,8 @@ module QueriesHelper
   end
   unless instance_methods.include?(:csv_content_with_multiprojects_issues)
     def csv_content_with_multiprojects_issues(column, issue)
-      value = column.value_object(issue)
-      if value.kind_of? ActiveRecord::Associations::CollectionProxy
-        value = value.to_a
+      if column.name == :projects && column.value_object(issue).kind_of?(ActiveRecord::Associations::CollectionProxy)
+        value = column.value_object(issue).to_a
         value.collect {|v| csv_value(column, issue, v)}.compact.join(', ')
       else
         csv_content_without_multiprojects_issues(column, issue)
