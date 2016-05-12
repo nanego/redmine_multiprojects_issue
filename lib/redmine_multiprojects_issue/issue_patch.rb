@@ -1,6 +1,8 @@
 require_dependency 'issue'
 
-class Issue
+class Issue < ActiveRecord::Base
+
+  unloadable # Send unloadable so it will not be unloaded in development
 
   has_and_belongs_to_many :projects
   attr_accessor :assignable_projects #List related projects before save
