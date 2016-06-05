@@ -1,5 +1,5 @@
 # Portuguese Brazil strings go here for Rails i18n
-en:
+pt-BR:
   concerned_projects: "Projetos impactados"
   modify_projects: "Editar lista de projetos"
   select_none: "Nenhum"
