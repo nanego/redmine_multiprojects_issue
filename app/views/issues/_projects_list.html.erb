@@ -8,7 +8,7 @@
   <span id="list_of_projects_per_issue">
     <% issue_projects.each do |project| %>
       <% if allowed_projects.include?(project) %>
-        <%= content_tag("span", link_to(project.name.gsub(/ /,"&nbsp;").html_safe, project_issues_path(project)), class: "list_projects_names") %>
+        <%= content_tag("span", link_to(project.name.gsub(/ /,"&nbsp;").html_safe, project_issues_path(project))) %>
         <% nb_visible_projects += 1 %>
       <% else %>
         <% nb_other_projects += 1 %>

@@ -28,7 +28,7 @@ a.list_projects_names.current{
     font-weight: bold;
     display: inline-block;
     /* vertical-align: super; */
-    margin-top: 4px;
+    /* margin-top: 4px; */
 }
 
 .projects_container{
