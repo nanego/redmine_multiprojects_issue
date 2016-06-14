@@ -14,7 +14,7 @@ describe "FileChecksums" do
     # 2.5.1 and 2.5.2 are ok
     # 2.6.0 is ok
     # 3.0.3 and 3.1.0 are ok
-    # 3.1.1 and 3.2.0 is ok
+    # 3.1.1 and 3.2.x are ok
     assert_checksum %w(7265e9dcb488ac8ea89ed7c3c92c8c88
                        31b05314384ac3bbe273ae9a0b0f7e24
                        f93d75a3bb8f60360e957d9335c15f43
@@ -22,7 +22,8 @@ describe "FileChecksums" do
                        5c85983c6b8ddb52fe4656d8e5d2471c,
                        a5a2fa1156016e4380e63d9f75c3bd75,
                        157f0a0c68e90e302ae565ac3cdb2ed7,
-                       087c5c94f641196d8c6511a02fb630f6), "app/models/issue.rb"
+                       087c5c94f641196d8c6511a02fb630f6,
+                       fd68745c6510526da2b8a9f5bd90bf50), "app/models/issue.rb"
   end
 
   # tests have been added to the issue_helper_patch_test file, no need to check the checksum
@@ -40,7 +41,8 @@ describe "FileChecksums" do
                        cb76a735b8d9304cadf1fc40e641dc7e
                        5db60e7361522d102722fbcff95494e5
                        63238edafc1bf5c83ec3da125eb5b776
-                       7984916a8552543a898767f977efaa26), "app/models/query.rb"
+                       7984916a8552543a898767f977efaa26
+                       4df7fc5643d9d7ed3cd1b13ac3d040ba), "app/models/query.rb"
   end
 
   it "should core issue query model checksum" do
@@ -51,9 +53,10 @@ describe "FileChecksums" do
                        6c1ba80a5f4e22680ecb946a6509599a
                        683cedbb78c368325997a6fe11d27d5c
                        53ab195fad836aae2ad7f6aeb273ca17
-                       6a6600f344e389682a8d51a881e089b7,
-                       949d5cdd375d4247a061fb004d90a81f,
-                       404e39ee0c76ac64eb5eb429d2be99a7), "app/models/issue_query.rb"
+                       6a6600f344e389682a8d51a881e089b7
+                       949d5cdd375d4247a061fb004d90a81f
+                       404e39ee0c76ac64eb5eb429d2be99a7
+                       db85b87f2b4a770ee5b4657ec7e31e1a), "app/models/issue_query.rb"
   end
 
   it "should core edit and new form js checksum" do
