@@ -1,0 +1,18 @@
+# Simplified Chinese strings go here for Rails i18n
+zh:
+  concerned_projects: "关联项目"
+  modify_projects: "修改关联项目列表"
+  select_none: "全不选"
+  select_all: "全选"
+  Selection: "选择"
+  other: "其他"
+  project: "项目"
+  you_are_not_a_member: "您不是所选项目的成员。"
+  text_journal_projects_deleted: "项目已移除关联关系。"
+  text_journal_projects_added: "项目已添加关联关系。"
+  text_journal_project_deleted: "项目已移除关联关系"
+  text_journal_project_added: "项目已添加关联关系。"
+  label_hide_details: "隐藏"
+  field_projects: "关联项目"
+  field_answers_on_secondary_projects: "允许跨项目处理"
+  multiprojects_selection_available_custom_fields: "用于快速选择关联项目的自定义字段"
