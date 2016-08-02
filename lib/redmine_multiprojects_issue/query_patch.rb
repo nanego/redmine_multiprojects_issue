@@ -26,7 +26,8 @@ class IssueQuery < Query
         where(project_statement_without_multiproject_issues).  # bypass patched method
         where(options[:conditions]).
         includes(:project).
-        all
+        references(:project).
+        to_a
   rescue ::ActiveRecord::StatementInvalid => e
     raise StatementInvalid.new(e.message)
   end
