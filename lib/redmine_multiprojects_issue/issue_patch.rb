@@ -114,6 +114,18 @@ class Issue < ActiveRecord::Base
   end
   alias_method_chain :editable?, :secondary_projects
 
+  def user_tracker_permission_with_multiprojects?(user, permission)
+    if user_tracker_permission_without_multiprojects?(user, permission) == true
+      true
+    else
+      # Check roles permissions on other projects
+      projects.any?{|p|
+        user.roles_for_project(p).select {|r| r.has_permission?(permission)}.any? {|r| r.permissions_all_trackers?(permission) || r.permissions_tracker_ids?(permission, tracker_id)}
+      }
+    end
+  end
+  alias_method_chain :user_tracker_permission?, :multiprojects
+
   private
 
     def set_projects
