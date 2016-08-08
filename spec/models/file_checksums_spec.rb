@@ -24,7 +24,8 @@ describe "FileChecksums" do
                        157f0a0c68e90e302ae565ac3cdb2ed7
                        087c5c94f641196d8c6511a02fb630f6
                        fd68745c6510526da2b8a9f5bd90bf50
-                       fcefe3d136dc3f4d1d9b82d49b621a68), "app/models/issue.rb"
+                       fcefe3d136dc3f4d1d9b82d49b621a68
+                       652942758e94adab39756092fc56eb64), "app/models/issue.rb"
   end
 
   # tests have been added to the issue_helper_patch_test file, no need to check the checksum

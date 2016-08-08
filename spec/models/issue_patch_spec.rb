@@ -262,7 +262,7 @@ describe "IssueMultiprojectsPatch" do
     assert !copy.notified_users.include?(copy.author)
   end
 
-  it "should editable allows member of secondary project to edit issue" do
+  it "should user_tracker_permission? allows member of secondary project to edit issue" do
     issue = Issue.find(4)
     issue.update_attribute(:answers_on_secondary_projects, true)
     user = User.find(4) #member of project(5)
@@ -272,7 +272,7 @@ describe "IssueMultiprojectsPatch" do
     assert issue.safe_attribute_names(user).include?("notes")
   end
 
-  it "should editable doesnt allow member of secondary project to edit issue if forbidden" do
+  it "should user_tracker_permission? does NOT allow member of secondary project to edit issue if forbidden" do
     issue = Issue.find(4)
     issue.update_attribute(:answers_on_secondary_projects, false)
     user = User.find(4) #member of project(5)
