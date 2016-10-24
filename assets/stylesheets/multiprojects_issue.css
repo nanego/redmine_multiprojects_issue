@@ -24,7 +24,7 @@ a.list_projects_names.current{
 
 #label_concerned_projects{
     /* color: #666; */
-    width: 22%;
+    min-width: 175px;
     font-weight: bold;
     display: inline-block;
     /* vertical-align: super; */
