@@ -14,7 +14,7 @@ describe "FileChecksums" do
     # 2.5.1 and 2.5.2 are ok
     # 2.6.0 is ok
     # 3.0.3 and 3.1.0 are ok
-    # 3.1.1, 3.2.x, 3.3.0 are ok
+    # 3.1.1, 3.2.x, 3.3.x are ok
     assert_checksum %w(7265e9dcb488ac8ea89ed7c3c92c8c88
                        31b05314384ac3bbe273ae9a0b0f7e24
                        f93d75a3bb8f60360e957d9335c15f43
@@ -25,7 +25,8 @@ describe "FileChecksums" do
                        087c5c94f641196d8c6511a02fb630f6
                        fd68745c6510526da2b8a9f5bd90bf50
                        fcefe3d136dc3f4d1d9b82d49b621a68
-                       652942758e94adab39756092fc56eb64), "app/models/issue.rb"
+                       652942758e94adab39756092fc56eb64
+                       0c04b25c3da681e1c7f4fa1cac8401df), "app/models/issue.rb"
   end
 
   # tests have been added to the issue_helper_patch_test file, no need to check the checksum
@@ -45,7 +46,8 @@ describe "FileChecksums" do
                        63238edafc1bf5c83ec3da125eb5b776
                        7984916a8552543a898767f977efaa26
                        4df7fc5643d9d7ed3cd1b13ac3d040ba
-                       4578911937e52016a86fdc5b6e73b9ee), "app/models/query.rb"
+                       4578911937e52016a86fdc5b6e73b9ee
+                       9267617c77561572f7bba862d115cddb), "app/models/query.rb"
   end
 
   it "should core issue query model checksum" do
@@ -60,7 +62,8 @@ describe "FileChecksums" do
                        949d5cdd375d4247a061fb004d90a81f
                        404e39ee0c76ac64eb5eb429d2be99a7
                        db85b87f2b4a770ee5b4657ec7e31e1a
-                       4b5ef87d1f41f8aea8c06c4512bb480a), "app/models/issue_query.rb"
+                       4b5ef87d1f41f8aea8c06c4512bb480a
+                       8acf3f31dc750eb1eafc11773cd1710e), "app/models/issue_query.rb"
   end
 
   it "should core edit and new form js checksum" do
