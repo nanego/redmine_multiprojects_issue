@@ -99,8 +99,13 @@ class Issue < ActiveRecord::Base
       # - they are member and they have appropriate role
       # or
       # - they are member and they are admin
-      members = p.notified_users
-      notified = notified | (notified_by_role & members) | (User.where("admin = ?", true).all & members)
+      if p.module_enabled?("redmine_limited_visibility") && self.authorized_viewer_ids.present?
+        members = p.notified_users & self.involved_users(p)
+      else
+        members = p.notified_users
+      end
+
+      notified = notified | (notified_by_role & members) | (User.where("admin = ?", true).all & p.notified_users)
 
     end
     notified.compact
