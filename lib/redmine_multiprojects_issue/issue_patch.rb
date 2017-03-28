@@ -99,7 +99,7 @@ class Issue < ActiveRecord::Base
       # - they are member and they have appropriate role
       # or
       # - they are member and they are admin
-      if p.module_enabled?("redmine_limited_visibility") && self.authorized_viewer_ids.present?
+      if p.module_enabled?("limited_visibility") && self.authorized_viewer_ids.present?
         members = p.notified_users & self.involved_users(p)
       else
         members = p.notified_users
