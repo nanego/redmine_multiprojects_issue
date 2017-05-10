@@ -22,7 +22,7 @@ a.list_projects_names.current{
     margin: 4px 0 0 7px;
 }
 
-#label_concerned_projects{
+#label_related_projects{
     /* color: #666; */
     min-width: 175px;
     font-weight: bold;

@@ -1,6 +1,6 @@
 # Portuguese Brazil strings go here for Rails i18n
 pt-BR:
-  concerned_projects: "Projetos impactados"
+  related_projects: "Projetos impactados"
   modify_projects: "Editar lista de projetos"
   select_none: "Nenhum"
   select_all: "Todos"
@@ -13,6 +13,6 @@ pt-BR:
   text_journal_project_deleted: "Projetos deletados"
   text_journal_project_added: "Projetos adicionados"
   label_hide_details: "esconder"
-  field_projects: "Projetos impactados"
+  field_related_projects: "Projetos impactados"
   field_answers_on_secondary_projects: "Respostas"
   multiprojects_selection_available_custom_fields: "Campos personalizados disponíveis para selecionar rapidamente projetos"

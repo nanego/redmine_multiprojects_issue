@@ -1,6 +1,6 @@
 # Russian strings go here for Rails i18n
 ru:
-  concerned_projects: "Затрагиваемые проекты"
+  related_projects: "Затрагиваемые проекты"
   modify_projects: "Редактировать список проектов"
   select_none: "Ни одного"
   select_all: "Все"
@@ -13,5 +13,5 @@ ru:
   text_journal_project_deleted: "проект удален"
   text_journal_project_added: "проект добавлен"
   label_hide_details: "скрыть"
-  field_projects: "Затрагиваемые проекты"
+  field_related_projects: "Затрагиваемые проекты"
   multiprojects_selection_available_custom_fields: "Доступные настраиваемые поля для быстрого выбора проектов"

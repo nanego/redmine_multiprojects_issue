@@ -3,7 +3,7 @@ Redmine Multiprojects Issue plugin
 
 This redmine plugin allows you to specify more than one project per issue.
 
-Cross-projects issues appear in all concerned projects. They can be viewed by every users who have enough permission on at least one impacted project, but can be updated only by users who have enough permissions on the main project (the project used to create the issue).
+Cross-projects issues appear in all related projects. They can be viewed by every users who have enough permission on at least one impacted project, but can be updated only by users who have enough permissions on the main project (the project used to create the issue).
 
 Screenshots
 ------------

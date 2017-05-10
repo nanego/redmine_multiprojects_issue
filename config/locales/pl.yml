@@ -1,6 +1,6 @@
 # English strings go here for Rails i18n
 pl:
-  concerned_projects: "Powiązane projekty"
+  related_projects: "Powiązane projekty"
   modify_projects: "Edytuj listę projektów"
   select_none: "Żaden"
   select_all: "Wszystkie"
@@ -13,5 +13,5 @@ pl:
   text_journal_project_deleted: "usunięty projekt"
   text_journal_project_added: "dodany projekt"
   label_hide_details: "ukryj"
-  field_projects: "Projekty powiązane"
+  field_related_projects: "Projekty powiązane"
   multiprojects_selection_available_custom_fields: "Wybierz Pola Niestandardowe aby móc skorzystać z szybkiego wybierania projektów"
