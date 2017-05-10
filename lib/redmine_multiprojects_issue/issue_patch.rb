@@ -2,6 +2,8 @@ require_dependency 'issue'
 
 class Issue < ActiveRecord::Base
 
+  include ApplicationHelper
+
   unloadable # Send unloadable so it will not be unloaded in development
 
   has_and_belongs_to_many :projects
@@ -122,6 +124,24 @@ class Issue < ActiveRecord::Base
     end
   end
   alias_method_chain :user_tracker_permission?, :multiprojects
+
+  def related_projects
+    RelatedProjects.new(self, projects)
+  end
+
+  # Class used to represent the related projects of an issue
+  class RelatedProjects < Array
+    include Redmine::I18n
+
+    def initialize(issue, *args)
+      @issue = issue
+      super(*args)
+    end
+
+    def to_s(*args)
+      map {|v| v.to_s}.join(', ')
+    end
+  end
 
   private
 
