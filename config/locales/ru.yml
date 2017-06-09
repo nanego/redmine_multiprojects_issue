@@ -14,4 +14,5 @@ ru:
   text_journal_project_added: "проект добавлен"
   label_hide_details: "скрыть"
   field_related_projects: "Затрагиваемые проекты"
+  field_answers_on_secondary_projects: "Ответы разрешены"
   multiprojects_selection_available_custom_fields: "Доступные настраиваемые поля для быстрого выбора проектов"
