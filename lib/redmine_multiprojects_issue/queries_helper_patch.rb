@@ -5,17 +5,18 @@ module QueriesHelper
 
   # These methods convert ActiveRecord_Associations to arrays when necessary
   unless instance_methods.include?(:column_content_with_multiprojects_issues)
-    def column_content_with_multiprojects_issues(column, issue)
-      value = column.value_object(issue)
-      if value.kind_of? ActiveRecord::Associations::CollectionProxy
+    def column_content_with_multiprojects_issues(column, item)
+      value = column.value_object(item)
+      if column.name == :related_projects && value.kind_of?(ActiveRecord::Associations::CollectionProxy)
         value = value.to_a
-        value.collect {|v| column_value(column, issue, v)}.compact.join(', ').html_safe
+        value.collect {|v| column_value(column, item, v)}.compact.join(', ').html_safe
       else
-        column_content_without_multiprojects_issues(column, issue)
+        column_content_without_multiprojects_issues(column, item)
       end
     end
     alias_method_chain :column_content, :multiprojects_issues
   end
+
   unless instance_methods.include?(:csv_content_with_multiprojects_issues)
     def csv_content_with_multiprojects_issues(column, issue)
       if column.name == :related_projects && column.value_object(issue).kind_of?(ActiveRecord::Associations::CollectionProxy)
