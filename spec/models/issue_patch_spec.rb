@@ -64,28 +64,28 @@ describe "IssueMultiprojectsPatch" do
 
   it "should anonymous should not see private issues with issues visibility set to default" do
     assert Role.anonymous.update_attribute(:issues_visibility, 'default')
-    issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true)
+    issue = Issue.generate!(:author => User.anonymous, :assigned_to_id => User.anonymous, :is_private => true)
     assert_nil Issue.where(:id => issue.id).visible(User.anonymous).first
     assert !issue.visible?(User.anonymous)
   end
 
   it "should anonymous should not see private issues with issues visibility set to own" do
     assert Role.anonymous.update_attribute(:issues_visibility, 'own')
-    issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true)
+    issue = Issue.generate!(:author => User.anonymous, :assigned_to_id => User.anonymous, :is_private => true)
     assert_nil Issue.where(:id => issue.id).visible(User.anonymous).first
     assert !issue.visible?(User.anonymous)
   end
 
   it "should anonymous should not see private multiproject issues with issues visibility set to default" do
     assert Role.anonymous.update_attribute(:issues_visibility, 'default')
-    issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true, project_ids: [2,5])
+    issue = Issue.generate!(:author => User.anonymous, :assigned_to_id => User.anonymous, :is_private => true, project_ids: [2,5])
     assert_nil Issue.where(:id => issue.id).visible(User.anonymous).first
     assert !issue.visible?(User.anonymous)
   end
 
   it "should anonymous should not see private multiproject issues with issues visibility set to own" do
     assert Role.anonymous.update_attribute(:issues_visibility, 'own')
-    issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true, project_ids: [2,5])
+    issue = Issue.generate!(:author => User.anonymous, :assigned_to_id => User.anonymous, :is_private => true, project_ids: [2,5])
     assert_nil Issue.where(:id => issue.id).visible(User.anonymous).first
     assert !issue.visible?(User.anonymous)
   end
@@ -122,28 +122,28 @@ describe "IssueMultiprojectsPatch" do
 
   it "should core visible method anonymous should not see private issues with issues visibility set to default" do
     assert Role.anonymous.update_attribute(:issues_visibility, 'default')
-    issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true)
+    issue = Issue.generate!(:author => User.anonymous, :assigned_to_id => User.anonymous, :is_private => true)
     assert_nil Issue.where(:id => issue.id).visible(User.anonymous).first
     assert !issue.visible_without_multiproject_issues?(User.anonymous)
   end
 
   it "should core visible method anonymous should not see private issues with issues visibility set to own" do
     assert Role.anonymous.update_attribute(:issues_visibility, 'own')
-    issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true)
+    issue = Issue.generate!(:author => User.anonymous, :assigned_to_id => User.anonymous, :is_private => true)
     assert_nil Issue.where(:id => issue.id).visible(User.anonymous).first
     assert !issue.visible_without_multiproject_issues?(User.anonymous)
   end
 
   it "should core visible method anonymous should not see private multiproject issues with issues visibility set to default" do
     assert Role.anonymous.update_attribute(:issues_visibility, 'default')
-    issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true, project_ids: [2,5])
+    issue = Issue.generate!(:author => User.anonymous, :assigned_to_id => User.anonymous, :is_private => true, project_ids: [2,5])
     assert_nil Issue.where(:id => issue.id).visible(User.anonymous).first
     assert !issue.visible_without_multiproject_issues?(User.anonymous)
   end
 
   it "should core visible method anonymous should not see private multiproject issues with issues visibility set to own" do
     assert Role.anonymous.update_attribute(:issues_visibility, 'own')
-    issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true, project_ids: [2,5])
+    issue = Issue.generate!(:author => User.anonymous, :assigned_to_id => User.anonymous, :is_private => true, project_ids: [2,5])
     assert_nil Issue.where(:id => issue.id).visible(User.anonymous).first
     assert !issue.visible_without_multiproject_issues?(User.anonymous)
   end
@@ -173,28 +173,28 @@ describe "IssueMultiprojectsPatch" do
 
   it "should other project visible method user should not see private issues with issues visibility set to default" do
     assert Member.find(7).roles.first.update_attribute(:issues_visibility, 'default')
-    issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true)
+    issue = Issue.generate!(:author => User.anonymous, :assigned_to_id => User.anonymous, :is_private => true)
     assert_nil Issue.where(:id => issue.id).visible(User.find(8)).first
     assert !issue.other_project_visible?(User.find(8))
   end
 
   it "should other project visible method user should not see private issues with issues visibility set to own" do
     assert Member.find(7).roles.first.update_attribute(:issues_visibility, 'own')
-    issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true)
+    issue = Issue.generate!(:author => User.anonymous, :assigned_to_id => User.anonymous, :is_private => true)
     assert_nil Issue.where(:id => issue.id).visible(User.find(8)).first
     assert !issue.other_project_visible?(User.find(8))
   end
 
   it "should other project visible method user should not see private multiproject issues with issues visibility set to default" do
     assert Member.find(7).roles.first.update_attribute(:issues_visibility, 'default')
-    issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true, project_ids: [2,5])
+    issue = Issue.generate!(:author => User.anonymous, :assigned_to_id => User.anonymous, :is_private => true, project_ids: [2,5])
     refute_nil Issue.where(:id => issue.id).visible(User.find(8)).first
     assert !issue.other_project_visible?(User.find(8))
   end
 
   it "should other project visible method member should not see private multiproject issues with issues visibility set to own" do
     assert Member.find(7).roles.first.update_attribute(:issues_visibility, 'own')
-    issue = Issue.generate!(:author => User.anonymous, :assigned_to => User.anonymous, :is_private => true, project_ids: [2,5])
+    issue = Issue.generate!(:author => User.anonymous, :assigned_to_id => User.anonymous, :is_private => true, project_ids: [2,5])
     refute_nil Issue.where(:id => issue.id).visible(User.find(8)).first
     assert !issue.other_project_visible?(User.find(8))
   end
@@ -247,7 +247,7 @@ describe "IssueMultiprojectsPatch" do
     user.update_attribute :mail_notification, 'only_assigned'
 
     issue = Issue.find(2)
-    issue.assigned_to = nil
+    issue.assigned_to_id = nil
     expect(issue.notified_users).to include user
     issue.save!
     assert !issue.notified_users.include?(user)

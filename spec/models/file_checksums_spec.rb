@@ -14,7 +14,7 @@ describe "FileChecksums" do
     # 2.5.1 and 2.5.2 are ok
     # 2.6.0 is ok
     # 3.0.3 and 3.1.0 are ok
-    # 3.1.1, 3.2.x, 3.3.x are ok
+    # 3.1.1, 3.2.x, 3.3.x, 3.4.x are ok
     assert_checksum %w(7265e9dcb488ac8ea89ed7c3c92c8c88
                        31b05314384ac3bbe273ae9a0b0f7e24
                        f93d75a3bb8f60360e957d9335c15f43
@@ -27,7 +27,8 @@ describe "FileChecksums" do
                        fcefe3d136dc3f4d1d9b82d49b621a68
                        652942758e94adab39756092fc56eb64
                        0c04b25c3da681e1c7f4fa1cac8401df
-                       c36774d42a066d996023da0a7198b413), "app/models/issue.rb"
+                       c36774d42a066d996023da0a7198b413
+                       a61cfdebe27ce348bd03272d82f77d6d), "app/models/issue.rb"
   end
 
   # tests have been added to the issue_helper_patch_test file, no need to check the checksum
@@ -39,7 +40,7 @@ describe "FileChecksums" do
   it "should core query model checksum" do
     # "project_statement" method is overridden
     # and should be reviewed if this test breaks
-    # 2.3.3, 2.5.1, 2.6.0, 3.0.3, 3.1.0, 3.2.0, 3.3.x are ok
+    # 2.3.3, 2.5.1, 2.6.0, 3.0.3, 3.1.0, 3.2.0, 3.3.x, 3.4.x are ok
     assert_checksum %w(4c224b8cf3777fe2708139cfa77684eb
                        01fe00cf132446c39f0485148ddaf8f7
                        cb76a735b8d9304cadf1fc40e641dc7e
@@ -49,7 +50,8 @@ describe "FileChecksums" do
                        4df7fc5643d9d7ed3cd1b13ac3d040ba
                        4578911937e52016a86fdc5b6e73b9ee
                        9267617c77561572f7bba862d115cddb
-                       fc595145ab400cac5e333f880d29c1ba), "app/models/query.rb"
+                       fc595145ab400cac5e333f880d29c1ba
+                       a1c2519e9bae097b5659adf9338ba7d0), "app/models/query.rb"
   end
 
   it "should core issue query model checksum" do
@@ -66,15 +68,16 @@ describe "FileChecksums" do
                        db85b87f2b4a770ee5b4657ec7e31e1a
                        4b5ef87d1f41f8aea8c06c4512bb480a
                        8acf3f31dc750eb1eafc11773cd1710e
-                       f0a72875ab85e22ae4acfac4fb3c0ae0), "app/models/issue_query.rb"
+                       f0a72875ab85e22ae4acfac4fb3c0ae0
+                       ee7b5ecc7f3b4b71c82f407a5c4ade48), "app/models/issue_query.rb"
   end
 
   it "should core edit and new form js checksum" do
     # "new.js.erb" and "edit.js.erb" are completely overridden
     # and should be reviewed if these tests breaks
-    # 3.0.3 and 3.2.0 are ok
-    assert_checksum %w(c6f78d63d0c029a215c0c577ecc42f7f 4ee0634707b28d83f3e41449c6d1cd21), "app/views/issues/new.js.erb"
-    assert_checksum %w(0a92d0609b883d43daf5e825bc08cb01 2ca65dcbd64f6047fe81b4d195ce5b21), "app/views/issues/edit.js.erb"
+    # 3.4.x is ok
+    assert_checksum %w(34e85ae56e20632f4d87b1bb19acee12), "app/views/issues/new.js.erb"
+    assert_checksum %w(0a92d0609b883d43daf5e825bc08cb01), "app/views/issues/edit.js.erb"
   end
 
 end

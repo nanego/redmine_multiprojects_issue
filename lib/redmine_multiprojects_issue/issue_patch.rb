@@ -26,20 +26,24 @@ class Issue < ActiveRecord::Base
     other_projects = self.projects - [self.project]
     visible_projects = other_projects.detect do |p|
       (usr || User.current).allowed_to?(:view_issues, p) do |role, user|
-        if user.logged?
+        visible = if user.logged?
           case role.issues_visibility
-            when 'all'
-              true
-            when 'default'
-              !self.is_private? || (self.author == user || user.is_or_belongs_to?(assigned_to))
-            when 'own'
-              self.author == user || user.is_or_belongs_to?(assigned_to)
-            else
-              false
+          when 'all'
+            true
+          when 'default'
+            !self.is_private? || (self.author == user || user.is_or_belongs_to?(assigned_to))
+          when 'own'
+            self.author == user || user.is_or_belongs_to?(assigned_to)
+          else
+            false
           end
         else
           !self.is_private?
         end
+        unless role.permissions_all_trackers?(:view_issues)
+          visible &&= role.permissions_tracker_ids?(:view_issues, tracker_id)
+        end
+        visible
       end
     end
     visible_projects.present?
