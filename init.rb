@@ -20,4 +20,7 @@ Redmine::Plugin.register :redmine_multiprojects_issue do
   requires_redmine_plugin :redmine_base_deface, :version_or_higher => '0.0.1'
   settings :default => { 'custom_fields' => []},
            :partial => 'settings/redmine_plugin_multiprojects_issue_settings'
+   project_module :issue_tracking do
+			permission :edit_multiprojects_issue, {}    
+   end
 end

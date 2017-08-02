@@ -1,3 +1,4 @@
+<% if User.current.allowed_to?(:edit_multiprojects_issue, @issue.project) %>
 <p id="projects_form">
   <% select_options = project_tree_options_for_select((@issue.allowed_target_projects|@issue.projects) - [@issue.project], :selected => [@issue.project]|@issue.projects) %>
   <%= f.select :project_ids, select_options, {:required => true, :label => l("related_projects")},
@@ -17,3 +18,4 @@
     $(this).attr('href', $(this).attr('href') + sep + 'project_ids=' + ids );
   });
 </script>
+<% end %>
