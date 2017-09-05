@@ -69,7 +69,7 @@ describe "FileChecksums" do
                        4b5ef87d1f41f8aea8c06c4512bb480a
                        8acf3f31dc750eb1eafc11773cd1710e
                        f0a72875ab85e22ae4acfac4fb3c0ae0
-                       ee7b5ecc7f3b4b71c82f407a5c4ade48), "app/models/issue_query.rb"
+                       fa1661f7ae3af1f40e9f58cbf1c5265c), "app/models/issue_query.rb"
   end
 
   it "should core edit and new form js checksum" do
