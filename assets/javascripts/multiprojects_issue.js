@@ -35,28 +35,33 @@ $(document).ready(function(){
     select_filter_values(event){
       const select_filters_element = event.target.previousElementSibling;
       const field = select_filters_element.value;
-      const value = event.target.value;
+      const values = getSelectedValues(event.target);
       if(isInteger(field)){
-        this.select_from_custom_field(event, field, value);
+        this.select_from_custom_field(event, field, values);
       }
     }
 
-    select_from_custom_field(event, id, value) {
+    select_from_custom_field(event, field_id, values) {
       event.preventDefault();
       this.select_none(event);
+      for (var i = 0, len = values.length; i < len; i++) {
+        this.check_box(field_id, values[i]);
+      }
+    }
+
+    check_box(field, value){
       if(exists(value)){
         //build a selector ; as we now accept "array" values, we must match foo OR *,foo OR *,foo,* OR foo,*...
         var selectors, selector;
         selectors = [ "='"+value+"'", "^='"+value+",'", "$=',"+value+"'", "*=',"+value+",'" ];
         selector = $.map(selectors, function(e) {
-          return "input:checkbox[name='project_ids[]']:checkbox[data-"+id+e+"]"
+          return "input:checkbox[name='project_ids[]']:checkbox[data-"+field+e+"]"
         }).join(", ");
         //for each matching value, select the checkbox
         $(selector).each(function() {
           $(this).prop("checked","checked") ;
         });
       }
-
     }
 
     select_all(event){

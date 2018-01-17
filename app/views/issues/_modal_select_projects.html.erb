@@ -47,11 +47,11 @@
   <%= link_to l("select_none"), '#', id: "link_select_all", :data => { :action => 'click->projects-selection#select_none' } %>
   |
   <%= link_to l("advanced_selection"), '#', id: "link_advanced_selection", :data => { :action => 'click->projects-selection#toggle_advanced_selection' } %>
-    <span class="advanced_selection hidden" data-target="projects-selection.filters">
+    <div class="advanced_selection hidden" data-target="projects-selection.filters">
       <span>
         <%= select_tag 'filter_name',
                        options_for_select(custom_fields.map{|cf| [cf.name, cf.id] }),
-                       :prompt=>"Select a filter",
+                       :prompt=>l("select_filter"),
                        :id => "select_filter",
                        :class => "select_box_custom_field_value",
                        :data => {
@@ -59,21 +59,20 @@
                        }
         %>
         <%= select_tag 'filter_value',
-                       options_for_select(custom_fields.map{|cf| [cf.name, cf.id] }),
-                       :prompt=>"Select a value",
+                       '',
                        :id => "select_values",
+                       :multiple => true,
                        :data => {
                          action: 'change->projects-selection#select_filter_values'
                        }
         %>
       </span>
-    </span>
-  <div>
+    </div>
+  <div style="display: none;">
     <% custom_fields.each do |field| %>
       <%= select_tag field.id,
                      options_for_select(options_for_selects[field.id]),
                      :id => "select_#{field.id}",
-                     :prompt=>"Select a value",
                      :data => {
                        target: "projects-selection.select_for_#{field.id}"
                      }

@@ -16,3 +16,4 @@ en:
   field_related_projects: "Related projects"
   field_answers_on_secondary_projects: "Answers allowed"
   multiprojects_selection_available_custom_fields: "Available custom fields to quickly select projects"
+  select_filter: "Select a filter"
