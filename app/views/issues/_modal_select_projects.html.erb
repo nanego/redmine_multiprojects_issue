@@ -10,7 +10,7 @@
    custom_values = custom_values_by_projects(allowed_projects, custom_fields)
    options_for_selects = {}
    custom_fields.each do |field|
-     options_for_selects.merge!(field.name.parameterize => [])
+     options_for_selects.merge!(field.id => [])
    end
 
    nested_projects_list = render_project_nested_lists(allowed_projects|issue_projects) do |project|
@@ -19,9 +19,9 @@
        custom_fields.each do |f|
          value = custom_values[project.id][f.id]
          value = value.join(",") if value.is_a?(Array)
-         custom_fields_data.merge!(f.name.parameterize => value)
+         custom_fields_data.merge!(f.id => value)
          value.split(",").each do |val|
-           options_for_selects[f.name.parameterize] << val unless options_for_selects[f.name.parameterize].include?(val) || val.blank?
+           options_for_selects[f.id] << val unless options_for_selects[f.id].include?(val) || val.blank?
          end if value.present?
        end
      end
@@ -38,17 +38,48 @@
    end
 %>
 
-  <h3 class="title"><%=l(:field_project).pluralize%></h3>
+<h3 class="title"><%=l(:field_project).pluralize%></h3>
 
-  <div class="actions_links">
+<div class="actions_links" data-controller="projects-selection">
   <%= l("Selection") %> :
-  <%= link_to l("select_all"), '#', id: "link_select_all", :onclick=> "select_all(event)" %>
+  <%= link_to l("select_all"), '#', id: "link_select_all", :data => { :action => 'click->projects-selection#select_all' } %>
   |
-  <%= link_to l("select_none"), '#', id: "link_select_all", :onclick=> "select_none(event)" %>
-  <% custom_fields.each do |field| %>
-    |
-    <%= select_tag field.name.parameterize, options_for_select(options_for_selects[field.name.parameterize]), :prompt=>field.name, :id => "select_#{field.name.parameterize}", :class => "select_box_custom_field_value", :onchange=> "select_from_custom_field(event, '#{field.name.parameterize}')" %>
-  <% end %>
+  <%= link_to l("select_none"), '#', id: "link_select_all", :data => { :action => 'click->projects-selection#select_none' } %>
+  |
+  <%= link_to l("advanced_selection"), '#', id: "link_advanced_selection", :data => { :action => 'click->projects-selection#toggle_advanced_selection' } %>
+    <span class="advanced_selection hidden" data-target="projects-selection.filters">
+      <span>
+        <%= select_tag 'filter_name',
+                       options_for_select(custom_fields.map{|cf| [cf.name, cf.id] }),
+                       :prompt=>"Select a filter",
+                       :id => "select_filter",
+                       :class => "select_box_custom_field_value",
+                       :data => {
+                         action: 'change->projects-selection#select_filter'
+                       }
+        %>
+        <%= select_tag 'filter_value',
+                       options_for_select(custom_fields.map{|cf| [cf.name, cf.id] }),
+                       :prompt=>"Select a value",
+                       :id => "select_values",
+                       :data => {
+                         action: 'change->projects-selection#select_filter_values'
+                       }
+        %>
+      </span>
+    </span>
+  <div>
+    <% custom_fields.each do |field| %>
+      <%= select_tag field.id,
+                     options_for_select(options_for_selects[field.id]),
+                     :id => "select_#{field.id}",
+                     :prompt=>"Select a value",
+                     :data => {
+                       target: "projects-selection.select_for_#{field.id}"
+                     }
+        %>
+    <% end %>
+  </div>
 </div>
 
 <div class="projects_container">
@@ -83,39 +114,6 @@
       $(".and_x_other_projects").css("display","inline");
       $("#answers-on-secondary-projects").show()
     }
-  }
-
-  function select_all(event){
-    event.preventDefault();
-    $("input:checkbox[name='project_ids[]']").each(function()
-    {
-      $(this).attr("checked","checked") ;
-    });
-  }
-
-  function select_none(event){
-    event.preventDefault();
-    $("input:checkbox[name='project_ids[]']:checked:not(.inactive)").each(function()
-    {
-      $(this).attr("checked",false) ;
-    });
-  }
-
-  function select_from_custom_field(event, id) {
-    event.preventDefault();
-    select_none(event);
-    //build a selector ; as we now accept "array" values, we must match foo OR *,foo OR *,foo,* OR foo,*...
-    var selectors, selector, val
-    val = $("#select_"+id).val()
-    selectors = [ "='"+val+"'", "^='"+val+",'", "$=',"+val+"'", "*=',"+val+",'" ]
-    selector = $.map(selectors, function(e) {
-      return "input:checkbox[name='project_ids[]']:checkbox[data-"+id+e+"]"
-    }).join(", ")
-    //for each matching value, select the checkbox
-    $(selector).each(function() {
-      $(this).attr("checked","checked") ;
-    });
-    $(".select_box_custom_field_value").prop('selectedIndex',0);
   }
 
 </script>

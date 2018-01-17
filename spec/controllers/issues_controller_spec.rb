@@ -153,7 +153,7 @@ describe IssuesController, type: :controller do
         }
       end
     end
-    expect(Issue.find(1).project_ids).to eq new_projects_ids
+    expect(Issue.find(1).project_ids.sort).to eq new_projects_ids
   end
 
   it "should put update should NOT create journals and journal details if only main project is added to projects" do

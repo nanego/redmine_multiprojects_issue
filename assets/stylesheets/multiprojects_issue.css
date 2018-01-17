@@ -88,3 +88,7 @@ td.projects{
 .load-modal-projects-selection {
   line-height:2em;
 }
+
+.actions_links .advanced_selection.hidden {
+    display: none;
+}
