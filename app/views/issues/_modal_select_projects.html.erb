@@ -31,7 +31,7 @@
            project.id,
            @issue != nil && issue_projects.include?(project),
            disabled: allowed_projects.include?(project) ? false : true,
-           :class => ("inactive" unless allowed_projects.include?(project)),
+           :class => "nested_project_#{project.id} #{"inactive" unless allowed_projects.include?(project)}",
            data: custom_fields_data
        ) + ' ' + h(project.name), :class => ("inactive" unless allowed_projects.include?(project))
      )
@@ -47,27 +47,27 @@
   <%= link_to l("select_none"), '#', id: "link_select_all", :data => { :action => 'click->projects-selection#select_none' } %>
   |
   <%= link_to l("advanced_selection"), '#', id: "link_advanced_selection", :data => { :action => 'click->projects-selection#toggle_advanced_selection' } %>
-    <div class="advanced_selection hidden" data-target="projects-selection.filters">
-      <span>
-        <%= select_tag 'filter_name',
-                       options_for_select(custom_fields.map{|cf| [cf.name, cf.id] }),
-                       :prompt=>l("select_filter"),
-                       :id => "select_filter",
-                       :class => "select_box_custom_field_value",
-                       :data => {
-                         action: 'change->projects-selection#select_filter'
-                       }
-        %>
-        <%= select_tag 'filter_value',
-                       '',
-                       :id => "select_values",
-                       :multiple => true,
-                       :data => {
-                         action: 'change->projects-selection#select_filter_values'
-                       }
-        %>
-      </span>
+  <div class="advanced_selection hidden" data-target="projects-selection.filters">
+    <div data-target="projects-selection.filter" class="first">
+      <%= select_tag 'filter_name',
+                     options_for_select(custom_fields.map{|cf| [cf.name, cf.id] }),
+                     :prompt=>l("select_filter"),
+                     :id => "select_filter",
+                     :class => "select_box_custom_field_value",
+                     :data => {
+                       action: 'change->projects-selection#select_filter'
+                     } %>
+      <%= select_tag 'filter_value',
+                     '',
+                     :id => "select_values",
+                     :multiple => true,
+                     :data => {
+                       action: 'change->projects-selection#select_filter_values'
+                     } %>
+      <%= link_to '(supprimer)', '#', class: 'hidden-if-first', data: {action: 'click->projects-selection#remove_filter'} %>
     </div>
+    <%= link_to '+ Ajouter un filtre', '#', data: {action: 'click->projects-selection#add_filter'} %>
+  </div>
   <div style="display: none;">
     <% custom_fields.each do |field| %>
       <%= select_tag field.id,

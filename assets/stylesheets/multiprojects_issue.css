@@ -92,3 +92,7 @@ td.projects{
 .actions_links .advanced_selection.hidden {
     display: none;
 }
+
+.first .hidden-if-first{
+    display: none;
+}
