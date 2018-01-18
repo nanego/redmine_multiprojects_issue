@@ -53,23 +53,29 @@ $(document).ready(function(){
     select_from_filters(filters) {
       console.log(filters);
       const _this = this;
-      let checked_boxes_per_field = [];
+      let checked_boxes_per_field = {};
+
+      // Union of results for each filter
       Object.keys(filters).map(function(field, index) {
+        checked_boxes_per_field[field] = []
         var values = filters[field];
         for (var i = 0, len = values.length; i < len; i++) {
-          checked_boxes_per_field.push(_this.checked_boxes(field, values[i]));
+          checked_boxes_per_field[field] = [...new Set([...checked_boxes_per_field[field], ..._this.checked_boxes(field, values[i])])];
         }
       });
-      log('checked_boxes_per_field lenght', checked_boxes_per_field.length);
-      let final_checked_boxes = checked_boxes_per_field[0];
-      for (var i = 1, len = checked_boxes_per_field.length; i < len; i++) {
-        final_checked_boxes = final_checked_boxes.filter((n) => checked_boxes_per_field[i].includes(n))
-      }
 
-      console.log(final_checked_boxes);
+      // Intersection of results between filters
+      let final_checked_boxes;
+      Object.keys(checked_boxes_per_field).map(function(field, index) {
+        if(index==0){
+          final_checked_boxes = checked_boxes_per_field[field];
+        }else{
+          final_checked_boxes = final_checked_boxes.filter((n) => checked_boxes_per_field[field].includes(n))
+        }
+      });
 
       log('final_checked_boxes lenght', final_checked_boxes.length);
-
+      
       for (var i = 0, len = final_checked_boxes.length; i < len; i++) {
         $('.nested_project_'+final_checked_boxes[i]).prop("checked","checked");
       }
@@ -89,8 +95,6 @@ $(document).ready(function(){
           checked_boxes.push($(this).val());
         });
       }
-      log('011 checked_boxes lenght', checked_boxes.length);
-      console.log(checked_boxes);
       return checked_boxes;
     }
 
