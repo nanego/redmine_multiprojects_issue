@@ -47,6 +47,9 @@
   <%= link_to l("select_none"), '#', id: "link_select_all", :data => { :action => 'click->projects-selection#select_none' } %>
   |
   <%= link_to l("advanced_selection"), '#', id: "link_advanced_selection", :data => { :action => 'click->projects-selection#toggle_advanced_selection' } %>
+  -
+  <span><%= l("selected_projects") %>:</span><span id="selection_counter" data-target="projects-selection.counter"></span><span> (<%= l("main_project_included") %>)</span>
+
   <div class="advanced_selection hidden" data-target="projects-selection.filters">
     <div data-target="projects-selection.filter" class="first">
       <%= select_tag 'filter_name',
@@ -64,9 +67,9 @@
                      :data => {
                        action: 'change->projects-selection#select_filter_values'
                      } %>
-      <%= link_to '(supprimer)', '#', class: 'hidden-if-first', data: {action: 'click->projects-selection#remove_filter'} %>
+      <%= link_to "(#{l('button_delete')})", '#', class: 'hidden-if-first', data: {action: 'click->projects-selection#remove_filter'} %>
     </div>
-    <%= link_to '+ Ajouter un filtre', '#', data: {action: 'click->projects-selection#add_filter'} %>
+    <%= link_to "+ #{l('add_a_filter')}", '#', data: {action: 'click->projects-selection#add_filter'} %>
   </div>
   <div style="display: none;">
     <% custom_fields.each do |field| %>
@@ -114,5 +117,7 @@
       $("#answers-on-secondary-projects").show()
     }
   }
+
+  update_checked_boxes_counter();
 
 </script>

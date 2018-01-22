@@ -24,7 +24,9 @@ Note that this plugin now depends on:
 * **redmine_base_deface** which can be found [here](https://github.com/jbbarth/redmine_base_deface)
 * **redmine_base_stimulusjs** which can be found [here](https://github.com/nanego/redmine_base_stimulusjs)
 
-First download the source or clone the plugin and put it in the "plugins/" directory of your redmine instance. Note that this is crucial that the directory is named 'redmine_multiprojects_issue'!
+These plugins must be installed first.
+
+Then, download the source or clone the plugin and put it in the "plugins/" directory of your redmine instance. Note that this is crucial that the directory is named 'redmine_multiprojects_issue'!
 
 If you are runnning Redmine 2.3.0 to 3.2.x, you need to download or clone [v0.2](https://github.com/nanego/redmine_multiprojects_issue/releases/tag/v0.2). If you are running Redmine 3.3.0+, download or clone the current master.
 

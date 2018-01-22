@@ -1,3 +1,9 @@
+function update_checked_boxes_counter(){
+  const counter_element = $('.actions_links #selection_counter');
+  let counter_value = $("input:checkbox[name='project_ids[]']:checked").length;
+  counter_element.html(counter_value);
+}
+
 $(document).ready(function(){
   // To deal with journal details
   $('.details').on("click", ".show_journal_details", function(e) {
@@ -11,6 +17,9 @@ $(document).ready(function(){
       $('.journal_projects_details[data-detail-id='+$(this).data('detail-id')+']').hide();
       $('.show_journal_details[data-detail-id='+$(this).data('detail-id')+']').show();
       $(this).hide();
+  });
+  $('body').on("change", "input:checkbox[name='project_ids[]']", function(e) {
+    update_checked_boxes_counter();
   });
 });
 
@@ -52,7 +61,6 @@ $(document).ready(function(){
     }
 
     select_from_filters(filters) {
-      console.log(filters);
       const _this = this;
       let checked_boxes_per_field = {};
 
@@ -75,11 +83,11 @@ $(document).ready(function(){
         }
       });
 
-      log('final_checked_boxes lenght', final_checked_boxes.length);
-
       for (var i = 0, len = final_checked_boxes.length; i < len; i++) {
         $('.nested_project_'+final_checked_boxes[i]).prop("checked","checked");
       }
+
+      update_checked_boxes_counter();
     }
 
     checked_boxes(field, value){
@@ -105,6 +113,7 @@ $(document).ready(function(){
       {
         $(this).prop("checked","checked") ;
       });
+      update_checked_boxes_counter();
     }
 
     select_none(event){
@@ -113,6 +122,7 @@ $(document).ready(function(){
       {
         $(this).prop("checked",false) ;
       })
+      update_checked_boxes_counter();
     }
 
     add_filter(event){

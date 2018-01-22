@@ -17,3 +17,7 @@ en:
   field_answers_on_secondary_projects: "Answers allowed"
   multiprojects_selection_available_custom_fields: "Available custom fields to quickly select projects"
   select_filter: "Select a filter"
+  advanced_selection: "Advanced selection"
+  selected_projects: "Selected projects"
+  main_project_included: "main project included"
+  add_a_filter: "Add a filter"
