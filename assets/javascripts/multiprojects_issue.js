@@ -39,13 +39,14 @@ $(document).ready(function(){
 
       const filters_elements = this.targets.findAll("filter");
       let filters = {};
-      for (var i = 0, len = filters_elements.length; i < len; i++) {
+      for (let i = 0, len = filters_elements.length; i < len; i++) {
         const filter_element = filters_elements[i];
         const select_filters_element = filter_element.firstElementChild;
         const field = select_filters_element.value;
-        const values = getSelectedValues(select_filters_element.nextElementSibling);
-
-        filters[field] = values;
+        let values = getSelectedValues(select_filters_element.nextElementSibling);
+        if(exists(field)){
+          filters[field] = values;
+        }
       }
       this.select_from_filters(filters);
     }
@@ -57,9 +58,9 @@ $(document).ready(function(){
 
       // Union of results for each filter
       Object.keys(filters).map(function(field, index) {
-        checked_boxes_per_field[field] = []
-        var values = filters[field];
-        for (var i = 0, len = values.length; i < len; i++) {
+        checked_boxes_per_field[field] = [];
+        let values = filters[field];
+        for (let i = 0, len = values.length; i < len; i++) {
           checked_boxes_per_field[field] = [...new Set([...checked_boxes_per_field[field], ..._this.checked_boxes(field, values[i])])];
         }
       });
@@ -75,7 +76,7 @@ $(document).ready(function(){
       });
 
       log('final_checked_boxes lenght', final_checked_boxes.length);
-      
+
       for (var i = 0, len = final_checked_boxes.length; i < len; i++) {
         $('.nested_project_'+final_checked_boxes[i]).prop("checked","checked");
       }
@@ -85,7 +86,7 @@ $(document).ready(function(){
       let checked_boxes = [];
       if(exists(value)){
         //build a selector ; as we now accept "array" values, we must match foo OR *,foo OR *,foo,* OR foo,*...
-        var selectors, selector;
+        let selectors, selector;
         selectors = [ "='"+value+"'", "^='"+value+",'", "$=',"+value+"'", "*=',"+value+",'" ];
         selector = $.map(selectors, function(e) {
           return "input:checkbox[name='project_ids[]']:checkbox[data-"+field+e+"]"
