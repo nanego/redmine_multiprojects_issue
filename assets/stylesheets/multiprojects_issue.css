@@ -66,7 +66,7 @@ tr:hover td.project .disabled_project, tr.context-menu-selection td.project .dis
     color: inherit;
 }
 
-td.projects{
+td.projects, td.related_projects{
     width: 150px;
     max-width: 250px;
     overflow: hidden;
