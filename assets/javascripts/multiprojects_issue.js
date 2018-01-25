@@ -1,5 +1,5 @@
 function update_checked_boxes_counter(){
-  const counter_element = $('.actions_links #selection_counter');
+  const counter_element = $('#selection_counter');
   let counter_value = $("input:checkbox[name='project_ids[]']:checked").length;
   counter_element.html(counter_value);
 }
@@ -25,9 +25,14 @@ $(document).ready(function(){
 
 (function() {
   stimulus_application.register("projects-selection", class extends Stimulus.Controller {
+
+    initialize() {
+      update_checked_boxes_counter();
+    }
+
     toggle_advanced_selection(event) {
       event.preventDefault();
-      this.filters.classList.toggle('hidden');
+      this.targets.find("filters").classList.toggle('hidden');
     }
 
     select_filter(event){
@@ -88,6 +93,7 @@ $(document).ready(function(){
       }
 
       update_checked_boxes_counter();
+      this.show_all_projects();
     }
 
     checked_boxes(field, value){
@@ -114,6 +120,7 @@ $(document).ready(function(){
         $(this).prop("checked","checked") ;
       });
       update_checked_boxes_counter();
+      this.show_all_projects();
     }
 
     select_none(event){
@@ -121,8 +128,9 @@ $(document).ready(function(){
       $("input:checkbox[name='project_ids[]']:checked:not(.inactive)").each(function()
       {
         $(this).prop("checked",false) ;
-      })
+      });
       update_checked_boxes_counter();
+      this.show_all_projects();
     }
 
     add_filter(event){
@@ -141,8 +149,24 @@ $(document).ready(function(){
       this.select_filter_values(event);
     }
 
-    get filters(){
-      return this.targets.find("filters");
+    hide_non_selected_projects(event){
+      event.preventDefault();
+      $("input:checkbox[name='project_ids[]']:not(:checked)").each(function()
+      {
+        $(this).parent().hide();
+      });
+      this.targets.find('show_projects_button').style.display = 'inline-block';
+      this.targets.find('hide_projects_button').style.display = 'none';
+    }
+
+    show_all_projects(event){
+      if(event){event.preventDefault();}
+      $("input:checkbox[name='project_ids[]']").each(function()
+      {
+        $(this).parent().show();
+      });
+      this.targets.find('show_projects_button').style.display = 'none';
+      this.targets.find('hide_projects_button').style.display = 'inline-block';
     }
 
   })

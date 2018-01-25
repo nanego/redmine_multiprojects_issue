@@ -19,5 +19,6 @@ en:
   select_filter: "Select a filter"
   advanced_selection: "Advanced selection"
   selected_projects: "Selected projects"
-  main_project_included: "main project included"
   add_a_filter: "Add a filter"
+  hide_non_selected_projects: "Hide non selected projects"
+  show_all_projects: "Show all projects"

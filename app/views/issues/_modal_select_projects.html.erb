@@ -40,59 +40,79 @@
 
 <h3 class="title"><%=l(:field_project).pluralize%></h3>
 
-<div class="actions_links" data-controller="projects-selection">
-  <%= l("Selection") %> :
-  <%= link_to l("select_all"), '#', id: "link_select_all", :data => { :action => 'click->projects-selection#select_all' } %>
-  |
-  <%= link_to l("select_none"), '#', id: "link_select_all", :data => { :action => 'click->projects-selection#select_none' } %>
-  |
-  <%= link_to l("advanced_selection"), '#', id: "link_advanced_selection", :data => { :action => 'click->projects-selection#toggle_advanced_selection' } %>
-  -
-  <span><%= l("selected_projects") %>:</span><span id="selection_counter" data-target="projects-selection.counter"></span><span> (<%= l("main_project_included") %>)</span>
+<div data-controller="projects-selection">
 
-  <div class="advanced_selection hidden" data-target="projects-selection.filters">
-    <div data-target="projects-selection.filter" class="first">
-      <%= select_tag 'filter_name',
-                     options_for_select(custom_fields.map{|cf| [cf.name, cf.id] }),
-                     :prompt=>l("select_filter"),
-                     :id => "select_filter",
-                     :class => "select_box_custom_field_value",
-                     :data => {
-                       action: 'change->projects-selection#select_filter'
-                     } %>
-      <%= select_tag 'filter_value',
-                     '',
-                     :id => "select_values",
-                     :multiple => true,
-                     :data => {
-                       action: 'change->projects-selection#select_filter_values'
-                     } %>
-      <%= link_to "(#{l('button_delete')})", '#', class: 'hidden-if-first', data: {action: 'click->projects-selection#remove_filter'} %>
+  <div class="actions_links">
+    <%= l("Selection") %> :
+    <%= link_to l("select_all"), '#', id: "link_select_all", :data => { :action => 'click->projects-selection#select_all' } %>
+    |
+    <%= link_to l("select_none"), '#', id: "link_select_all", :data => { :action => 'click->projects-selection#select_none' } %>
+    |
+    <%= link_to l("advanced_selection"), '#', id: "link_advanced_selection", :data => { :action => 'click->projects-selection#toggle_advanced_selection' } %>
+
+    <div class="advanced_selection hidden" data-target="projects-selection.filters">
+      <div data-target="projects-selection.filter" class="first">
+        <%= select_tag 'filter_name',
+                       options_for_select(custom_fields.map{|cf| [cf.name, cf.id] }),
+                       :prompt=>l("select_filter"),
+                       :id => "select_filter",
+                       :class => "select_box_custom_field_value",
+                       :data => {
+                         action: 'change->projects-selection#select_filter'
+                       } %>
+        <%= select_tag 'filter_value',
+                       '',
+                       :id => "select_values",
+                       :multiple => true,
+                       :data => {
+                         action: 'change->projects-selection#select_filter_values'
+                       } %>
+        <%= link_to "(#{l('button_delete')})", '#', class: 'hidden-if-first', data: {action: 'click->projects-selection#remove_filter'} %>
+      </div>
+      <%= link_to "+ #{l('add_a_filter')}", '#', data: {action: 'click->projects-selection#add_filter'} %>
     </div>
-    <%= link_to "+ #{l('add_a_filter')}", '#', data: {action: 'click->projects-selection#add_filter'} %>
+    <div style="display: none;">
+      <% custom_fields.each do |field| %>
+        <%= select_tag field.id,
+                       options_for_select(options_for_selects[field.id]),
+                       :id => "select_#{field.id}",
+                       :data => {
+                         target: "projects-selection.select_for_#{field.id}"
+                       }
+          %>
+      <% end %>
+    </div>
   </div>
-  <div style="display: none;">
-    <% custom_fields.each do |field| %>
-      <%= select_tag field.id,
-                     options_for_select(options_for_selects[field.id]),
-                     :id => "select_#{field.id}",
-                     :data => {
-                       target: "projects-selection.select_for_#{field.id}"
-                     }
-        %>
-    <% end %>
-  </div>
-</div>
 
-<div class="projects_container">
-  <div class="columns" id="project_nested_list">
-    <%= nested_projects_list %>
+  <div class="projects_container">
+    <div class="columns" id="project_nested_list">
+      <%= nested_projects_list %>
+    </div>
   </div>
-</div>
 
-<p class="buttons">
-  <%= submit_tag l(:button_apply), :name => nil, :onclick => "updateSelectedProjects();hideModal(this);", :type => 'button', :id=> 'button_apply_projects' %>
-</p>
+  <p>
+    <%= l("selected_projects") %>:
+    <span id="selection_counter" data-target="projects-selection.counter"></span>
+    <span style="margin-left: 5px;">
+      (<%= link_to l("hide_non_selected_projects"),
+                  '#',
+                  data: {action: 'click->projects-selection#hide_non_selected_projects',
+                         target: 'projects-selection.hide_projects_button'},
+                  style: 'display: inline-block'
+      %><%= link_to l("show_all_projects"),
+                  '#',
+                  data: {action: 'click->projects-selection#show_all_projects',
+                         target: 'projects-selection.show_projects_button'},
+                  style: 'display: none'
+      %>)
+    </span>
+  </p>
+
+  <p class="buttons">
+    <%= submit_tag l(:button_apply), :name => nil, :onclick => "updateSelectedProjects();hideModal(this);", :type => 'button', :id=> 'button_apply_projects' %>
+  </p>
+
+</div>
 
 <script type="text/javascript">
 
@@ -117,7 +137,5 @@
       $("#answers-on-secondary-projects").show()
     }
   }
-
-  update_checked_boxes_counter();
 
 </script>

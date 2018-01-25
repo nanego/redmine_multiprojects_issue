@@ -19,5 +19,6 @@ fr:
   select_filter: "Sélectionnez un filtre"
   advanced_selection: "Sélection avancée"
   selected_projects: "Projets sélectionnés"
-  main_project_included: "projet principal inclus"
   add_a_filter: "Ajouter un filtre"
+  hide_non_selected_projects: "Masquer les projets non sélectionnés"
+  show_all_projects: "Montrer tous les projets"
