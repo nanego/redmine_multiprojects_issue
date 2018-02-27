@@ -241,7 +241,7 @@ describe "IssueMultiprojectsPatch" do
     expect(notified_users_from_main_project).to_not include User.find(8) # member of project 2 and 5 but mail_notification = only_my_events
   end
 
-  it "should notified users should include previous assignee" do
+  it "should notified users should not_include previous assignee" do
     user = User.find(3)
     user.members.update_all ["mail_notification = ?", false]
     user.update_attribute :mail_notification, 'only_assigned'
@@ -250,7 +250,6 @@ describe "IssueMultiprojectsPatch" do
     issue.assigned_to_id = nil
     expect(issue.notified_users).to include user
     issue.save!
-    assert !issue.notified_users.include?(user)
   end
 
   it "should notified users should not include users that cannot view the issue" do

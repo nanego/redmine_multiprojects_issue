@@ -10,25 +10,8 @@ describe "FileChecksums" do
   it "should core issue model checksum" do
     # "notified_users", "visible_condition" and "visible?" methods are overridden
     # and should be reviewed if this test breaks
-    # 2.3.3 is ok
-    # 2.5.1 and 2.5.2 are ok
-    # 2.6.0 is ok
-    # 3.0.3 and 3.1.0 are ok
-    # 3.1.1, 3.2.x, 3.3.x, 3.4.x are ok
-    assert_checksum %w(7265e9dcb488ac8ea89ed7c3c92c8c88
-                       31b05314384ac3bbe273ae9a0b0f7e24
-                       f93d75a3bb8f60360e957d9335c15f43
-                       2ebfdef98d98062124c77cc12f61519f
-                       5c85983c6b8ddb52fe4656d8e5d2471c
-                       a5a2fa1156016e4380e63d9f75c3bd75
-                       157f0a0c68e90e302ae565ac3cdb2ed7
-                       087c5c94f641196d8c6511a02fb630f6
-                       fd68745c6510526da2b8a9f5bd90bf50
-                       fcefe3d136dc3f4d1d9b82d49b621a68
-                       652942758e94adab39756092fc56eb64
-                       0c04b25c3da681e1c7f4fa1cac8401df
-                       c36774d42a066d996023da0a7198b413
-                       a61cfdebe27ce348bd03272d82f77d6d), "app/models/issue.rb"
+    # 3.4.x are ok
+    assert_checksum %w(2d2642e90e5b0c91d33a304189e7139c), "app/models/issue.rb"
   end
 
   # tests have been added to the issue_helper_patch_test file, no need to check the checksum
