@@ -26,6 +26,10 @@ $(document).ready(function(){
 (function() {
   stimulus_application.register("projects-selection", class extends Stimulus.Controller {
 
+    static get targets() {
+        return [ "filters", "filter", "hide_projects_button", "show_projects_button" ]
+    }
+
     initialize() {
       update_checked_boxes_counter();
     }
@@ -37,8 +41,8 @@ $(document).ready(function(){
 
     select_filter(event){
       const select_values_element = event.target.nextElementSibling;
-      const target = "select_for_"+event.target.value;
-      const targeted_select = this.targets.find(target);
+      const target_id = "select_"+event.target.value;
+      const targeted_select = document.getElementById(target_id);
       if (exists(event.target.value)){
         select_values_element.innerHTML = targeted_select.innerHTML;
       }else{
@@ -155,8 +159,8 @@ $(document).ready(function(){
       {
         $(this).parent().hide();
       });
-      this.targets.find('show_projects_button').style.display = 'inline-block';
-      this.targets.find('hide_projects_button').style.display = 'none';
+      this.show_projects_buttonTarget.style.display = 'inline-block';
+      this.hide_projects_buttonTarget.style.display = 'none';
     }
 
     show_all_projects(event){
@@ -165,8 +169,9 @@ $(document).ready(function(){
       {
         $(this).parent().show();
       });
-      this.targets.find('show_projects_button').style.display = 'none';
-      this.targets.find('hide_projects_button').style.display = 'inline-block';
+
+      this.show_projects_buttonTarget.style.display = 'none';
+      this.hide_projects_buttonTarget.style.display = 'inline-block';
     }
 
   })
