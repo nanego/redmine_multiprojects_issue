@@ -25,6 +25,7 @@
          end if value.present?
        end
      end
+     custom_fields_data.merge!('name' => project.name)
      content_tag('label',
        check_box_tag(
            'project_ids[]',
@@ -41,6 +42,11 @@
 <h3 class="title"><%=l(:field_project).pluralize%></h3>
 
 <div data-controller="projects-selection">
+
+  <div class="actions_links">
+    <%= l("button_filter") %> :
+    <input data-action="input->projects-selection#hide_by_name" />
+  </div>
 
   <div class="actions_links">
     <%= l("Selection") %> :

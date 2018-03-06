@@ -163,13 +163,22 @@ $(document).ready(function(){
       this.hide_projects_buttonTarget.style.display = 'none';
     }
 
+    hide_by_name(event){
+        this.show_all_projects(event)
+        if(exists(event.target.value)){
+            $("#project_nested_list input[name='project_ids[]']:not([data-name*='"+event.target.value+"' i])").each(function()
+            {
+                $(this).parent().hide()
+            })
+        }
+    }
+
     show_all_projects(event){
-      if(event){event.preventDefault();}
+      if(event){event.preventDefault()}
       $("input:checkbox[name='project_ids[]']").each(function()
       {
         $(this).parent().show();
       });
-
       this.show_projects_buttonTarget.style.display = 'none';
       this.hide_projects_buttonTarget.style.display = 'inline-block';
     }
