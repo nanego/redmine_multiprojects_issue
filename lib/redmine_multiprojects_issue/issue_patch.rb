@@ -1,5 +1,15 @@
 require_dependency 'issue'
 
+module RedmineMultiprojectsIssue
+  module PrependedIssuePatch
+    # Returns the users that should be notified
+    def notified_users
+      super | notified_users_from_other_projects
+    end
+  end
+end
+Issue.prepend RedmineMultiprojectsIssue::PrependedIssuePatch
+
 class Issue < ActiveRecord::Base
 
   include ApplicationHelper
@@ -20,6 +30,17 @@ class Issue < ActiveRecord::Base
       visible_without_multiproject_issues?(usr) || other_project_visible?(usr)
     end
     alias_method_chain :visible?, :multiproject_issues
+  end
+
+  # Overrides Redmine::Acts::Attachable::InstanceMethods#attachments_visible?
+  def attachments_visible?(user=User.current)
+    # Check if user is allowed to see attached files in at least one of the impacted projects
+    allowed = false
+    (self.projects + [self.project]).each do |project|
+      allowed = allowed || user.allowed_to?(self.class.attachable_options[:view_permission], project)
+      break if allowed
+    end
+    (respond_to?(:visible?) ? visible?(user) : true) && allowed
   end
 
   def other_project_visible?(usr=nil)
@@ -67,14 +88,6 @@ class Issue < ActiveRecord::Base
       end
     end
     self.singleton_class.send(:alias_method_chain, :visible_condition, :multiproject_issues)
-  end
-
-  unless instance_methods.include?(:notified_users_with_multiproject_issues)
-    # Returns the users that should be notified
-    def notified_users_with_multiproject_issues
-      notified_users_without_multiproject_issues | notified_users_from_other_projects
-    end
-    alias_method_chain :notified_users, :multiproject_issues
   end
 
   def notified_users_from_other_projects
