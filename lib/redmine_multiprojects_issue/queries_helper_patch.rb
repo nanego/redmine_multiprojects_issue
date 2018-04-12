@@ -1,11 +1,11 @@
 require_dependency 'queries_helper'
 
-module QueriesHelper
-  include IssuesHelper
+module PluginMultiprojectsIssue
+  module QueriesHelper
 
-  # These methods convert ActiveRecord_Associations to arrays when necessary
-  unless instance_methods.include?(:column_content_with_multiprojects_issues)
-    def column_content_with_multiprojects_issues(column, item)
+    # These methods convert ActiveRecord_Associations to arrays when necessary
+
+    def column_content(column, item)
       begin
         value = column.value_object(item)
       rescue
@@ -15,22 +15,22 @@ module QueriesHelper
         value = value.to_a
         value.collect {|v| column_value(column, item, v)}.compact.join(', ').html_safe
       else
-        column_content_without_multiprojects_issues(column, item)
+        super
       end
     end
-    alias_method_chain :column_content, :multiprojects_issues
-  end
 
-  unless instance_methods.include?(:csv_content_with_multiprojects_issues)
-    def csv_content_with_multiprojects_issues(column, issue)
+    def csv_content(column, issue)
       if column.name == :related_projects && column.value_object(issue).kind_of?(ActiveRecord::Associations::CollectionProxy)
         value = column.value_object(issue).to_a
         value.collect {|v| csv_value(column, issue, v)}.compact.join(', ')
       else
-        csv_content_without_multiprojects_issues(column, issue)
+        super
       end
     end
-    alias_method_chain :csv_content, :multiprojects_issues
-  end
 
+  end
 end
+
+QueriesHelper.include IssuesHelper
+QueriesHelper.prepend PluginMultiprojectsIssue::QueriesHelper
+ActionView::Base.prepend QueriesHelper

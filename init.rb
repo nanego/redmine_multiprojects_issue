@@ -5,7 +5,7 @@ ActionDispatch::Reloader.to_prepare do
   require_dependency 'redmine_multiprojects_issue/issue_patch'
   require_dependency 'redmine_multiprojects_issue/issues_helper_patch'
   require_dependency 'redmine_multiprojects_issue/issues_controller_patch'
-  require_dependency 'redmine_multiprojects_issue/query_patch'
+  require_dependency 'redmine_multiprojects_issue/issue_query_patch'
   require_dependency 'redmine_multiprojects_issue/queries_helper_patch'
 end
 

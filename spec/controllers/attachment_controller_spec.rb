@@ -1,5 +1,4 @@
 require "spec_helper"
-require 'redmine_multiprojects_issue/acts_as_attachable_patch'
 
 describe AttachmentsController do
   render_views

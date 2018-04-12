@@ -1,5 +1,5 @@
 require "spec_helper"
-require 'redmine_multiprojects_issue/query_patch.rb'
+require 'redmine_multiprojects_issue/issue_query_patch.rb'
 
 describe "IssueQueryMultiprojectsPatch" do
   it "should versions" do

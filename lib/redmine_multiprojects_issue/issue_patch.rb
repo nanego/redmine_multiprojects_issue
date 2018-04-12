@@ -6,11 +6,46 @@ module RedmineMultiprojectsIssue
     def notified_users
       super | notified_users_from_other_projects
     end
+
+    # Returns true if usr or current user is allowed to view the issue
+    def visible?(usr=nil)
+      super || other_project_visible?(usr)
+    end
+
+    def user_tracker_permission?(user, permission)
+      super || user_tracker_permission_on_other_projects?(user, permission)
+    end
+
+    module ClassMethods
+      def visible_condition(user, options={})
+        statement_by_role = {}
+        user.projects_by_role.each do |role, projects|
+          projects = projects & [options[:project]] if options[:project]
+          if role.allowed_to?(:view_issues) && projects.any?
+            statement_by_role[role] = "project_id IN (#{projects.collect(&:id).join(',')})"
+          end
+        end
+        authorized_projects = statement_by_role.values.join(' OR ')
+        if authorized_projects.present?
+          "(#{super} OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE (#{authorized_projects}) ))"
+        else
+          super
+        end
+      end
+    end
+
+    def self.prepended(base)
+      class << base
+        prepend ClassMethods
+      end
+    end
   end
 end
-Issue.prepend RedmineMultiprojectsIssue::PrependedIssuePatch
 
 class Issue < ActiveRecord::Base
+
+  alias_method :notified_users_from_main_project, :notified_users
+  prepend RedmineMultiprojectsIssue::PrependedIssuePatch
 
   include ApplicationHelper
 
@@ -23,14 +58,6 @@ class Issue < ActiveRecord::Base
   safe_attributes 'answers_on_secondary_projects'
   #adds a new "safe_attributes condition to handle the case of secondary projects
   safe_attributes 'notes', :if => lambda {|issue, user| issue.editable?(user)}
-
-  unless instance_methods.include?(:visible_with_multiproject_issues?)
-    # Returns true if usr or current user is allowed to view the issue
-    def visible_with_multiproject_issues?(usr=nil)
-      visible_without_multiproject_issues?(usr) || other_project_visible?(usr)
-    end
-    alias_method_chain :visible?, :multiproject_issues
-  end
 
   # Overrides Redmine::Acts::Attachable::InstanceMethods#attachments_visible?
   def attachments_visible?(user=User.current)
@@ -68,26 +95,6 @@ class Issue < ActiveRecord::Base
       end
     end
     visible_projects.present?
-  end
-
-  unless methods.include?(:visible_condition_with_multiproject_issues)
-    def self.visible_condition_with_multiproject_issues(user, options={})
-      statement_by_role = {}
-      user.projects_by_role.each do |role, projects|
-        projects = projects & [options[:project]] if options[:project]
-        if role.allowed_to?(:view_issues) && projects.any?
-          statement_by_role[role] = "project_id IN (#{projects.collect(&:id).join(',')})"
-        end
-      end
-      authorized_projects = statement_by_role.values.join(' OR ')
-
-      if authorized_projects.present?
-        "(#{visible_condition_without_multiproject_issues(user, options)} OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE (#{authorized_projects}) ))"
-      else
-        visible_condition_without_multiproject_issues(user, options)
-      end
-    end
-    self.singleton_class.send(:alias_method_chain, :visible_condition, :multiproject_issues)
   end
 
   def notified_users_from_other_projects
@@ -130,17 +137,12 @@ class Issue < ActiveRecord::Base
     notified.compact
   end
 
-  def user_tracker_permission_with_multiprojects?(user, permission)
-    if user_tracker_permission_without_multiprojects?(user, permission) == true
-      true
-    else
-      # Check roles permissions on other projects
-      (answers_on_secondary_projects && projects.any?{|p|
-        user.roles_for_project(p).select {|r| r.has_permission?(permission)}.any? {|r| r.permissions_all_trackers?(permission) || r.permissions_tracker_ids?(permission, tracker_id)}
-      })
-    end
+  def user_tracker_permission_on_other_projects?(user, permission)
+    # Check roles permissions on other projects
+    answers_on_secondary_projects && projects.any?{|p|
+      user.roles_for_project(p).select {|r| r.has_permission?(permission)}.any? {|r| r.permissions_all_trackers?(permission) || r.permissions_tracker_ids?(permission, tracker_id)}
+    }
   end
-  alias_method_chain :user_tracker_permission?, :multiprojects
 
   def related_projects
     RelatedProjects.new(self, projects)

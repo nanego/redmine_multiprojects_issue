@@ -1,11 +1,12 @@
 require_dependency 'issues_helper'
 
-module IssuesHelper
-  unless instance_methods.include?(:show_detail_with_multiproject_issues)
+module PluginMultiprojectsIssue
+  module IssuesHelper
+
     # Returns the textual representation of a single journal detail
     # Core properties are 'attr', 'attachment' or 'cf' : this patch specify how to display 'projects' journal details
     # 'projects' property is introduced by this plugin
-    def show_detail_with_multiproject_issues(detail, no_html=false, options={})
+    def show_detail(detail, no_html=false, options={})
 
       # Process custom 'projects' property
       if detail.property == 'projects'
@@ -49,10 +50,12 @@ module IssuesHelper
 
       else
         # Process standard properties like 'attr', 'attachment' or 'cf'
-        show_detail_without_multiproject_issues(detail, no_html, options)
+        super
       end
 
     end
-    alias_method_chain :show_detail, :multiproject_issues
   end
 end
+
+IssuesHelper.prepend PluginMultiprojectsIssue::IssuesHelper
+ActionView::Base.prepend IssuesHelper

@@ -34,7 +34,8 @@ describe "FileChecksums" do
                        4578911937e52016a86fdc5b6e73b9ee
                        9267617c77561572f7bba862d115cddb
                        fc595145ab400cac5e333f880d29c1ba
-                       a1c2519e9bae097b5659adf9338ba7d0), "app/models/query.rb"
+                       a1c2519e9bae097b5659adf9338ba7d0
+                       a266d0434f7dfdde72a9dbf7bb16b5fa), "app/models/query.rb"
   end
 
   it "should core issue query model checksum" do
