@@ -9,18 +9,31 @@ describe IssuesController, type: :controller do
 
   render_views
 
-  fixtures :projects,
-           :users, :email_addresses,
+  fixtures :users, :email_addresses, :user_preferences,
            :roles,
-           :issues,
-           :workflows,
            :members,
            :member_roles,
+           :issues,
+           :issue_statuses,
+           :issue_relations,
+           :versions,
+           :trackers,
+           :projects_trackers,
+           :issue_categories,
            :enabled_modules,
+           :enumerations,
+           :attachments,
+           :workflows,
            :custom_fields,
            :custom_values,
            :custom_fields_projects,
-           :custom_fields_trackers
+           :custom_fields_trackers,
+           :time_entries,
+           :journals,
+           :journal_details,
+           :queries,
+           :repositories,
+           :changesets
 
   it "should post create should send a notification to other projects users" do
     ActionMailer::Base.deliveries.clear
