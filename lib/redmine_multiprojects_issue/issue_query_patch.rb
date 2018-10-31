@@ -8,7 +8,7 @@ class IssueQuery < Query
     if project_clauses && project
       "((#{project_clauses}) OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE project_id = #{project.id}))"
     else
-      nil
+      project_clauses
     end
   end
 
