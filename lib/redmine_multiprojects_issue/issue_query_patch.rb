@@ -5,7 +5,7 @@ class IssueQuery < Query
 
   def project_statement
     project_clauses = super
-    if project_clauses
+    if project_clauses && project
       "((#{project_clauses}) OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE project_id = #{project.id}))"
     else
       nil
