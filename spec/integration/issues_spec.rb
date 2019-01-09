@@ -9,7 +9,7 @@ def log_user(login, password)
   assert_equal nil, session[:user_id]
   assert_response :success
   assert_template "account/login"
-  post "/login", :username => login, :password => password
+  post "/login", params: {:username => login, :password => password}
   assert_equal login, User.find(session[:user_id]).login
 end
 
@@ -33,23 +33,23 @@ describe "Issues" do
   # create an issue with multiple projects
   it "should create issue with multiple projects" do
     log_user('jsmith', 'jsmith')
-    get '/projects/1/issues/new', :tracker_id => '1'
-    expect(response).to be_success
+    get '/projects/1/issues/new', params: {:tracker_id => '1'}
+    expect(response).to be_successful
     assert_template 'issues/new'
     assert_select "p#projects_form", :count => 1
 
-    post '/projects/1/issues', :tracker_id => "1",
-         :issue => { :start_date => "2006-12-26",
-                     :priority_id => "4",
-                     :subject => "new multiproject test issue",
-                     :category_id => "",
-                     :description => "new issue",
-                     :done_ratio => "0",
-                     :due_date => "",
-                     :assigned_to_id => "",
-                     :project_ids => [2, 3, 4]
-         },
-         :custom_fields => {'2' => 'Value for field 2'}
+    post '/projects/1/issues', params: {:tracker_id => "1",
+                                        :issue => {:start_date => "2006-12-26",
+                                                   :priority_id => "4",
+                                                   :subject => "new multiproject test issue",
+                                                   :category_id => "",
+                                                   :description => "new issue",
+                                                   :done_ratio => "0",
+                                                   :due_date => "",
+                                                   :assigned_to_id => "",
+                                                   :project_ids => [2, 3, 4]
+                                        },
+                                        :custom_fields => {'2' => 'Value for field 2'}}
 
     # find created issue
     issue = Issue.find_by_subject("new multiproject test issue")
@@ -63,18 +63,18 @@ describe "Issues" do
     # check issue attributes
     expect(issue.author.login).to eq 'jsmith'
     expect(issue.project.id).to eq 1
-    expect(issue.projects.collect(&:id)).to eq [2,3,4]
+    expect(issue.projects.collect(&:id)).to eq [2, 3, 4]
   end
 
   # update an issue and set several projects
   it "should update projects" do
     log_user('jsmith', 'jsmith')
     get '/issues/1/edit'
-    expect(response).to be_success
+    expect(response).to be_successful
     assert_template 'issues/edit'
     assert_select "p#projects_form", :count => 1
 
-    put '/issues/1', {:issue => { :project_ids => [2, 3, 4]}, :project_id => 1 }
+    put '/issues/1', params: {:issue => {:project_ids => [2, 3, 4]}, :project_id => 1}
 
     # find updated issue
     issue = Issue.find(1)
@@ -88,18 +88,18 @@ describe "Issues" do
     # check issue attributes
     expect(issue.author.login).to eq 'jsmith'
     expect(issue.project.id).to eq 1
-    expect(issue.projects.collect(&:id)).to eq [2,3,4]
+    expect(issue.projects.collect(&:id)).to eq [2, 3, 4]
   end
 
   # remove the unique other project
   it "should remove unique other project" do
     log_user('jsmith', 'jsmith')
     get '/issues/1/edit'
-    expect(response).to be_success
+    expect(response).to be_successful
     assert_template 'issues/edit'
     assert_select "p#projects_form", :count => 1
 
-    put '/issues/1', {:issue => { :project_ids => [2]}, :project_id => 1 }
+    put '/issues/1', params: {:issue => {:project_ids => [2]}, :project_id => 1}
 
     # find updated issue
     issue = Issue.find(1)
@@ -116,7 +116,7 @@ describe "Issues" do
     expect(issue.projects.collect(&:id)).to eq [2]
 
     ### Remove other project
-    put '/issues/1', {:issue => { :project_ids => [""]}, :project_id => 1 }
+    put '/issues/1', params: {:issue => {:project_ids => [""]}, :project_id => 1}
 
     # find updated issue
     issue = Issue.find(1)
@@ -140,7 +140,7 @@ describe "Issues" do
 
     log_user('jsmith', 'jsmith')
     get '/issues/4'
-    expect(response).to be_success
+    expect(response).to be_successful
     assert_template 'issues/show'
     refute_nil assigns(:issue).projects
     assert assigns(:issue).projects.present?
@@ -154,7 +154,7 @@ describe "Issues" do
 
     log_user('jsmith', 'jsmith')
     get '/issues/4'
-    expect(response).to be_success
+    expect(response).to be_successful
     assert_template 'issues/show'
     refute_nil assigns[:issue]
     expect(assigns(:issue).projects).to eq [Project.find(2)]

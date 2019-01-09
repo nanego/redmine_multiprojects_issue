@@ -1,12 +1,12 @@
 require_dependency 'issues_controller'
 
-class IssuesController
+class IssuesController < ApplicationController
 
-  before_filter :authorize, :except => [:index, :new, :create, :load_projects_selection, :show]
-  before_filter :set_project, :only => [:load_projects_selection]
-  append_before_filter :set_assignable_projects, :only => [:create, :update]
+  before_action :authorize, :except => [:index, :new, :create, :load_projects_selection, :show]
+  before_action :set_project, :only => [:load_projects_selection]
+  append_before_action :set_assignable_projects, :only => [:create, :update]
 
-  protect_from_forgery except: :load_projects_selection
+  skip_forgery_protection only: :load_projects_selection
 
   def load_projects_selection
     if params[:issue_id]

@@ -17,20 +17,20 @@ describe ActivitiesController do
   before do
     # new multiproject issue on project 2
     Issue.create!(created_on: 3.days.ago.to_s(:db),
-                 project_id: 2,
-                 updated_on: 1.day.ago.to_s(:db),
-                 description: "Desc",
-                 subject: "My title",
-                 tracker_id: 1,
-                 author_id: 1,
-                 projects: [Project.find(2)])
+                  project_id: 2,
+                  updated_on: 1.day.ago.to_s(:db),
+                  description: "Desc",
+                  subject: "My title",
+                  tracker_id: 1,
+                  author_id: 1,
+                  projects: [Project.find(2)])
   end
 
   it "should project index should not contain activity from other unrelated projects" do
     @request.session[:user_id] = 2
-    get :index, :id => 1, :with_subprojects => 0
+    get :index, params: {:id => 1, :with_subprojects => 0}
 
-    expect(response).to be_success
+    expect(response).to be_successful
     assert_template 'index'
     refute_nil assigns(:events_by_day)
     refute_nil assigns(:project)

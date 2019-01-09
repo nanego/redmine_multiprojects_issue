@@ -1,6 +1,6 @@
 require 'redmine'
 
-ActionDispatch::Reloader.to_prepare do
+ActiveSupport::Reloader.to_prepare do
   require_dependency 'redmine_multiprojects_issue/hooks'
   require_dependency 'redmine_multiprojects_issue/issue_patch'
   require_dependency 'redmine_multiprojects_issue/issues_helper_patch'

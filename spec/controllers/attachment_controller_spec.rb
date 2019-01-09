@@ -38,8 +38,8 @@ describe AttachmentsController do
 
     str_japanese = "\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e".force_encoding('UTF-8')
 
-    get :show, :id => a.id
-    expect(response).to be_success
+    get :show, params: {:id => a.id}
+    expect(response).to be_successful
     assert_template 'file'
     expect(@response.content_type).to eq 'text/html'
     assert_select 'tr#L1' do
