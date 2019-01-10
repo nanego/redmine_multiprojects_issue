@@ -45,7 +45,7 @@ describe "IssueHelperMultiprojectsIssuePatch", type: :helper do
   it "should IssuesHelper#show_detail with html should show a deleted project with HTML highlights" do
     detail = JournalDetail.new(:property => 'projects', :old_value => 'CookBook', :value => nil, :prop_key => nil)
     html = show_detail(detail, false)
-    expect(html).to include('1 deleted project (<del class="journal_projects_details" data-detail-id="null"')
+    expect(html).to include('1 deleted project (<del class="journal_projects_details" ')
     expect(html).to include('CookBook</del>)')
   end
 
@@ -60,7 +60,7 @@ describe "IssueHelperMultiprojectsIssuePatch", type: :helper do
   it "should IssuesHelper#show_detail with html should show all deleted projects with HTML highlights" do
     detail = JournalDetail.new(:property => 'projects', :old_value => 'CookBook,OnlineStore', :value => nil, :prop_key => nil)
     result = show_detail(detail, false)
-    html = "2 deleted projects (<a class=\"show_journal_details\" data-detail-id=\"null\" href=\"#\">details</a><a class=\"hide_journal_details\" data-detail-id=\"null\" href=\"#\">hide</a><del class=\"journal_projects_details\" data-detail-id=\"null\" style=\"display:none;\">CookBook, OnlineStore</del>)"
+    html = "2 deleted projects (<a class=\"show_journal_details\" href=\"#\">details</a><a class=\"hide_journal_details\" href=\"#\">hide</a><del class=\"journal_projects_details\" style=\"display:none;\">CookBook, OnlineStore</del>)"
     expect(result).to include(html)
   end
 

@@ -44,7 +44,6 @@ end
 
 class Issue < ActiveRecord::Base
 
-  alias_method :notified_users_from_main_project, :notified_users
   prepend RedmineMultiprojectsIssue::PrependedIssuePatch
 
   include ApplicationHelper

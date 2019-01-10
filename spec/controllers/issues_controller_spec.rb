@@ -51,13 +51,14 @@ describe IssuesController, type: :controller do
     end
     expect(response).to redirect_to(:controller => 'issues', :action => 'show', :id => Issue.last.id)
 
-    expect(ActionMailer::Base.deliveries.size).to eq 1
+    expect(ActionMailer::Base.deliveries.size).to eq 3
 
-    mail = ActionMailer::Base.deliveries.last
-    expect(mail['bcc'].to_s).to include(User.find(2).mail)
-    expect(mail['bcc'].to_s).to include(User.find(3).mail)
-    expect(mail['bcc'].to_s).to include(User.find(1).mail) #admin, member, but his role has no view_issue permission
-    expect(mail['bcc'].to_s).to_not include(User.find(8).mail) # member but notifications disabled
+    mails = ActionMailer::Base.deliveries
+    notified_users = mails.map{|m|m['bcc'].to_s}
+    expect(notified_users).to include(User.find(2).mail)
+    expect(notified_users).to include(User.find(3).mail)
+    expect(notified_users).to include(User.find(1).mail) #admin, member, but his role has no view_issue permission
+    expect(notified_users).to_not include(User.find(8).mail) # member but notifications disabled
   end
 
   it "should post create should NOT send a notification to non member users" do
@@ -76,13 +77,14 @@ describe IssuesController, type: :controller do
     end
     expect(response).to redirect_to(:controller => 'issues', :action => 'show', :id => Issue.last.id)
 
-    expect(ActionMailer::Base.deliveries.size).to eq 1
+    expect(ActionMailer::Base.deliveries.size).to eq 2
 
-    mail = ActionMailer::Base.deliveries.last
-    expect(mail['bcc'].to_s).to include(User.find(2).mail)
-    expect(mail['bcc'].to_s).to include(User.find(3).mail)
-    expect(mail['bcc'].to_s).to_not include(User.find(1).mail)
-    expect(mail['bcc'].to_s).to_not include(User.find(8).mail)
+    mails = ActionMailer::Base.deliveries
+    notified_users = mails.map{|m|m['bcc'].to_s}
+    expect(notified_users).to include(User.find(2).mail)
+    expect(notified_users).to include(User.find(3).mail)
+    expect(notified_users).to_not include(User.find(1).mail)
+    expect(notified_users).to_not include(User.find(8).mail)
   end
 
   it "should put update should send a notification to members on other projects" do
@@ -97,13 +99,14 @@ describe IssuesController, type: :controller do
                                                :project_ids => [1, 5],
                                                :category_id => '1' # no change
     }}
-    expect(ActionMailer::Base.deliveries.size).to eq 1
+    expect(ActionMailer::Base.deliveries.size).to eq 3
 
-    mail = ActionMailer::Base.deliveries.last
-    expect(mail['bcc'].to_s).to include(User.find(2).mail)
-    expect(mail['bcc'].to_s).to include(User.find(3).mail)
-    expect(mail['bcc'].to_s).to include(User.find(1).mail)
-    expect(mail['bcc'].to_s).to_not include(User.find(8).mail) # member but notifications disabled
+    mails = ActionMailer::Base.deliveries
+    notified_users = mails.map{|m|m['bcc'].to_s}
+    expect(notified_users).to include(User.find(2).mail)
+    expect(notified_users).to include(User.find(3).mail)
+    expect(notified_users).to include(User.find(1).mail)
+    expect(notified_users).to_not include(User.find(8).mail) # member but notifications disabled
   end
 
   it "should put update should NOT send a notification to non member users" do
@@ -118,13 +121,14 @@ describe IssuesController, type: :controller do
                                                :project_ids => [1, 4],
                                                :category_id => '1' # no change
     }}
-    expect(ActionMailer::Base.deliveries.size).to eq 1
+    expect(ActionMailer::Base.deliveries.size).to eq 2
 
-    mail = ActionMailer::Base.deliveries.last
-    expect(mail['bcc'].to_s).to include(User.find(2).mail)
-    expect(mail['bcc'].to_s).to include(User.find(3).mail)
-    expect(mail['bcc'].to_s).to_not include(User.find(1).mail)
-    expect(mail['bcc'].to_s).to_not include(User.find(8).mail) # member but notifications disabled
+    mails = ActionMailer::Base.deliveries
+    notified_users = mails.map{|m|m['bcc'].to_s}
+    expect(notified_users).to include(User.find(2).mail)
+    expect(notified_users).to include(User.find(3).mail)
+    expect(notified_users).to_not include(User.find(1).mail)
+    expect(notified_users).to_not include(User.find(8).mail) # member but notifications disabled
   end
 
   it "should load projects selection" do

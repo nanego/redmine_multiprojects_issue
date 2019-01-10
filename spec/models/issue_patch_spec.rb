@@ -171,15 +171,15 @@ describe "IssueMultiprojectsPatch" do
     expect(notified_users_from_other_projects).to_not include User.find(8) # member of project 2 and 5 but mail_notification = only_my_events
   end
 
-  it "should notified users from main project" do
+  it "should return all notified users" do
     issue = Issue.find(4)
-    notified_users_from_main_project = issue.notified_users_from_main_project
+    notified_users_from_main_project = issue.notified_users
     expect(notified_users_from_main_project).to_not be_nil
     expect(notified_users_from_main_project).to_not include User.anonymous
-    expect(notified_users_from_main_project).to_not include User.find(1) # member of project 5 only, but admin
+    expect(notified_users_from_main_project).to include User.find(1) # member of project 5 only, but admin
     expect(notified_users_from_main_project).to include User.find(2) # member of main project 2
     expect(notified_users_from_main_project).to_not include User.find(3) # not a member
-    expect(notified_users_from_main_project).to_not include User.find(4) # member of project 5 only, not admin
+    expect(notified_users_from_main_project).to include User.find(4) # member of project 5 only, not admin
     expect(notified_users_from_main_project).to_not include User.find(8) # member of project 2 and 5 but mail_notification = only_my_events
   end
 
