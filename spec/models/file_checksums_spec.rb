@@ -46,7 +46,7 @@ describe "FileChecksums" do
     # "acts_as_activity_provider.rb" is completely overridden
     # and should be reviewed if these tests breaks
     # 4.0.2 is ok
-    assert_checksum %w(1b31da7f7a7392bd277a240c114756e9), "lib/plugins/acts_as_activity_provider/lib/acts_as_activity_provider.rb"
+    assert_checksum %w(baf7e02c5b9c33b30d657fe2693f724e), "lib/plugins/acts_as_activity_provider/lib/acts_as_activity_provider.rb"
   end
 
 end
