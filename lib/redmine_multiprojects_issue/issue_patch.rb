@@ -58,6 +58,10 @@ class Issue < ActiveRecord::Base
   #adds a new "safe_attributes condition to handle the case of secondary projects
   safe_attributes 'notes', :if => lambda {|issue, user| issue.editable?(user)}
 
+  acts_as_activity_provider :type => 'issues_from_current_project_only',
+                            :scope => joins(:project).preload(:project, :author, :tracker, :status),
+                            :author_key => :author_id
+
   # Overrides Redmine::Acts::Attachable::InstanceMethods#attachments_visible?
   def attachments_visible?(user=User.current)
     # Check if user is allowed to see attached files in at least one of the impacted projects

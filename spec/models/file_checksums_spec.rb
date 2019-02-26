@@ -42,4 +42,11 @@ describe "FileChecksums" do
     assert_checksum %w(0a92d0609b883d43daf5e825bc08cb01), "app/views/issues/edit.js.erb"
   end
 
+  it "should check acts_as_activity_provider" do
+    # "acts_as_activity_provider.rb" is completely overridden
+    # and should be reviewed if these tests breaks
+    # 4.0.2 is ok
+    assert_checksum %w(1b31da7f7a7392bd277a240c114756e9), "lib/plugins/acts_as_activity_provider/lib/acts_as_activity_provider.rb"
+  end
+
 end

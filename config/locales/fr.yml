@@ -22,3 +22,4 @@ fr:
   add_a_filter: "Ajouter un champ de sélection"
   hide_non_selected_projects: "Masquer les projets non sélectionnés"
   show_all_projects: "Montrer tous les projets"
+  label_issues_from_current_project_only_plural: "Demandes de ce projet uniquement"
