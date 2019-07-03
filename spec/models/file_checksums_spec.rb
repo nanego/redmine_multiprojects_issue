@@ -24,14 +24,14 @@ describe "FileChecksums" do
     # "project_statement" method is overridden
     # and should be reviewed if this test breaks
     # 4.0.0 is ok
-    assert_checksum %w(1b2c9e04706dbaff4130a7fb6e36342e), "app/models/query.rb"
+    assert_checksum %w(57279103006a6e28cc3fa5fedd51b637), "app/models/query.rb"
   end
 
   it "should core issue query model checksum" do
     # "versions" method is overridden
     # and should be reviewed if this test breaks
     # 4.0.0 is ok
-    assert_checksum %w(5eb12a32cb1af4fa2ec4d01c37923496), "app/models/issue_query.rb"
+    assert_checksum %w(4a37e52846b3a14ccac44e03104afa1e), "app/models/issue_query.rb"
   end
 
   it "should core edit and new form js checksum" do
