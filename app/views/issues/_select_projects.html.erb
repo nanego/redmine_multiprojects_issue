@@ -2,8 +2,8 @@
   <% select_options = project_tree_options_for_select((@issue.allowed_target_projects|@issue.projects) - [@issue.project], :selected => [@issue.project]|@issue.projects) %>
   <%= f.select :project_ids, select_options, {:required => true, :label => l("related_projects")},
                {:multiple => true, style: "display:none;"} %>
-  <%= render 'projects_list' %>
-  <%= link_to l('modify_projects'), plugin_multiprojects_issue_load_projects_selection_path(:issue_id => @issue.id, :project_id => @issue.project.id), remote: true, id: "loadModalProjectsSelection", class: "load-modal-projects-selection" %>
+  <%= render 'projects_list', issue: @issue, selected_projects: @issue.projects %>
+  <%= link_to l('modify_projects'), plugin_multiprojects_issue_load_projects_selection_path(:issue_id => @issue.id, :project_id => @issue.project.id, :select_tag_id => "issue_project_ids"), remote: true, id: "loadModalProjectsSelection", class: "load-modal-projects-selection" %>
   <label id=answers-on-secondary-projects class="inline answers-on-secondary-projects" style="<%= "display:none;" if @issue.projects.none? %>"><%= f.check_box :answers_on_secondary_projects, :no_label => true %><%= l(:field_answers_on_secondary_projects) %></label>
 </p>
 

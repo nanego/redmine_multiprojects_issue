@@ -123,10 +123,10 @@
 <script type="text/javascript">
 
   function updateSelectedProjects() {
-    $("select#issue_project_ids option").each(function() { this.selected = ""; });
+    $("select#<%= select_tag_id %> option").each(function() { this.selected = ""; });
     $("input:checkbox[name='project_ids[]']:checked").each(function()
     {
-      $("#issue_project_ids option[value=" + $(this).val() +"]").prop("selected",true);
+      $("#<%= select_tag_id %> option[value=" + $(this).val() +"]").prop("selected",true);
     });
     var htmlContent = "";
     $("input:checkbox[name='project_ids[]']:checked").each(function() {

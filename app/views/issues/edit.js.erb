@@ -17,7 +17,7 @@ $('#issue_project_ids').val(involved_project_ids);
 
 var htmlContent = "";
 $.each(involved_project_ids, function(key, name) {
-  htmlContent += " <span class=\"list_projects_names\">"+ $('#issue_project_ids option[value='+name+']').html().replace(/&nbsp;/g, '').replace("» ","") + "</span>";
+  htmlContent += " <span class=\"list_projects_names\">"+ $('#issue_project_ids option[value='+name+']').html().replace(/&nbsp;/g, '').replace("» ","").replace("  ", "") + "</span>";
 });
 $("#projects_form #list_of_projects_per_issue").html(htmlContent);
 if (htmlContent == ""){

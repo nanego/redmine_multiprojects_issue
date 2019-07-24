@@ -1,6 +1,6 @@
 var involved_project_ids = $('#issue_project_ids').val();
-if(involved_project_ids==null) {
-  involved_project_ids='';
+if (involved_project_ids == null) {
+    involved_project_ids = '';
 }
 
 /** Start Standard Redmine */
@@ -18,14 +18,16 @@ $('#issue_assigned_to_id').find('option').first().html('<%= escape_javascript(@i
 $('#issue_project_ids').val(involved_project_ids);
 
 var htmlContent = "";
-$.each(involved_project_ids, function(key, name) {
-  htmlContent += " <span class=\"list_projects_names\">"+ $('#issue_project_ids option[value='+name+']').html().replace(/&nbsp;/g, '').replace("» ","") + "</span>";
+$.each(involved_project_ids, function (key, name) {
+    htmlContent += ' <span class="list_projects_names">';
+    htmlContent += $('#issue_project_ids option[value=' + name + ']').html().replace(/&nbsp;/gi, '').replace("» ", "");
+    htmlContent += "</span>";
 });
 $("#projects_form #list_of_projects_per_issue").html(htmlContent);
-if (htmlContent == ""){
-  $(".and_x_other_projects").css("display", "none");
-  $("#answers-on-secondary-projects").hide()
-} else{
-  $(".and_x_other_projects").css("display","inline");
-  $("#answers-on-secondary-projects").show()
+if (htmlContent == "") {
+    $(".and_x_other_projects").css("display", "none");
+    $("#answers-on-secondary-projects").hide()
+} else {
+    $(".and_x_other_projects").css("display", "inline");
+    $("#answers-on-secondary-projects").show()
 }

@@ -1,12 +1,11 @@
 <%
    nb_other_projects = 0
    nb_visible_projects = 0
-   issue_projects = @issue.projects
-   allowed_projects = [@issue.project] | @issue.allowed_target_projects
+   allowed_projects = [issue.project] | issue.allowed_target_projects
 %>
 <span id="my_projects_per_issue">
   <span id="list_of_projects_per_issue">
-    <% issue_projects.each do |project| %>
+    <% selected_projects.each do |project| %>
       <% if allowed_projects.include?(project) %>
         <%= content_tag("span", link_to(project.name.gsub(/ /,"&nbsp;").html_safe, project_issues_path(project)), class: "list_projects_names") %>
         <% nb_visible_projects += 1 %>

@@ -15,6 +15,7 @@ class IssuesController < ApplicationController
       @issue = Issue.new
     end
     @issue.project = @project
+    @select_tag_id = params[:select_tag_id]
   end
 
   private
