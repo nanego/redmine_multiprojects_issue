@@ -1,7 +1,8 @@
 <% if (@issue.projects-[@issue.project]).present? %>
   <hr>
   <div id="current_projects_list" style="display: flex;">
-    <span id="label_related_projects"><%= l("related_projects") %></span><%= render 'projects_list' %>
+    <span id="label_related_projects"><%= l("related_projects") %></span>
+    <%= render 'projects_list', issue: @issue, selected_projects: @issue.projects %>
   </div>
   <% unless @project.is_public? || User.current.admin? || User.current.member_of?(@project) %>
     <script>$('#sidebar').hide();</script>
