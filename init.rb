@@ -26,4 +26,7 @@ Redmine::Plugin.register :redmine_multiprojects_issue do
 
   activity_provider :issues_from_current_project_only, :class_name => ['Issue', 'Journal']
   permission :view_issues_from_current_project_only, {}, :public => false, :read => true
+  project_module :issue_tracking do
+    permission :link_other_projects_to_issue, {}, :require => :member
+  end
 end

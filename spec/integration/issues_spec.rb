@@ -30,6 +30,10 @@ describe "Issues" do
            :custom_values,
            :custom_fields_trackers
 
+  before(:all) do
+    Role.find(1).add_permission!(:link_other_projects_to_issue) # Role for User:jsmith on Project:1
+  end
+
   # create an issue with multiple projects
   it "should create issue with multiple projects" do
     log_user('jsmith', 'jsmith')
@@ -64,6 +68,15 @@ describe "Issues" do
     expect(issue.author.login).to eq 'jsmith'
     expect(issue.project.id).to eq 1
     expect(issue.projects.collect(&:id)).to eq [2, 3, 4]
+  end
+
+  it "should not be allowed to create issue with multiple projects" do
+    Role.find(1).remove_permission!(:link_other_projects_to_issue) # Role for User:jsmith on Project:1
+    log_user('jsmith', 'jsmith')
+    get '/projects/1/issues/new', params: {:tracker_id => '1'}
+    expect(response).to be_successful
+    assert_template 'issues/new'
+    assert_select "p#projects_form", :count => 0
   end
 
   # update an issue and set several projects

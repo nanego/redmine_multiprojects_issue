@@ -10,8 +10,9 @@ class IssuesController < ApplicationController
 
   def load_projects_selection
     if params[:issue_id]
-      @issue = Issue.find(params[:issue_id])
-    else
+      @issue = Issue.where(id: params[:issue_id]).first
+    end
+    if @issue.blank?
       @issue = Issue.new
     end
     @issue.project = @project
