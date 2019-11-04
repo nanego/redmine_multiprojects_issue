@@ -3,9 +3,14 @@ if(involved_project_ids==null) {
   involved_project_ids='';
 }
 
-/** Start Standard Redmine */
-replaceIssueFormWith('<%= escape_javascript(render :partial => 'form') %>');
+/* Compatibility with redmine_customize_core_fields plugin */
+<% if Setting['plugin_redmine_customize_core_fields']['override_issue_form'] == 'true' && @issue.project.module_enabled?("customize_core_fields") %>
+  replaceIssueFormWith('<%= escape_javascript(render :partial => 'issues/form_with_positions') %>');
+<% else %>
+  replaceIssueFormWith('<%= escape_javascript(render :partial => 'issues/form') %>');
+<% end %>
 
+/** Standard Redmine */
 <% if User.current.allowed_to?(:log_time, @issue.project) %>
   $('#log_time').show();
 <% else %>

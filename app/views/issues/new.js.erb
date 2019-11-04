@@ -3,9 +3,15 @@ if (involved_project_ids == null) {
     involved_project_ids = '';
 }
 
+/* Compatibility with redmine_customize_core_fields plugin */
+<% if Setting['plugin_redmine_customize_core_fields']['override_issue_form'] == 'true' && @issue.project.module_enabled?("customize_core_fields") %>
+replaceIssueFormWith('<%= escape_javascript(render :partial => 'issues/form_with_positions') %>');
+<% else %>
+replaceIssueFormWith('<%= escape_javascript(render :partial => 'issues/form') %>');
+<% end %>
+
 /** Start Standard Redmine */
 
-replaceIssueFormWith('<%= escape_javascript(render :partial => 'form') %>');
 <% case params[:form_update_triggered_by] %>
 <% when "issue_project_id" %>
 $("#watchers_form_container").html('<%= escape_javascript(render :partial => 'issues/watchers_form') %>');
