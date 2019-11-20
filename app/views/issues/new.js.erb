@@ -4,7 +4,7 @@ if (involved_project_ids == null) {
 }
 
 /* Compatibility with redmine_customize_core_fields plugin */
-<% if Redmine::Plugin.installed?(:plugin_redmine_customize_core_fields) && Setting['plugin_redmine_customize_core_fields']['override_issue_form'] == 'true' && @issue.project.module_enabled?("customize_core_fields") %>
+<% if Redmine::Plugin.installed?(:redmine_customize_core_fields) && Setting['plugin_redmine_customize_core_fields']['override_issue_form'] == 'true' && @issue.project.module_enabled?("customize_core_fields") %>
 replaceIssueFormWith('<%= escape_javascript(render :partial => 'issues/form_with_positions') %>');
 <% else %>
 replaceIssueFormWith('<%= escape_javascript(render :partial => 'issues/form') %>');
