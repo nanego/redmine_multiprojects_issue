@@ -28,12 +28,14 @@ export REDMINE_GIT_TAG=$REDMINE_VER
 export BUNDLE_GEMFILE=$PATH_TO_REDMINE/Gemfile
 
 # checkout redmine
-git clone $REDMINE_GIT_REPO $PATH_TO_REDMINE
-cd $PATH_TO_REDMINE
-if [ ! "$REDMINE_GIT_TAG" = "master" ];
+if [ "$REDMINE_GIT_TAG" == "master" ];
 then
-  git checkout -b $REDMINE_GIT_TAG origin/$REDMINE_GIT_TAG
+  git clone $REDMINE_GIT_REPO $PATH_TO_REDMINE
+else
+  git clone $REDMINE_GIT_REPO --branch=$REDMINE_GIT_TAG $PATH_TO_REDMINE
 fi
+
+cd $PATH_TO_REDMINE
 
 # create a link to the backlogs plugin
 ln -sf $PATH_TO_PLUGIN plugins/$NAME_OF_PLUGIN
