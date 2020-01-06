@@ -48,19 +48,18 @@ mv $TESTSPACE/database.yml.travis config/database.yml
 mv $TESTSPACE/additional_environment.rb config/
 
 # install gems
-bundle install
+bundle install --jobs=4
 
 # run redmine database migrations
 bundle exec rails db:migrate
-
-# run plugin database migrations
-bundle exec rails redmine:plugins:migrate
+bundle exec rails redmine:plugins
 
 # install redmine database
-bundle exec rails redmine:load_default_data REDMINE_LANG=en
+# bundle exec rails redmine:load_default_data REDMINE_LANG=en
 
-bundle exec rails db:structure:dump
+# bundle exec rails db:structure:dump
 bundle exec rails db:fixtures:load
+bundle exec rails test:scm:setup:subversion
 
 # run tests
 # bundle exec rake TEST=test/unit/role_test.rb
