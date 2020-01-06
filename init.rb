@@ -24,7 +24,7 @@ Redmine::Plugin.register :redmine_multiprojects_issue do
   settings :default => { 'custom_fields' => []},
            :partial => 'settings/redmine_plugin_multiprojects_issue_settings'
 
-  activity_provider :issues_from_current_project_only, :class_name => ['Issue', 'Journal']
+  activity_provider :issues_from_current_project_only, :class_name => ['Issue', 'Journal'] unless Rails.env.test?
   permission :view_issues_from_current_project_only, {}, :public => false, :read => true
   project_module :issue_tracking do
     permission :link_other_projects_to_issue, {}, :require => :member

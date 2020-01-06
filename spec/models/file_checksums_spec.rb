@@ -10,8 +10,8 @@ describe "FileChecksums" do
   it "should core issue model checksum" do
     # "notified_users", "visible_condition" and "visible?" methods are overridden
     # and should be reviewed if this test breaks
-    # 4.0.0 is ok
-    assert_checksum %w(71289d390f3afbd70f0e284382875e5d), "app/models/issue.rb"
+    # 4.0.0 and 4.0.6 are ok
+    assert_checksum %w(71289d390f3afbd70f0e284382875e5d 7bf3334c6f62ec6c6baec7ca883b8019), "app/models/issue.rb"
   end
 
   # tests have been added to the issue_helper_patch_test file, no need to check the checksum
@@ -30,8 +30,8 @@ describe "FileChecksums" do
   it "should core issue query model checksum" do
     # "versions" method is overridden
     # and should be reviewed if this test breaks
-    # 4.0.0 is ok
-    assert_checksum %w(4a37e52846b3a14ccac44e03104afa1e), "app/models/issue_query.rb"
+    # 4.0.0 and 4.0.6 are ok
+    assert_checksum %w(4a37e52846b3a14ccac44e03104afa1e ef4a2baaa3a69ba6de09dd52609aff7a), "app/models/issue_query.rb"
   end
 
   it "should core edit and new form js checksum" do
