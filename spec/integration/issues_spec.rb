@@ -30,7 +30,7 @@ describe "Issues" do
            :custom_values,
            :custom_fields_trackers
 
-  before(:all) do
+  before(:each) do
     Role.find(1).add_permission!(:link_other_projects_to_issue) # Role for User:jsmith on Project:1
   end
 
