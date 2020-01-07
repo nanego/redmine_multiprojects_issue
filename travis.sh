@@ -37,6 +37,15 @@ fi
 
 cd $PATH_TO_REDMINE
 
+mv $TESTSPACE/database.yml.travis config/database.yml
+mv $TESTSPACE/additional_environment.rb config/
+
+# install gems
+bundle install --jobs=4
+
+# run redmine database migrations
+bundle exec rails db:migrate RAILS_ENV=test
+
 # create a link to the backlogs plugin
 ln -sf $PATH_TO_PLUGIN plugins/$NAME_OF_PLUGIN
 
@@ -45,15 +54,11 @@ git clone https://github.com/jbbarth/redmine_base_deface.git plugins/redmine_bas
 git clone https://github.com/jbbarth/redmine_base_rspec.git plugins/redmine_base_rspec
 git clone https://github.com/nanego/redmine_base_stimulusjs.git plugins/redmine_base_stimulusjs
 
-mv $TESTSPACE/database.yml.travis config/database.yml
-mv $TESTSPACE/additional_environment.rb config/
-
 # install gems
 bundle install --jobs=4
 
-# run redmine database migrations
-bundle exec rails db:migrate
-bundle exec rails redmine:plugins
+# run plugins migrations
+bundle exec rails redmine:plugins RAILS_ENV=test
 
 # install redmine database
 # bundle exec rails redmine:load_default_data REDMINE_LANG=en
