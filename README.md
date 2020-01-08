@@ -17,9 +17,9 @@ Cross-projects issues appear in all related projects. They can be viewed by ever
 Screenshots
 ------------
 
-![redmine_multiprojects_issue screenshot](http://blog.nanego.com/images/multiproject_query.png)
-![redmine_multiprojects_issue screenshot](http://blog.nanego.com/images/multiproject_show.png)
-![redmine_multiprojects_issue screenshot](http://blog.nanego.com/images/multiproject_modify.png)
+![redmine_multiprojects_issue screenshot](https://raw.githubusercontent.com/nanego/redmine_multiprojects_issue/master/assets/images/multiprojects_show.png)
+![redmine_multiprojects_issue screenshot](https://raw.githubusercontent.com/nanego/redmine_multiprojects_issue/master/assets/images/multiprojects_issues.png)
+![redmine_multiprojects_issue screenshot](https://raw.githubusercontent.com/nanego/redmine_multiprojects_issue/master/assets/images/multiprojects_edit.png)
 
 Installation
 ------------
