@@ -13,6 +13,7 @@ env:
   global:
     - MAGICK_CONFIGURE_PATH=$HOME/.config/ImageMagick
   jobs:
+    - REDMINE_VER=master
     - REDMINE_VER=4.1.0
     - REDMINE_VER=4.0.6
 
