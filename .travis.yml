@@ -14,8 +14,8 @@ env:
     - MAGICK_CONFIGURE_PATH=$HOME/.config/ImageMagick
   jobs:
     - REDMINE_VER=master
-    - REDMINE_VER=4.1.0
-    - REDMINE_VER=4.0.6
+    - REDMINE_VER=4.1.1
+    - REDMINE_VER=4.0.7
 
 addons:
   postgresql: "9.4"

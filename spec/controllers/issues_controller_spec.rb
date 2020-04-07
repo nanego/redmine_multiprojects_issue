@@ -33,7 +33,8 @@ describe IssuesController, type: :controller do
            :journal_details,
            :queries,
            :repositories,
-           :changesets
+           :changesets,
+           :projects
 
   it "should post create should send a notification to other projects users" do
     ActionMailer::Base.deliveries.clear

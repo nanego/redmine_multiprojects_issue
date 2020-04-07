@@ -37,10 +37,6 @@ fi
 
 cd $PATH_TO_REDMINE
 
-# Temporary fix for issue #32785 X-Sendfile header field is not set if rack 2.1.0 is installed
-# TODO => Remove this when Redmine 4.1.1 is released
-echo "gem 'rack', '~> 2.0.8'" >> Gemfile
-
 mv $TESTSPACE/database.yml.travis config/database.yml
 mv $TESTSPACE/additional_environment.rb config/
 
