@@ -16,4 +16,4 @@ ca:
   field_projects: "Projectes relacionats"
   field_answers_on_secondary_projects: "Respostes permeses"
   multiprojects_selection_available_custom_fields: "Camps personalitzats disponibles per a la selecció ràpida de projectes"
-  permission_edit_multiprojects_issue: "Editar projectes relacionats"
+  permission_link_other_projects_to_issue: "Editar projectes relacionats"

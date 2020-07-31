@@ -16,4 +16,4 @@ es:
   field_projects: "Proyectos relacionados"
   field_answers_on_secondary_projects: "Respuestas permitidas"
   multiprojects_selection_available_custom_fields: "Campos personalizados disponibles para la selección rápida de proyectos"
-  permission_edit_multiprojects_issue: "Editar proyectos relacionados"
+  permission_link_other_projects_to_issue: "Editar proyectos relacionados"
