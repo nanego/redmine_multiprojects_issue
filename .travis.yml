@@ -1,5 +1,3 @@
-sudo: false
-
 language: ruby
 
 rvm:
@@ -13,9 +11,13 @@ env:
   global:
     - MAGICK_CONFIGURE_PATH=$HOME/.config/ImageMagick
   jobs:
-    - REDMINE_VER=master
     - REDMINE_VER=4.1.1
     - REDMINE_VER=4.0.7
+    - REDMINE_VER=master
+
+jobs:
+  allow_failures:
+    - env: REDMINE_VER=master
 
 addons:
   postgresql: "9.4"
