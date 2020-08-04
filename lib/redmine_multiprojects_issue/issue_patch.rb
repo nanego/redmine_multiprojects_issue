@@ -22,7 +22,19 @@ module RedmineMultiprojectsIssue
         user.projects_by_role.each do |role, projects|
           projects = projects & [options[:project]] if options[:project]
           if role.allowed_to?(:view_issues) && projects.any?
-            statement_by_role[role] = "project_id IN (#{projects.collect(&:id).join(',')})"
+            role_where = 
+            case role.issues_visibility
+                when 'all'
+                    ""
+                when 'default'
+                    " AND ( #{Issue.table_name}.is_private <> 1 OR #{Issue.table_name}.author_id = #{user.id} OR #{Issue.table_name}.assigned_to_id IN (#{user.id}))"
+                when 'own'
+                    " AND ( #{Issue.table_name}.author_id = #{user.id} OR #{Issue.table_name}.assigned_to_id IN (#{user.id}))"
+                else
+                    " AND ( #{Issue.table_name}.id < 0 )"
+            end
+
+            statement_by_role[role] = "( project_id IN (#{projects.collect(&:id).join(',')}) #{role_where}) "            
           end
         end
         authorized_projects = statement_by_role.values.join(' OR ')
