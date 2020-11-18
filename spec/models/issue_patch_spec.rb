@@ -37,6 +37,7 @@ describe "IssueMultiprojectsPatch" do
     new_member = Member.new(:project_id => 5, :user_id => 4)
     new_member.roles = [Role.find(2)]
     new_member.save!
+    Role.find(2).add_permission!(:view_related_issues_in_secondary_projects) # Role for user 8 on project 2 and 5
   end
 
   it "should visible patch when project is public" do

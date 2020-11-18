@@ -4,7 +4,8 @@ class IssueQuery < Query
 
   def project_statement(with_multiprojects = true)
     project_clauses = super()
-    if project_clauses && project && with_multiprojects
+    allowed = User.current.allowed_to?(:view_related_issues_in_secondary_projects, nil, :global => true)
+    if project_clauses && project && with_multiprojects && allowed
       "((#{project_clauses}) OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE project_id = #{project.id}))"
     else
       project_clauses

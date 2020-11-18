@@ -26,7 +26,8 @@ module RedmineMultiprojectsIssue
           end
         end
         authorized_projects = statement_by_role.values.join(' OR ')
-        if authorized_projects.present?
+        allowed = user.allowed_to?(:view_related_issues_in_secondary_projects, nil, :global => true)
+        if authorized_projects.present? && allowed
           "(#{super} OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE (#{authorized_projects}) ))"
         else
           super
@@ -62,7 +63,7 @@ class Issue < ActiveRecord::Base
 
   # Overrides Redmine::Acts::Attachable::InstanceMethods#attachments_visible?
   def attachments_visible?(user=User.current)
-    # Check if user is allowed to see attached files in at least one of the impacted projects
+    # Check if user is allowed to see attached files in at least one of the related projects
     allowed = false
     (self.projects + [self.project]).each do |project|
       allowed = allowed || user.allowed_to?(self.class.attachable_options[:view_permission], project)

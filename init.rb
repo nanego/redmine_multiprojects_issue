@@ -28,5 +28,6 @@ Redmine::Plugin.register :redmine_multiprojects_issue do
   permission :view_issues_from_current_project_only, {}, :public => false, :read => true
   project_module :issue_tracking do
     permission :link_other_projects_to_issue, {}, :require => :member
+    permission :view_related_issues_in_secondary_projects, {}, :read => true
   end
 end

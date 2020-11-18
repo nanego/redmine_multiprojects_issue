@@ -15,6 +15,10 @@ describe "QueryPatch" do
            :projects_trackers,
            :custom_fields_trackers
 
+  before do
+    Role.find(2).add_permission!(:view_related_issues_in_secondary_projects) # Role for user 8 on project 2 and 5
+  end
+
   it "should issue visibility from other project" do
 
     #setup - create multiproject issue

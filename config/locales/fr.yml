@@ -24,3 +24,4 @@ fr:
   show_all_projects: "Montrer tous les projets"
   label_issues_from_current_project_only_plural: "Demandes de ce projet uniquement"
   permission_link_other_projects_to_issue: "Lier d'autres projets à une demande (demandes multi-projets)"
+  permission_view_related_issues_in_secondary_projects: "Voir les demandes multi-projets dans leurs projets secondaires"
