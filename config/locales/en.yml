@@ -24,3 +24,4 @@ en:
   show_all_projects: "Show all projects"
   label_issues_from_current_project_only_plural: "Issues from this project only"
   permission_link_other_projects_to_issue: "Add related projects to issues (multi-project issues)"
+  permission_view_related_issues_in_secondary_projects: "View multi-projects issues"

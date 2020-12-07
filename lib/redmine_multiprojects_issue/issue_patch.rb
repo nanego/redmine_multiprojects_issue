@@ -21,14 +21,13 @@ module RedmineMultiprojectsIssue
         statement_by_role = {}
         user.projects_by_role.each do |role, projects|
           projects = projects & [options[:project]] if options[:project]
-          if role.allowed_to?(:view_issues) && projects.any?
+          if projects.any? && role.allowed_to?(:view_related_issues_in_secondary_projects)
             statement_by_role[role] = "project_id IN (#{projects.collect(&:id).join(',')})"
           end
         end
-        authorized_projects = statement_by_role.values.join(' OR ')
-        allowed = user.allowed_to?(:view_related_issues_in_secondary_projects, nil, :global => true)
-        if authorized_projects.present? && allowed
-          "(#{super} OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE (#{authorized_projects}) ))"
+        authorized_project_statement = statement_by_role.values.join(' OR ')
+        if authorized_project_statement.present?
+          "(#{super} OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE (#{authorized_project_statement}) ))"
         else
           super
         end
