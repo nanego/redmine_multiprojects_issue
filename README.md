@@ -47,18 +47,16 @@ And finally restart your Redmine instance.
 
 ## Test status
 
-|Plugin branch| Redmine Version   | Test Status       |
-|-------------|-------------------|-------------------| 
-|master       | 4.1.1             | [![Build1][1]][5] |  
-|master       | 4.0.7             | [![Build2][2]][5] |
-|master       | master            | [![Build1][3]][5] | 
+|Plugin branch| Redmine Version   | Test Status      |
+|-------------|-------------------|------------------|
+|master       | 4.1.1             | [![4.1.1][1]][5] |  
+|master       | 4.0.7             | [![4.0.7][2]][5] |
+|master       | master            | [![master][3]][5]|
 
-[1]: https://travis-matrix-badges.herokuapp.com/repos/nanego/redmine_multiprojects_issue/branches/master/1?use_travis_com=true
-[2]: https://travis-matrix-badges.herokuapp.com/repos/nanego/redmine_multiprojects_issue/branches/master/2?use_travis_com=true
-[3]: https://travis-matrix-badges.herokuapp.com/repos/nanego/redmine_multiprojects_issue/branches/master/3?use_travis_com=true
-[5]: https://travis-ci.com/nanego/redmine_multiprojects_issue
-
-
+[1]: https://github.com/nanego/redmine_multiprojects_issue/actions/workflows/4_1_1.yml/badge.svg
+[2]: https://github.com/nanego/redmine_multiprojects_issue/actions/workflows/4_0_7.yml/badge.svg
+[3]: https://github.com/nanego/redmine_multiprojects_issue/actions/workflows/master.yml/badge.svg
+[5]: https://github.com/nanego/redmine_multiprojects_issue/actions
 
 Contributing
 ------------

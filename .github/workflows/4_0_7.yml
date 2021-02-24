@@ -1,0 +1,157 @@
+name: Tests 4.0.7
+
+env:
+  PLUGIN_NAME: redmine_multiprojects_issue
+  REDMINE_VERSION: 4.0.7
+  RAILS_ENV: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: ${{ github.workflow }} ${{ matrix.db }} ruby-${{ matrix.ruby }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        ruby: ['2.6']
+        db: ['postgres']
+      fail-fast: false
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_DB: redmine
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout Redmine
+        uses: actions/checkout@v2
+        with:
+          repository: redmine/redmine
+          ref: ${{ env.REDMINE_VERSION }}
+          path: redmine
+
+      - name: Update package archives
+        run: sudo apt-get update --yes --quiet
+
+      - name: Install package dependencies
+        run: >
+          sudo apt-get install --yes --quiet
+          build-essential
+          cmake
+          libicu-dev
+          libpq-dev
+          ghostscript
+
+      - name: Set up chromedriver
+        uses: nanasess/setup-chromedriver@master
+      - run: |
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
+
+      - name: Allow imagemagick to read PDF files
+        run: |
+          echo '<policymap>' > policy.xml
+          echo '<policy domain="coder" rights="read | write" pattern="PDF" />' >> policy.xml
+          echo '</policymap>' >> policy.xml
+          sudo rm /etc/ImageMagick-6/policy.xml
+          sudo mv policy.xml /etc/ImageMagick-6/policy.xml
+
+      - name: Setup Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+
+      - name: Setup Bundler
+        run: gem install bundler -v '~> 1.0'
+
+      - name: Checkout dependencies - Base RSpec plugin
+        uses: actions/checkout@v2
+        with:
+          repository: jbbarth/redmine_base_rspec
+          path: redmine/plugins/redmine_base_rspec
+
+      - name: Prepare Redmine source
+        working-directory: redmine
+        run: |
+          sed -i '/rubocop/d' Gemfile
+          rm -f .rubocop*
+          cp plugins/redmine_base_rspec/spec/support/database-${{ matrix.db }}.yml config/database.yml
+
+      - name: Install Ruby dependencies
+        working-directory: redmine
+        run: |
+          bundle install --jobs=4 --retry=3 --without development
+
+      - name: Generate session store secret
+        env:
+          RAILS_ENV: test
+        working-directory: redmine
+        run: |
+          bundle exec rake generate_secret_token
+
+      - name: Run Redmine DB and migration tasks
+        env:
+          RAILS_ENV: test
+        working-directory: redmine
+        run: |
+          bundle exec rake db:create db:migrate
+          bundle exec rails test:scm:setup:subversion
+
+      - name: Checkout dependencies - Base Deface plugin
+        uses: actions/checkout@v2
+        with:
+          repository: jbbarth/redmine_base_deface
+          path: redmine/plugins/redmine_base_deface
+
+      - name: Checkout dependencies - Base StimulusJS plugin
+        uses: actions/checkout@v2
+        with:
+          repository: nanego/redmine_base_stimulusjs
+          path: redmine/plugins/redmine_base_stimulusjs
+
+      - name: Checkout plugin
+        uses: actions/checkout@v2
+        with:
+          path: redmine/plugins/${{ env.PLUGIN_NAME }}
+
+      - name: Install plugins dependencies and run plugins migrations
+        env:
+          RAILS_ENV: test
+        working-directory: redmine
+        run: |
+          bundle install --jobs=4 --retry=3 --without development
+          bundle exec rake redmine:plugins:migrate
+          # cp -i plugins/*/spec/fixtures/*yml test/fixtures/
+          bundle exec rails db:fixtures:load
+
+      - name: Run core tests
+        env:
+          RAILS_ENV: test
+        working-directory: redmine
+        run: bundle exec rails test
+
+      - name: Run plugin tests
+        env:
+          RAILS_ENV: test
+        working-directory: redmine
+        run: bundle exec rails redmine:plugins:test NAME=${{ env.PLUGIN_NAME }} RUBYOPT="-W0"
+
+      - name: Run uninstall test
+        env:
+          RAILS_ENV: test
+        working-directory: redmine
+        run: bundle exec rake redmine:plugins:migrate NAME=${{ env.PLUGIN_NAME }} VERSION=0
