@@ -1,7 +1,7 @@
 Redmine Multiprojects Issue plugin
 ======================
 
-[![Build Status](https://travis-ci.com/nanego/redmine_multiprojects_issue.svg?branch=master)](https://travis-ci.com/nanego/redmine_multiprojects_issue)
+[![4.1.1][1]][5]
 
 This redmine plugin allows you to specify more than one project per issue.
 
