@@ -54,6 +54,7 @@ jobs:
           libicu-dev
           libpq-dev
           ghostscript
+          gsfonts
 
       - name: Set up chromedriver
         uses: nanasess/setup-chromedriver@master
