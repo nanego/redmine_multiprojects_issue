@@ -37,3 +37,8 @@ if (htmlContent == "") {
     $(".and_x_other_projects").css("display", "inline");
     $("#answers-on-secondary-projects").show()
 }
+
+/* Compatibility with redmine_limited_visibility plugin */
+<% if Redmine::Plugin.installed?(:redmine_limited_visibility) %>
+    init_issue_form_with_visibility()
+<% end %>
