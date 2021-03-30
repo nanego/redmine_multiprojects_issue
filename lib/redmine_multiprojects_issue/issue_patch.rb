@@ -54,7 +54,7 @@ class Issue < ActiveRecord::Base
 
   safe_attributes 'answers_on_secondary_projects'
   #adds a new "safe_attributes condition to handle the case of secondary projects
-  safe_attributes 'notes', :if => lambda {|issue, user| issue.editable?(user)}
+  safe_attributes 'notes', :if => lambda {|issue, user| issue.notes_addable?(user)}
 
   acts_as_activity_provider :type => 'issues_from_current_project_only',
                             :scope => joins(:project).preload(:project, :author, :tracker, :status),
