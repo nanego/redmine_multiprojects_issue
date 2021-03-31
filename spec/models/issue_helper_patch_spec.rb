@@ -19,7 +19,7 @@ describe "IssueHelperMultiprojectsIssuePatch", type: :helper do
 
   before do
     set_language_if_valid('en')
-    User.current = nil
+    User.current = User.find(1) #Admin
   end
 
   ### custom tests for 'projects' property
