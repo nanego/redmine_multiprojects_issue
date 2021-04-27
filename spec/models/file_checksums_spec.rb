@@ -11,7 +11,7 @@ describe "FileChecksums" do
   it "should core issue model checksum" do
     # "notified_users", "visible_condition" and "visible?" methods are overridden
     # and should be reviewed if this test breaks
-    # 4.0.0, 4.0.8 and 4.1.2 are ok
+    # 4.0.0, 4.0.9 and 4.1.3 are ok
     assert_checksum %w(71289d390f3afbd70f0e284382875e5d
                     7bf3334c6f62ec6c6baec7ca883b8019
                     0436c38146aea3ca0be29b9a89a41dc4
