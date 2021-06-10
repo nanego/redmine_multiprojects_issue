@@ -5,11 +5,17 @@ module Redmine
         module ClassMethods
           # Returns events of type event_type visible by user that occurred between from and to
           def find_events(event_type, user, from, to, options)
-
             provider_options = activity_provider_options[event_type]
             raise "#{self.name} can not provide #{event_type} events." if provider_options.nil?
 
-            scope = (provider_options[:scope] || self)
+            scope = provider_options[:scope]
+            if !scope
+              scope = self
+            elsif scope.respond_to?(:call)
+              scope = scope.call
+            else
+              ActiveSupport::Deprecation.warn "acts_as_activity_provider with implicit :scope option is deprecated. Please pass a scope on the #{self.name} as a proc."
+            end
 
             ## START PATCH
             ## START PATCH
