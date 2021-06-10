@@ -11,13 +11,8 @@ describe "FileChecksums" do
   it "should core issue model checksum" do
     # "notified_users", "visible_condition" and "visible?" methods are overridden
     # and should be reviewed if this test breaks
-    # 4.0.0, 4.0.9 and 4.1.3 are ok
-    assert_checksum %w(71289d390f3afbd70f0e284382875e5d
-                    7bf3334c6f62ec6c6baec7ca883b8019
-                    0436c38146aea3ca0be29b9a89a41dc4
-                    656212bf71ea687247ef7e9736819901
-                    c46d250871a265392924aa1eea26cf80
-                    0ebcfaac9dc50725ddae46568aa46b26), "app/models/issue.rb"
+    # 4.2.1 is ok
+    assert_checksum %w(465503c44955a1cea55dadbbbdf3aca6), "app/models/issue.rb"
   end
 
   # tests have been added to the issue_helper_patch_test file, no need to check the checksum
@@ -29,35 +24,30 @@ describe "FileChecksums" do
   it "should core query model checksum" do
     # "project_statement" method is overridden
     # and should be reviewed if this test breaks
-    # 4.0 and 4.1 are ok
-    assert_checksum %w(57279103006a6e28cc3fa5fedd51b637
-                    9a8c112af47dc4f8401740e88bea52df
-                    bfdf56d03af9e4812bbc340edf86e427
-                    3857c7c71260ae34823d079b1ded456a
-                    418acc71c688658893c35a1c4f26aa1d
-                    3f9a98e32dca8600372e5559e1b1d781), "app/models/query.rb"
+    # 4.2 is ok
+    assert_checksum %w(5e3055e02d5f96b8aa48307bacc427c0), "app/models/query.rb"
   end
 
   it "should core issue query model checksum" do
     # "versions" method is overridden
     # and should be reviewed if this test breaks
-    # 4.0.0, 4.0.6 and 4.1.0 are ok
-    assert_checksum %w(4a37e52846b3a14ccac44e03104afa1e ef4a2baaa3a69ba6de09dd52609aff7a a5e63ecd0d6ef15580c4db80cb5ec1a1), "app/models/issue_query.rb"
+    # 4.2 is ok
+    assert_checksum %w(1323eb088303abf0aa553e6d6541cecb), "app/models/issue_query.rb"
   end
 
   it "should core edit and new form js checksum" do
     # "new.js.erb" and "edit.js.erb" are completely overridden
     # and should be reviewed if these tests breaks
-    # 4.0.0 is ok
-    assert_checksum %w(2567d0882238652fc51e905d6ebe4b9c), "app/views/issues/new.js.erb"
+    # 4.2 is ok
+    assert_checksum %w(1fd7f7770d15713675b475d07dd2d364), "app/views/issues/new.js.erb"
     assert_checksum %w(0a92d0609b883d43daf5e825bc08cb01), "app/views/issues/edit.js.erb"
   end
 
   it "should check acts_as_activity_provider" do
     # "acts_as_activity_provider.rb" is completely overridden
     # and should be reviewed if these tests breaks
-    # 4.0.2 is ok
-    assert_checksum %w(baf7e02c5b9c33b30d657fe2693f724e 05d45dd431e17984ad8dd93366d4eda9), "lib/plugins/acts_as_activity_provider/lib/acts_as_activity_provider.rb"
+    # 4.2 is ok
+    assert_checksum %w(9c376fe7d1cd774107abd1b9eaf37c6e), "lib/plugins/acts_as_activity_provider/lib/acts_as_activity_provider.rb"
   end
 
 end
