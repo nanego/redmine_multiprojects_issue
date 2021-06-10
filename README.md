@@ -22,11 +22,12 @@ Installation
 
 This plugin has been tested with Redmine 2.3.0+.
 
-For Redmine versions up to 3.2.x, [release v0.2](https://github.com/nanego/redmine_multiprojects_issue/releases/tag/v0.2) must be used.
+Compatibility with older Redmine versions:
+* for Redmine versions up to 3.2.x, [release v0.2](https://github.com/nanego/redmine_multiprojects_issue/releases/tag/v0.2) must be used.
+* for Redmine version 3.3 & 3.4, please use this release [v3.4.6](https://github.com/nanego/redmine_multiprojects_issue/releases/tag/v3.4.6)
+* for Redmine version 4.0 & 4.1, use this release [v4.1.2](https://github.com/nanego/redmine_multiprojects_issue/releases/tag/v4.1.2)
 
-For Redmine version 3.3 & 3.4, use this release [v3.4.6](https://github.com/nanego/redmine_multiprojects_issue/releases/tag/v3.4.6)
-
-For Redmine version 4.0.0+, use the current master branch. See below for specific instructions.
+With Redmine 4.2.0+, use the current master branch. See below for specific instructions.
 
 Please apply general instructions for plugins [here](http://www.redmine.org/wiki/redmine/Plugins).
 
