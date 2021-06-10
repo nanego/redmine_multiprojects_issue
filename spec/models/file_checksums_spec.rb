@@ -25,7 +25,7 @@ describe "FileChecksums" do
     # "project_statement" method is overridden
     # and should be reviewed if this test breaks
     # 4.2 is ok
-    assert_checksum %w(5e3055e02d5f96b8aa48307bacc427c0), "app/models/query.rb"
+    assert_checksum %w(5e3055e02d5f96b8aa48307bacc427c0 07eea829a11f8d072e6c58ef4002bbcc), "app/models/query.rb"
   end
 
   it "should core issue query model checksum" do
