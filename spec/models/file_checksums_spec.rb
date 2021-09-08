@@ -11,7 +11,7 @@ describe "FileChecksums" do
   it "should core issue model checksum" do
     # "notified_users", "visible_condition" and "visible?" methods are overridden
     # and should be reviewed if this test breaks
-    # 4.2.1 is ok
+    # 4.2.2 is ok
     assert_checksum %w(465503c44955a1cea55dadbbbdf3aca6), "app/models/issue.rb"
   end
 
