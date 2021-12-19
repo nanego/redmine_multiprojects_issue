@@ -33,7 +33,6 @@ Please apply general instructions for plugins [here](http://www.redmine.org/wiki
 
 Note that this plugin now depends on:
 
-* **redmine_base_deface** which can be found [here](https://github.com/jbbarth/redmine_base_deface)
 * **redmine_base_stimulusjs** which can be found [here](https://github.com/nanego/redmine_base_stimulusjs)
 
 These plugins must be installed first.
@@ -51,7 +50,7 @@ And finally restart your Redmine instance.
 
 |Plugin branch| Redmine Version   | Test Status      |
 |-------------|-------------------|------------------|
-|master       | 4.2.3             | [![4.2.3][1]][5] |  
+|master       | 4.2.3             | [![4.2.3][1]][5] |
 |master       | 4.1.5             | [![4.1.5][2]][5] |
 |master       | master            | [![master][4]][5]|
 
