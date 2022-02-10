@@ -149,7 +149,7 @@ describe IssuesController, type: :controller do
 
     issue = Issue.find(1)
     old_projects_ids = issue.project_ids
-    new_projects_ids = [1, 4, 5]
+    new_projects_ids = [1, 5]
     assert_difference 'Journal.count' do
       assert_difference('JournalDetail.count', 2) do
         put :update, params: {:id => 1, :issue => {:priority_id => '6',
@@ -162,7 +162,7 @@ describe IssuesController, type: :controller do
 
     issue = Issue.find(1)
     old_projects_ids = issue.project_ids
-    new_projects_ids = [1, 6]
+    new_projects_ids = [1, 3]
     assert_difference 'Journal.count' do
       assert_difference('JournalDetail.count', 3) do # 3 changes : priority, added projects, deleted projects
         put :update, params: {:id => 1, :issue => {:priority_id => '4',
@@ -194,7 +194,7 @@ describe IssuesController, type: :controller do
     @request.session[:user_id] = 2
 
     #setup multiprojects issue
-    new_projects_ids = [1, 4, 5]
+    new_projects_ids = [1, 5]
     assert_difference 'Journal.count' do
       assert_difference('JournalDetail.count', 2) do
         put :update, params: {:id => 1, :issue => {:priority_id => '6',
