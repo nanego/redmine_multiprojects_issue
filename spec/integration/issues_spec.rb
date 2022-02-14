@@ -114,7 +114,7 @@ describe "Issues" do
     assert_template 'issues/edit'
     assert_select "p#projects_form", :count => 1
 
-    put '/issues/1', params: {:issue => {:project_ids => [2, 3, 4]}, :project_id => 1}
+    put '/issues/1', params: {:issue => {:project_ids => [2, 3]}, :project_id => 1}
 
     # find updated issue
     issue = Issue.find(1)
