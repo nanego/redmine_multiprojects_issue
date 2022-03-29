@@ -1,8 +1,8 @@
-name: Tests 4.2.4
+name: Tests 4.2.5
 
 env:
   PLUGIN_NAME: redmine_multiprojects_issue
-  REDMINE_VERSION: 4.2.4
+  REDMINE_VERSION: 4.2.5
   RAILS_ENV: test
 
 on:
