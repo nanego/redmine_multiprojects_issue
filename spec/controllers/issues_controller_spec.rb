@@ -36,6 +36,29 @@ describe IssuesController, type: :controller do
            :changesets,
            :projects
 
+  before(:each) do
+    Role.find_by_name("Manager").add_permission!(:link_other_projects_to_issue)
+  end
+
+  it "should require correct permission when linking other projects during issue creation (:link_other_projects_to_issue)" do
+    Role.find_by_name("Manager").remove_permission!(:link_other_projects_to_issue)
+    ActionMailer::Base.deliveries.clear
+    @request.session[:user_id] = 2
+
+    assert_difference 'Issue.count', 1 do
+      post :create, params: {:project_id => 1,
+                              :issue => {:tracker_id => 3,
+                                        :subject => 'This is the test_new issue',
+                                        :description => 'This is the description',
+                                        :priority_id => 5,
+                                        :estimated_hours => '',
+                                        :project_ids => [1, 5, 2],
+                                        :custom_field_values => {'2' => 'Value for field 2'}}}
+    end
+
+    expect(Issue.last.project_ids).to be_empty
+  end
+
   it "should post create should send a notification to other projects users" do
     ActionMailer::Base.deliveries.clear
     @request.session[:user_id] = 2
@@ -86,6 +109,27 @@ describe IssuesController, type: :controller do
     expect(notified_users).to include(User.find(3).mail)
     expect(notified_users).to_not include(User.find(1).mail)
     expect(notified_users).to_not include(User.find(8).mail)
+  end
+
+  it "should require correct permission when linking other projects during issue update" do
+    Role.find_by_name("Manager").remove_permission!(:link_other_projects_to_issue)
+
+    @request.session[:user_id] = 2
+    ActionMailer::Base.deliveries.clear
+    issue = Issue.find(1)
+    old_subject = issue.subject
+    new_subject = 'Subject modified by IssuesControllerTest#test_post_edit'
+
+    put :update, params: {:id => 1, :issue => {:subject => new_subject,
+                                               :priority_id => '6',
+                                               :project_ids => [1, 5],
+                                               :category_id => '1' # no change
+    }}
+    issue.reload
+
+    expect(ActionMailer::Base.deliveries.size).to eq 2
+    expect(issue.subject).to eq(new_subject)
+    expect(issue.project_ids).to be_empty
   end
 
   it "should put update should send a notification to members on other projects" do
