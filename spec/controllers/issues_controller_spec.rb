@@ -132,6 +132,25 @@ describe IssuesController, type: :controller do
     expect(issue.project_ids).to be_empty
   end
 
+  it "should keep current current linked projects when user has no permission" do
+    Role.find_by_name("Manager").remove_permission!(:link_other_projects_to_issue)
+    @request.session[:user_id] = 2
+
+    issue = Issue.find(1)
+    issue.assignable_projects = [Project.first]
+    issue.save!
+
+    put :update, params: {:id => 1, :issue => {:subject => "new subject",
+                                               :priority_id => '6',
+                                               :project_ids => [1, 5],
+                                               :category_id => '1' 
+    }}
+    issue.reload
+
+    expect(issue.subject).to eq("new subject")
+    expect(issue.project_ids).to eq([1])
+  end
+
   it "should put update should send a notification to members on other projects" do
     @request.session[:user_id] = 2
     ActionMailer::Base.deliveries.clear
