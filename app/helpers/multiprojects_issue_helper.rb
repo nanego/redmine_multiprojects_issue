@@ -3,10 +3,17 @@ module MultiprojectsIssueHelper
     values_by_projects = {}
     projects.each do |project|
       values_by_projects.merge!(project.id => {})
-    end
-    values = CustomValue.where("customized_type = ? AND customized_id IN (?) AND custom_field_id IN (?)", Project.name.demodulize, projects.map(&:id), custom_fields.map(&:id) )
-    values.each do |value|
-      values_by_projects[value.customized_id].merge!(value.custom_field_id => value.value)
+      custom_fields.each do |custom_field|
+        values = CustomValue.where(customized_type: Project.name.demodulize, customized_id: project.id, custom_field_id: custom_field.id)
+        values.each do |custom_value|
+          if custom_field.field_format == 'enumeration'
+            value = CustomFieldEnumeration.where(id: custom_value.value.to_i).first.to_s
+          else
+            value = custom_value.value
+          end
+          values_by_projects[project.id].merge!(custom_field.id => value) if value.present?
+        end
+      end
     end
     values_by_projects
   end
