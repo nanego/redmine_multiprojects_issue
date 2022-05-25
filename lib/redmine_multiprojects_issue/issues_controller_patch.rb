@@ -22,13 +22,15 @@ class IssuesController < ApplicationController
   private
 
     def set_assignable_projects
+      if !User.current.admin? && !User.current.allowed_to?(:link_other_projects_to_issue, @issue.project)
+        @issue.assignable_projects = @issue.projects
+        return
+      end
       if params[:issue] && params[:issue][:project_ids]
         @projects = []
         params[:issue][:project_ids].reject!(&:blank?)
         if params[:issue][:project_ids].present?
           Project.find(params[:issue][:project_ids]).each do |p|
-            # next unless User.current.allowed_to?(:add_issues, p)
-
             @projects << p unless (params[:project_id] == p.id.to_s || params[:issue][:project_id]  == p.id.to_s)
           end
         end

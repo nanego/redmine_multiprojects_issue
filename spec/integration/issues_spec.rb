@@ -70,33 +70,6 @@ describe "Issues" do
     expect(issue.projects.collect(&:id)).to eq [2, 3]
   end
 
-  it "should only allow to add projects with issue creation permission" do
-    log_user('jsmith', 'jsmith')
-    get '/projects/1/issues/new', params: {:tracker_id => '1'}
-    expect(response).to be_successful
-    assert_template 'issues/new'
-    assert_select "p#projects_form", :count => 1
-
-    post '/projects/1/issues', params: {:tracker_id => "1",
-                                        :issue => {:start_date => "2006-12-26",
-                                                   :priority_id => "4",
-                                                   :subject => "new multiproject test issue",
-                                                   :category_id => "",
-                                                   :description => "new issue",
-                                                   :done_ratio => "0",
-                                                   :due_date => "",
-                                                   :assigned_to_id => "",
-                                                   :project_ids => [2, 3, 4] # user is not allowed to add permission on project 4
-                                        },
-                                        :custom_fields => {'2' => 'Value for field 2'}}
-
-    # find created issue
-    issue = Issue.find_by_subject("new multiproject test issue")
-    assert_kind_of Issue, issue
-    
-    expect(issue.projects.collect(&:id)).to eq [2, 3]
-  end
-
   it "should not be allowed to create issue with multiple projects" do
     Role.find(1).remove_permission!(:link_other_projects_to_issue) # Role for User:jsmith on Project:1
     log_user('jsmith', 'jsmith')
