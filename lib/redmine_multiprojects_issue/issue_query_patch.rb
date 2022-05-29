@@ -1,6 +1,6 @@
-require_dependency 'issue_query'
+require 'issue_query'
 
-class IssueQuery < Query
+class RedmineMultiprojectsIssue::IssueQueryPatch < Query
 
   def project_statement(with_multiprojects = true)
     project_clauses = super()

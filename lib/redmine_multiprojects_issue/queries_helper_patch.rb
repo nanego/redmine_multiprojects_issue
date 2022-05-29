@@ -1,11 +1,13 @@
-require_dependency 'queries_helper'
+require 'queries_helper'
+require 'issue_queries_query' if ActiveSupport::Dependencies::search_for_file('issue_queries_helper')
 
-module PluginMultiprojectsIssue
+module RedmineMultiprojectsIssue
   module QueriesHelperPatch
 
     # These methods convert ActiveRecord_Associations to arrays when necessary
 
-    def column_content(column, item)
+    def column_value(column, item, value)
+
       begin
         value = column.value_object(item)
       rescue
@@ -32,6 +34,6 @@ module PluginMultiprojectsIssue
 end
 
 QueriesHelper.include IssuesHelper
-QueriesHelper.prepend PluginMultiprojectsIssue::QueriesHelperPatch
+QueriesHelper.prepend RedmineMultiprojectsIssue::QueriesHelperPatch
 ActionView::Base.prepend QueriesHelper
 IssuesController.prepend QueriesHelper

@@ -1,6 +1,6 @@
-require_dependency 'journal'
+require 'journal'
 
-class Journal < ActiveRecord::Base
+class RedmineMultiprojectsIssue::JournalPatch < ActiveRecord::Base
 
   acts_as_activity_provider :type => 'issues_from_current_project_only',
                             :author_key => :user_id,

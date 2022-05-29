@@ -1,7 +1,7 @@
-require_dependency 'issues_helper'
+require 'issues_helper'
 
-module PluginMultiprojectsIssue
-  module IssuesHelper
+module RedmineMultiprojectsIssue
+  module IssuesHelperPatch
 
     # Returns the textual representation of a single journal detail
     # Core properties are 'attr', 'attachment' or 'cf' : this patch specify how to display 'projects' journal details
@@ -57,5 +57,6 @@ module PluginMultiprojectsIssue
   end
 end
 
-IssuesHelper.prepend PluginMultiprojectsIssue::IssuesHelper
+# TODO: Check: More to replace?
+IssuesHelper.prepend RedmineMultiprojectsIssue::IssuesHelperPatch
 ActionView::Base.prepend IssuesHelper
