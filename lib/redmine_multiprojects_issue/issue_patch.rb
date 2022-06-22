@@ -1,7 +1,7 @@
-require_dependency 'issue'
+require 'issue'
 
 module RedmineMultiprojectsIssue
-  module PrependedIssuePatch
+  module IssuePatch
     # Returns the users that should be notified
     def notified_users
       super | notified_users_from_other_projects
@@ -44,7 +44,7 @@ end
 
 class Issue < ActiveRecord::Base
 
-  prepend RedmineMultiprojectsIssue::PrependedIssuePatch
+  prepend RedmineMultiprojectsIssue::IssuePatch
 
   include ApplicationHelper
 

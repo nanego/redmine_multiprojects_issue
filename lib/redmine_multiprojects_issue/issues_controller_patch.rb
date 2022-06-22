@@ -1,6 +1,6 @@
-require_dependency 'issues_controller'
+require 'issues_controller'
 
-class IssuesController < ApplicationController
+class RedmineMultiprojectsIssue::IssuesControllerPatch < ApplicationController
 
   before_action :authorize, :except => [:index, :new, :create, :load_projects_selection, :show]
   before_action :set_project, :only => [:load_projects_selection]

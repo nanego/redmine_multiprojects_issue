@@ -1,22 +1,23 @@
 require 'redmine'
 
-ActiveSupport::Reloader.to_prepare do
-  require_dependency 'redmine_multiprojects_issue/hooks'
-  require_dependency 'redmine_multiprojects_issue/issue_patch'
-  require_dependency 'redmine_multiprojects_issue/journal_patch'
-  require_dependency 'redmine_multiprojects_issue/issues_helper_patch'
-  require_dependency 'redmine_multiprojects_issue/issues_controller_patch'
-  require_dependency 'redmine_multiprojects_issue/issue_query_patch'
-  require_dependency 'redmine_multiprojects_issue/queries_helper_patch'
-  require_dependency 'redmine_multiprojects_issue/activity_fetcher_patch.rb'
-  require_dependency 'redmine_multiprojects_issue/acts_as_activity_provider.rb'
+
+def init()
+  require File.expand_path('lib/redmine_multiprojects_issue/hooks', __dir__)
+  require File.expand_path('lib/redmine_multiprojects_issue/issue_patch', __dir__)
+  require File.expand_path('lib/redmine_multiprojects_issue/journal_patch', __dir__)
+  require File.expand_path('lib/redmine_multiprojects_issue/issues_helper_patch', __dir__)
+  require File.expand_path('lib/redmine_multiprojects_issue/issues_controller_patch', __dir__)
+  require File.expand_path('lib/redmine_multiprojects_issue/issue_query_patch', __dir__)
+  require File.expand_path('lib/redmine_multiprojects_issue/queries_helper_patch', __dir__)
+  require File.expand_path('lib/redmine_multiprojects_issue/activity_fetcher_patch.rb', __dir__)
+  require File.expand_path('lib/redmine_multiprojects_issue/acts_as_activity_provider.rb', __dir__)
 end
 
 Redmine::Plugin.register :redmine_multiprojects_issue do
   name 'Redmine Multiple Projects per Issue plugin'
   author 'Vincent ROBERT'
   description 'This plugin for Redmine allows more than one project per issue.'
-  version '4.1.1'
+  version '4.1.2'
   url 'https://github.com/nanego/redmine_multiprojects_issue'
   author_url 'mailto:contact@vincent-robert.com'
   requires_redmine_plugin :redmine_base_deface, :version_or_higher => '0.0.1'
@@ -30,3 +31,14 @@ Redmine::Plugin.register :redmine_multiprojects_issue do
     permission :view_related_issues_in_secondary_projects, {}, :read => true
   end
 end
+
+
+if Rails.version > '6.0'
+  init()
+  return
+else
+  ActiveSupport::Reloader.to_prepare do
+    init()
+  end
+end
+
