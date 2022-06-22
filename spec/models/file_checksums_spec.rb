@@ -11,8 +11,8 @@ describe "FileChecksums" do
   it "should core issue model checksum" do
     # "notified_users", "visible_condition" and "visible?" methods are overridden
     # and should be reviewed if this test breaks
-    # 4.2.3 is ok
-    assert_checksum %w(55c3bf6852b555cb9dbe888fda9f590c), "app/models/issue.rb"
+    # 4.2.7 is ok
+    assert_checksum %w(a1f8ffdc9ec1124468d45780731a94a9), "app/models/issue.rb"
   end
 
   # tests have been added to the issue_helper_patch_test file, no need to check the checksum
@@ -24,8 +24,8 @@ describe "FileChecksums" do
   it "should core query model checksum" do
     # "project_statement" method is overridden
     # and should be reviewed if this test breaks
-    # 4.2 is ok
-    assert_checksum %w(5e3055e02d5f96b8aa48307bacc427c0 07eea829a11f8d072e6c58ef4002bbcc), "app/models/query.rb"
+    # 4.2.7 is ok
+    assert_checksum %w(11741752fee9e227a6c5af19acb8a56e), "app/models/query.rb"
   end
 
   it "should core issue query model checksum" do
