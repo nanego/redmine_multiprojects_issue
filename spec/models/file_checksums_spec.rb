@@ -57,4 +57,11 @@ describe "FileChecksums" do
     assert_checksum %w(fd88168b29f2b3718c3e885c5c55b757), "app/models/issue_custom_field.rb"
   end
 
+  it "checks query model changes" do
+    # "value_object" methods are completely overridden, for performance reasons
+    # and should be reviewed if these tests breaks
+    # 4.2.7 is ok
+    assert_checksum %w(11741752fee9e227a6c5af19acb8a56e), "app/models/query.rb"
+  end
+
 end
