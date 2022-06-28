@@ -7,6 +7,7 @@ ActiveSupport::Reloader.to_prepare do
   require_dependency 'redmine_multiprojects_issue/issues_helper_patch'
   require_dependency 'redmine_multiprojects_issue/issues_controller_patch'
   require_dependency 'redmine_multiprojects_issue/issue_query_patch'
+  require_dependency 'redmine_multiprojects_issue/issue_custom_field_patch' unless Rails.env.test?
   require_dependency 'redmine_multiprojects_issue/queries_helper_patch'
   require_dependency 'redmine_multiprojects_issue/activity_fetcher_patch.rb'
   require_dependency 'redmine_multiprojects_issue/acts_as_activity_provider.rb'

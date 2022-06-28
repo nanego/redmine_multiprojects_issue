@@ -50,4 +50,11 @@ describe "FileChecksums" do
     assert_checksum %w(9c376fe7d1cd774107abd1b9eaf37c6e), "lib/plugins/acts_as_activity_provider/lib/acts_as_activity_provider.rb"
   end
 
+  it "checks issue_custom_field model changes" do
+    # "visibility_by_project_condition" method is completely overridden, for performance reasons
+    # and should be reviewed if these tests breaks
+    # 4.2.7 is ok
+    assert_checksum %w(fd88168b29f2b3718c3e885c5c55b757), "app/models/issue_custom_field.rb"
+  end
+
 end

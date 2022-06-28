@@ -22,7 +22,7 @@ module RedmineMultiprojectsIssue
         user.projects_by_role.each do |role, projects|
           projects = projects & [options[:project]] if options[:project]
           if projects.any? && role.allowed_to?(:view_related_issues_in_secondary_projects)
-            statement_by_role[role] = "project_id IN (#{projects.collect(&:id).join(',')})"
+            statement_by_role[role] = "project_id IN (#{projects.map(&:id).join(',')})"
           end
         end
         authorized_project_statement = statement_by_role.values.join(' OR ')
