@@ -1,3 +1,5 @@
+require_dependency 'issue_custom_field'
+
 class IssueCustomField < CustomField
 
   # Override visibility condition to improve performances
