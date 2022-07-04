@@ -18,14 +18,14 @@ module RedmineMultiprojectsIssue
 
     module ClassMethods
       def visible_condition(user, options = {})
-        statement_by_role = {}
+        allowed_projects_ids = []
         user.projects_by_role.each do |role, projects|
           projects = projects & [options[:project]] if options[:project]
           if projects.any? && role.allowed_to?(:view_related_issues_in_secondary_projects)
-            statement_by_role[role] = "project_id IN (#{projects.map(&:id).join(',')})"
+            allowed_projects_ids << projects.map(&:id)
           end
         end
-        authorized_project_statement = statement_by_role.values.join(' OR ')
+        authorized_project_statement =  "project_id IN (#{allowed_projects_ids.flatten.uniq.sort.join(',')})"
         if authorized_project_statement.present?
           "(#{super} OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE (#{authorized_project_statement}) ))"
         else
