@@ -25,8 +25,8 @@ module RedmineMultiprojectsIssue
             allowed_projects_ids << projects.map(&:id)
           end
         end
-        authorized_project_statement =  "project_id IN (#{allowed_projects_ids.flatten.uniq.sort.join(',')})"
-        if authorized_project_statement.present?
+        if allowed_projects_ids.present?
+          authorized_project_statement =  "project_id IN (#{allowed_projects_ids.flatten.uniq.sort.join(',')})"
           "(#{super} OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE (#{authorized_project_statement}) ))"
         else
           super
