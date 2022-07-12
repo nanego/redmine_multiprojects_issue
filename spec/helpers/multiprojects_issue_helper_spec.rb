@@ -4,7 +4,7 @@ describe "MultiprojectsIssueHelper" do
   include MultiprojectsIssueHelper
 
   it "should custom_values_by_projects" do
-    values = custom_values_by_projects(Project.all, CustomField.all)
+    values = custom_values_by_projects(Project.all, ProjectCustomField.all)
     refute_nil values
     assert_kind_of Hash, values
     expect(values.size).to eq 6
