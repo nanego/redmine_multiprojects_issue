@@ -1,13 +1,14 @@
 module MultiprojectsIssueHelper
   def custom_values_by_projects(projects, custom_fields)
     values_by_projects = {}
+    enumeration_values = CustomFieldEnumeration.all
     projects.each do |project|
       values_by_projects.merge!(project.id => {})
       custom_fields.each do |custom_field|
-        values = CustomValue.where(customized_type: Project.name.demodulize, customized_id: project.id, custom_field_id: custom_field.id)
+        values = custom_field.custom_values.select { |cv| cv.customized_id == project.id }
         values.each do |custom_value|
           if custom_field.field_format == 'enumeration'
-            value = CustomFieldEnumeration.where(id: custom_value.value.to_i).first.to_s
+            value = enumeration_values.find{|enum_value| enum_value.id == custom_value.value.to_i}.to_s
           else
             value = custom_value.value
           end

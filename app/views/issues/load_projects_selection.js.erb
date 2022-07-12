@@ -1,5 +1,6 @@
-$(document).ready(function(){
-  $('#ajax-modal').html('<%= escape_javascript(render 'issues/modal_select_projects', select_tag_id: @select_tag_id) %>');
-  showModal("ajax-modal", "1000px");
-  $("#button_apply_projects").focus();
+$(document).ready(function () {
+    $('#ajax-modal').html('<%= escape_javascript(render 'issues/modal_select_projects', select_tag_id: @select_tag_id) %>');
+    $('#ajax-indicator').hide();
+    showModal("ajax-modal", "1000px");
+    $("#button_apply_projects").focus();
 });

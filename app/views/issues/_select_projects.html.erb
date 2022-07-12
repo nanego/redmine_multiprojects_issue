@@ -17,6 +17,7 @@
           }
           var sep = ($(this).attr('href').indexOf('?') != -1) ? '&' : '?';
           $(this).attr('href', $(this).attr('href') + sep + 'project_ids=' + ids);
+          $('#ajax-indicator').show();
       });
   </script>
 

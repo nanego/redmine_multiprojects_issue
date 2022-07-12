@@ -1,3 +1,5 @@
+require_dependency 'query'
+
 class QueryAssociationColumn < QueryColumn
 
   def value_object(object)
