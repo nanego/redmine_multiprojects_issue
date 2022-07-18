@@ -1,8 +1,8 @@
 Redmine Multiprojects Issue plugin
 ======================
 
-[![4.2.7][1]][5]
-[![4.1.7][2]][5]
+[![5.0.2][1]][5]
+[![4.2.7][2]][5]
 
 This redmine plugin allows you to specify more than one project per issue.
 
@@ -26,12 +26,13 @@ Compatibility with older Redmine versions:
 * for Redmine versions up to 3.2.x, [release v0.2](https://github.com/nanego/redmine_multiprojects_issue/releases/tag/v0.2) must be used.
 * for Redmine version 3.3 & 3.4, please use this release [v3.4.6](https://github.com/nanego/redmine_multiprojects_issue/releases/tag/v3.4.6)
 * for Redmine version 4.0 & 4.1, use this release [v4.1.2](https://github.com/nanego/redmine_multiprojects_issue/releases/tag/v4.1.2)
+* for Redmine version 4.2.x, use this release [v4.2.7](https://github.com/nanego/redmine_multiprojects_issue/releases/tag/v4.2.7)
 
-With Redmine 4.2.0+, use the current master branch. See below for specific instructions.
+With Redmine 5.0+, use the current master branch. See below for specific instructions.
 
 Please apply general instructions for plugins [here](http://www.redmine.org/wiki/redmine/Plugins).
 
-Note that this plugin now depends on:
+Note that this plugin depends on:
 
 * **redmine_base_deface** which can be found [here](https://github.com/jbbarth/redmine_base_deface)
 * **redmine_base_stimulusjs** which can be found [here](https://github.com/nanego/redmine_base_stimulusjs)
@@ -49,14 +50,14 @@ And finally restart your Redmine instance.
 
 ## Test status
 
-|Plugin branch| Redmine Version   | Test Status      |
-|-------------|-------------------|------------------|
-|master       | 4.2.7             | [![4.2.7][1]][5] |  
-|master       | 4.1.7             | [![4.1.7][2]][5] |
-|master       | master            | [![master][4]][5]|
+|Plugin branch| Redmine Version | Test Status       |
+|-------------|-----------------|-------------------|
+|master       | 5.0.2           | [![5.0.2][1]][5]  |
+|master       | 4.2.7           | [![4.2.7][2]][5]  |
+|master       | master          | [![master][4]][5] |
 
-[1]: https://github.com/nanego/redmine_multiprojects_issue/actions/workflows/4_2_7.yml/badge.svg
-[2]: https://github.com/nanego/redmine_multiprojects_issue/actions/workflows/4_1_7.yml/badge.svg
+[1]: https://github.com/nanego/redmine_multiprojects_issue/actions/workflows/5_0_2.yml/badge.svg
+[2]: https://github.com/nanego/redmine_multiprojects_issue/actions/workflows/4_2_7.yml/badge.svg
 [4]: https://github.com/nanego/redmine_multiprojects_issue/actions/workflows/master.yml/badge.svg
 [5]: https://github.com/nanego/redmine_multiprojects_issue/actions
 

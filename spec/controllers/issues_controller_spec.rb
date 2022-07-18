@@ -1,7 +1,7 @@
 require "spec_helper"
 require "active_support/testing/assertions"
-require 'redmine_multiprojects_issue/issues_controller_patch.rb'
-require 'redmine_multiprojects_issue/issue_patch.rb'
+require_relative '../../lib/redmine_multiprojects_issue/issues_controller_patch.rb'
+require_relative '../../lib/redmine_multiprojects_issue/issue_patch.rb'
 
 describe IssuesController, type: :controller do
 
@@ -78,7 +78,8 @@ describe IssuesController, type: :controller do
     expect(ActionMailer::Base.deliveries.size).to eq 3
 
     mails = ActionMailer::Base.deliveries
-    notified_users = mails.map{|m|m['bcc'].to_s}
+    field = Redmine::VERSION::MAJOR >= 5 ? 'to' : 'bcc'
+    notified_users = mails.map{|m|m[field].to_s}
     expect(notified_users).to include(User.find(2).mail)
     expect(notified_users).to include(User.find(3).mail)
     expect(notified_users).to include(User.find(1).mail) #admin, member, but his role has no view_issue permission
@@ -104,7 +105,8 @@ describe IssuesController, type: :controller do
     expect(ActionMailer::Base.deliveries.size).to eq 2
 
     mails = ActionMailer::Base.deliveries
-    notified_users = mails.map{|m|m['bcc'].to_s}
+    field = Redmine::VERSION::MAJOR >= 5 ? 'to' : 'bcc'
+    notified_users = mails.map{|m|m[field].to_s}
     expect(notified_users).to include(User.find(2).mail)
     expect(notified_users).to include(User.find(3).mail)
     expect(notified_users).to_not include(User.find(1).mail)
@@ -166,7 +168,8 @@ describe IssuesController, type: :controller do
     expect(ActionMailer::Base.deliveries.size).to eq 3
 
     mails = ActionMailer::Base.deliveries
-    notified_users = mails.map{|m|m['bcc'].to_s}
+    field = Redmine::VERSION::MAJOR >= 5 ? 'to' : 'bcc'
+    notified_users = mails.map{|m|m[field].to_s}
     expect(notified_users).to include(User.find(2).mail)
     expect(notified_users).to include(User.find(3).mail)
     expect(notified_users).to include(User.find(1).mail)
@@ -188,7 +191,8 @@ describe IssuesController, type: :controller do
     expect(ActionMailer::Base.deliveries.size).to eq 2
 
     mails = ActionMailer::Base.deliveries
-    notified_users = mails.map{|m|m['bcc'].to_s}
+    field = Redmine::VERSION::MAJOR >= 5 ? 'to' : 'bcc'
+    notified_users = mails.map{|m|m[field].to_s}
     expect(notified_users).to include(User.find(2).mail)
     expect(notified_users).to include(User.find(3).mail)
     expect(notified_users).to_not include(User.find(1).mail)
@@ -200,7 +204,7 @@ describe IssuesController, type: :controller do
     get :load_projects_selection, params: {format: :js, :issue_id => 1, :project_id => 1}
     expect(response).to be_successful
     assert_template 'load_projects_selection'
-    expect(response.content_type).to eq 'text/javascript'
+    expect(response.media_type).to eq 'text/javascript'
     expect(response.body).to include("$('#ajax-modal')")
     refute_nil assigns(:issue)
     expect(assigns(:issue).id).to eq 1

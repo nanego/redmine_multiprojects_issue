@@ -1,5 +1,5 @@
 require "spec_helper"
-require 'redmine_multiprojects_issue/issues_helper_patch.rb'
+require_relative '../../lib/redmine_multiprojects_issue/issues_helper_patch.rb'
 
 describe "IssueHelperMultiprojectsIssuePatch", type: :helper do
   include IssuesHelper
@@ -108,10 +108,10 @@ describe "IssueHelperMultiprojectsIssuePatch", type: :helper do
 
   it "should IssuesHelper#show_detail with a start_date attribute should format the dates" do
     detail = JournalDetail.new(
-        :property  => 'attr',
-        :old_value => '2010-01-01',
-        :value     => '2010-01-31',
-        :prop_key  => 'start_date'
+      :property => 'attr',
+      :old_value => '2010-01-01',
+      :value => '2010-01-31',
+      :prop_key => 'start_date'
     )
     with_settings :date_format => '%m/%d/%Y' do
       assert_match "01/31/2010", show_detail(detail, true)
@@ -121,10 +121,10 @@ describe "IssueHelperMultiprojectsIssuePatch", type: :helper do
 
   it "should IssuesHelper#show_detail with a due_date attribute should format the dates" do
     detail = JournalDetail.new(
-        :property  => 'attr',
-        :old_value => '2010-01-01',
-        :value     => '2010-01-31',
-        :prop_key  => 'due_date'
+      :property => 'attr',
+      :old_value => '2010-01-01',
+      :value => '2010-01-31',
+      :prop_key => 'due_date'
     )
     with_settings :date_format => '%m/%d/%Y' do
       assert_match "01/31/2010", show_detail(detail, true)
@@ -176,8 +176,8 @@ describe "IssueHelperMultiprojectsIssuePatch", type: :helper do
 
   it "should IssuesHelper#show_detail should show old and new values with a estimated hours attribute" do
     detail = JournalDetail.new(:property => 'attr', :prop_key => 'estimated_hours', :old_value => '5', :value => '6.3')
-    assert_match '5.00', show_detail(detail, true)
-    assert_match '6.30', show_detail(detail, true)
+    assert_match(Redmine::VERSION::MAJOR >= 5 ? '5:00' : '5.00', show_detail(detail, true))
+    assert_match(Redmine::VERSION::MAJOR >= 5 ? '6:18' : '6.30', show_detail(detail, true))
   end
 
   it "should IssuesHelper#show_detail should show old and new values with a custom field" do

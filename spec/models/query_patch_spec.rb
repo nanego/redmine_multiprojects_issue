@@ -1,8 +1,8 @@
 require "spec_helper"
 
-require 'redmine_multiprojects_issue/issues_controller_patch.rb'
-require 'redmine_multiprojects_issue/issue_patch.rb'
-require 'redmine_multiprojects_issue/issue_query_patch.rb'
+require_relative '../../lib/redmine_multiprojects_issue/issues_controller_patch.rb'
+require_relative '../../lib/redmine_multiprojects_issue/issue_patch.rb'
+require_relative '../../lib/redmine_multiprojects_issue/issue_query_patch.rb'
 
 describe "QueryPatch" do
   include Redmine::I18n

@@ -126,12 +126,10 @@ class Issue < ActiveRecord::Base
       # - they are member and they have appropriate role
       # or
       # - they are member and they are admin
-      if p.module_enabled?("limited_visibility") && self.authorized_viewer_ids.present?
-        members = p.notified_users & self.involved_users(p)
-      else
-        members = p.notified_users
+      members = p.notified_users
+      if Redmine::Plugin.installed?(:redmine_limited_visibility)
+        members = members & self.involved_users(p) if p.module_enabled?("limited_visibility") && self.authorized_viewer_ids.present?
       end
-
       notified = notified | (notified_by_role & members) | (User.where("admin = ?", true).all & p.notified_users)
 
     end

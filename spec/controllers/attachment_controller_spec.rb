@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe AttachmentsController do
   render_views
@@ -31,19 +31,24 @@ describe AttachmentsController do
 
     set_tmp_attachments_directory
     a = Attachment.new(:container => multiproject_issue,
-                       :file => fixture_file_upload("files/japanese-utf-8.txt", "text/plain", true),
+                       :file => uploaded_test_file('japanese-utf-8.txt', "text/plain"),
                        :author => User.find(1))
     assert a.save
     expect(a.filename).to eq 'japanese-utf-8.txt'
 
     str_japanese = "\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e".force_encoding('UTF-8')
 
-    get :show, params: {:id => a.id}
+    get :show, params: { :id => a.id }
     expect(response).to be_successful
     assert_template 'file'
-    expect(@response.content_type).to eq 'text/html'
+    expect(@response.media_type).to eq 'text/html'
+
     assert_select 'tr#L1' do
-      assert_select 'th.line-num', :text => '1'
+      if Redmine::VERSION::MAJOR >= 5
+        assert_select 'th.line-num a[data-txt=?]', '1'
+      else
+        assert_select 'th.line-num', :text => '1'
+      end
       assert_select 'td', :text => /#{str_japanese}/
     end
   end

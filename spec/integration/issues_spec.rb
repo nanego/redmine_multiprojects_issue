@@ -1,6 +1,6 @@
 require "spec_helper"
-require 'redmine_multiprojects_issue/issues_controller_patch.rb'
-require 'redmine_multiprojects_issue/issue_patch.rb'
+require_relative '../../lib/redmine_multiprojects_issue/issues_controller_patch.rb'
+require_relative '../../lib/redmine_multiprojects_issue/issue_patch.rb'
 
 #taken from core
 def log_user(login, password)

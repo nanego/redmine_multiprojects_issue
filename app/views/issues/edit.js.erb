@@ -16,6 +16,14 @@ if(involved_project_ids==null) {
 <% else %>
   $('#log_time').hide();
 <% end %>
+
+<% if @issue.notes_addable? %>
+  $('#add_notes').show();
+  $('#add_attachments').show();
+<% else %>
+  $('#add_notes').hide();
+  $('#add_attachments').hide();
+<% end %>
 /** End Standard Redmine */
 
 $('#issue_project_ids').val(involved_project_ids);

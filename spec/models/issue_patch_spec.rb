@@ -1,6 +1,6 @@
 require "spec_helper"
 
-require 'redmine_multiprojects_issue/issue_patch.rb'
+require_relative '../../lib/redmine_multiprojects_issue/issue_patch.rb'
 
 # Generates an unsaved Issue
 def Issue.generate(attributes = {})
