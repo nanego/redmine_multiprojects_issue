@@ -1,6 +1,6 @@
 require_dependency 'queries_helper'
 
-module PluginMultiprojectsIssue
+module RedmineMultiprojectsIssue
   module QueriesHelperPatch
 
     # These methods convert ActiveRecord_Associations to arrays when necessary
@@ -32,6 +32,6 @@ module PluginMultiprojectsIssue
 end
 
 QueriesHelper.include IssuesHelper
-QueriesHelper.prepend PluginMultiprojectsIssue::QueriesHelperPatch
+QueriesHelper.prepend RedmineMultiprojectsIssue::QueriesHelperPatch
 ActionView::Base.prepend QueriesHelper
 IssuesController.prepend QueriesHelper
