@@ -1,24 +1,25 @@
 require_dependency 'query'
 
-module RedmineMultiprojectsIssue
-  module QueryPatch
-    module QueryAssociationColumnPatch
-      def value_object(object)
-        if assoc = object.send(@association)
-          assoc.send @attribute
-        end
-      end
-    end
+class QueryAssociationColumn < QueryColumn
 
-    module QueryAssociationCustomFieldColumnPatch
-      def value_object(object)
-        if assoc = object.send(@association)
-          super(assoc)
-        end
-      end
+  def value_object(object)
+    if assoc = object.send(@association)
+      assoc.send @attribute
     end
   end
+
 end
 
-QueryAssociationColumn.prepend RedmineMultiprojectsIssue::QueryPatch::QueryAssociationColumnPatch
-QueryCustomFieldColumn.prepend RedmineMultiprojectsIssue::QueryPatch::QueryAssociationCustomFieldColumnPatch
+class QueryAssociationCustomFieldColumn < QueryCustomFieldColumn
+
+  def value_object(object)
+    if assoc = object.send(@association)
+      super(assoc)
+    end
+  end
+
+end
+
+module RedmineMultiprojectsIssue
+  module QueryPatch;end
+end
