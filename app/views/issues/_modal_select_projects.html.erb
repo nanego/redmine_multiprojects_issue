@@ -7,36 +7,36 @@
    issue_projects = issue_projects | [@issue.project]
    allowed_projects = @issue.allowed_target_projects - [@issue.project]
    custom_fields = ProjectCustomField.where("name IN (?)", Setting["plugin_redmine_multiprojects_issue"]['custom_fields'])
+   custom_fields_ids = ProjectCustomField.where("name IN (?)", Setting["plugin_redmine_multiprojects_issue"]['custom_fields']).pluck(:id)
    custom_values = custom_values_by_projects(allowed_projects, custom_fields)
    options_for_selects = {}
-   custom_fields.each do |field|
-     options_for_selects.merge!(field.id => [])
+   custom_fields_ids.each do |field_id|
+     options_for_selects.merge!(field_id => [])
    end
 
    nested_projects_list = render_project_nested_lists(allowed_projects | issue_projects) do |project|
-     custom_fields_data = {}
-     if allowed_projects.include?(project)
-       custom_fields.each do |cf|
-         values = custom_values[project.id][cf.id]
+     project_allowed = allowed_projects.include?(project)
+     custom_fields_data = { 'name' => project.name }
+     if project_allowed
+       custom_fields_ids.each do |cf_id|
+         values = custom_values[project.id][cf_id]
          if values.present?
            values = [values] if values.kind_of?(String)
-           custom_fields_data.merge!(cf.id => values.join('|'))
-           values.each do |value|
-             options_for_selects[cf.id] << value unless options_for_selects[cf.id].include?(value) || value.blank?
-           end
+           values.reject!(&:blank?)
+           custom_fields_data.merge!(cf_id => values.join('|'))
+           options_for_selects[cf_id] |= values
          end
        end
      end
-     custom_fields_data.merge!('name' => project.name)
      content_tag('label',
                  check_box_tag(
                    'project_ids[]',
                    project.id,
-                   @issue != nil && issue_projects.include?(project),
-                   disabled: allowed_projects.include?(project) ? false : true,
-                   :class => "nested_project_#{project.id} #{"inactive" unless allowed_projects.include?(project)}",
+                   @issue.present? && issue_projects.include?(project),
+                   disabled: !project_allowed,
+                   :class => "nested_project_#{project.id} #{"inactive" unless project_allowed}",
                    data: custom_fields_data
-                 ) + ' ' + h(project.name), :class => ("inactive" unless allowed_projects.include?(project))
+                 ) + ' ' + h(project.name), :class => ("inactive" unless project_allowed)
      )
    end
 %>
