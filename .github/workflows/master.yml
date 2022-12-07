@@ -37,7 +37,7 @@ jobs:
 
     steps:
       - name: Checkout Redmine
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: redmine/redmine
           ref: ${{ env.REDMINE_VERSION }}
@@ -72,15 +72,16 @@ jobs:
           sudo mv policy.xml /etc/ImageMagick-6/policy.xml
 
       - name: Setup Ruby
-        uses: actions/setup-ruby@v1
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
       - name: Setup Bundler
         run: gem install bundler -v '~> 1.0'
 
       - name: Checkout dependencies - Base RSpec plugin
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: jbbarth/redmine_base_rspec
           path: redmine/plugins/redmine_base_rspec
@@ -113,19 +114,19 @@ jobs:
           bundle exec rails test:scm:setup:subversion
 
       - name: Checkout dependencies - Base Deface plugin
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: jbbarth/redmine_base_deface
           path: redmine/plugins/redmine_base_deface
 
       - name: Checkout dependencies - Base StimulusJS plugin
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: nanego/redmine_base_stimulusjs
           path: redmine/plugins/redmine_base_stimulusjs
 
       - name: Checkout plugin
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: redmine/plugins/${{ env.PLUGIN_NAME }}
 
