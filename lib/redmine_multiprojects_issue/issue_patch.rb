@@ -74,7 +74,7 @@ class Issue < ActiveRecord::Base
   def other_project_visible?(usr = nil)
     other_projects = self.projects - [self.project]
     visible_projects = other_projects.detect do |p|
-      (usr || User.current).allowed_to?(:view_issues, p) do |role, user|
+      (usr || User.current).allowed_to?(:view_related_issues_in_secondary_projects, p) do |role, user|
         visible = if user.logged?
                     case role.issues_visibility
                     when 'all'

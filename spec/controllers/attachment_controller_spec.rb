@@ -11,6 +11,7 @@ describe AttachmentsController do
     multiproject_issue = Issue.find(4) # project_id = 2
     multiproject_issue.projects = [multiproject_issue.project, Project.find(5)]
     multiproject_issue.save!
+    Role.find(2).add_permission! :view_related_issues_in_secondary_projects
     new_member = Member.new(:project_id => 5, :user_id => 4)
     new_member.roles = [Role.find(2)]
     new_member.save!

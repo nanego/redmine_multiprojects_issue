@@ -37,7 +37,8 @@ describe IssuesController, type: :controller do
            :projects
 
   before(:each) do
-    Role.find_by_name("Manager").add_permission!(:link_other_projects_to_issue)
+    Role.find_by_name("Manager").add_permission! :link_other_projects_to_issue
+    Role.find_by_name("Manager").add_permission! :view_related_issues_in_secondary_projects
   end
 
   it "should require correct permission when linking other projects during issue creation (:link_other_projects_to_issue)" do
@@ -313,6 +314,7 @@ describe IssuesController, type: :controller do
 
   def prepare_context_where_user_can_only_update_through_secondary_project
     @user, @issue, @secondary_project = User.find(6), Issue.find(4), Project.find(3)
+    Role.find(5).add_permission! :view_related_issues_in_secondary_projects # Role Anonymous
     @request.session[:user_id] = @user.id
     @issue.update_attribute(:project_ids, [@secondary_project.id])
     @issue.reload
