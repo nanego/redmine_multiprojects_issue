@@ -6,7 +6,7 @@
    end
    issue_projects = issue_projects | [@issue.project]
    allowed_projects = @issue.allowed_target_projects - [@issue.project]
-   custom_fields = ProjectCustomField.includes(:custom_values).where("name IN (?)", Setting["plugin_redmine_multiprojects_issue"]['custom_fields'])
+   custom_fields = ProjectCustomField.where("name IN (?)", Setting["plugin_redmine_multiprojects_issue"]['custom_fields'])
    custom_values = custom_values_by_projects(allowed_projects, custom_fields)
    options_for_selects = {}
    custom_fields.each do |field|
