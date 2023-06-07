@@ -12,8 +12,15 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
     @select_tag_id = params[:select_tag_id]
   end
 
+  
+
   private
 
+  def get_allowed_target_projects    
+    @issue = Issue.find(params[:id]) unless @issue.present? 
+    @allowed_projects = @issue.present? ?  @issue.allowed_target_projects : Issue.find(params[:id])
+  end
+  
   def set_assignable_projects
     if !User.current.admin? && !User.current.allowed_to?(:link_other_projects_to_issue, @issue.project)
       @issue.assignable_projects = @issue.projects
@@ -71,6 +78,7 @@ class IssuesController < ApplicationController
   before_action :authorize, :except => [:index, :new, :create, :load_projects_selection, :show]
   before_action :set_project, :only => [:load_projects_selection]
   append_before_action :set_assignable_projects, :only => [:create, :update]
+  append_before_action :get_allowed_target_projects, :only => [:show, :edit, :new]
 
   skip_forgery_protection only: :load_projects_selection
 
