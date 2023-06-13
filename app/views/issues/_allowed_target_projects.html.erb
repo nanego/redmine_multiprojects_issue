@@ -1,0 +1,53 @@
+<% if @issue.present?
+     project_ids = [@issue.project.id] | @issue.projects.map(&:id)
+     issue_projects = (project_ids.present? ? Project.find(project_ids) : [])
+   else
+     issue_projects = @issue.projects
+   end
+   issue_projects = issue_projects | [@issue.project]
+   
+   # this condition to avoid calling  @issue.allowed_target_projects ,in the pages (edit "open link in new tab" /new),
+   #  call this method only for edit by "render_form_by_ajax"
+   allowed_target_projects = @allowed_target_projects.present? ? @allowed_target_projects : @issue.allowed_target_projects
+   allowed_projects = allowed_target_projects - [@issue.project]
+    
+ %>
+ <%
+  custom_fields = ProjectCustomField.where("name IN (?)", Setting["plugin_redmine_multiprojects_issue"]['custom_fields'])
+  custom_fields_ids = ProjectCustomField.where("name IN (?)", Setting["plugin_redmine_multiprojects_issue"]['custom_fields']).pluck(:id)
+  custom_values = custom_values_by_projects(allowed_projects, custom_fields)
+  
+  options_for_selects = {}
+  custom_fields_ids.each do |field_id|
+    options_for_selects.merge!(field_id => [])
+  end
+
+  nested_projects_list = render_project_nested_lists(allowed_projects | issue_projects) do |project|
+  project_allowed = allowed_projects.include?(project)
+  custom_fields_data = { 'name' => project.name }
+  if project_allowed
+    custom_fields_ids.each do |cf_id|
+      values = custom_values[project.id][cf_id]
+      if values.present?
+        values = [values] if values.kind_of?(String)
+        values.reject!(&:blank?)
+        custom_fields_data.merge!(cf_id => values.join('|'))
+        options_for_selects[cf_id] |= values
+      end
+    end
+  end
+  content_tag('label',
+              check_box_tag(
+                'project_ids[]',
+                project.id,
+                @issue.present? && issue_projects.include?(project),
+                disabled: !project_allowed,
+                :class => "nested_project_#{project.id} #{"inactive" unless project_allowed}",
+                data: custom_fields_data
+              ) + ' ' + h(project.name), :class => ("inactive" unless project_allowed)
+   )
+  end
+ %>
+<div id="allowed_projects"  >
+  <%= nested_projects_list %>
+</div>
