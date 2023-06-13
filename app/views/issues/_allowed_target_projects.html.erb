@@ -1,10 +1,5 @@
-<% if @issue.present?
-     project_ids = [@issue.project.id] | @issue.projects.map(&:id)
-     issue_projects = (project_ids.present? ? Project.find(project_ids) : [])
-   else
-     issue_projects = @issue.projects
-   end
-   issue_projects = issue_projects | [@issue.project]
+<% 
+   issue_projects = @issue.projects | [@issue.project]
    
    # this condition to avoid calling  @issue.allowed_target_projects ,in the pages (edit "open link in new tab" /new),
    #  call this method only for edit by "render_form_by_ajax"
@@ -48,6 +43,6 @@
    )
   end
  %>
-<div id="allowed_projects"  >
+<div id="allowed_projects"  style="display:none;">
   <%= nested_projects_list %>
 </div>

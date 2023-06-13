@@ -91,19 +91,26 @@
 
 <script type="text/javascript">
 
-    $("#project_nested_list").html($("#allowed_projects").html())
+    $("#project_nested_list").html($("#allowed_projects").html());
+    $("#allowed_projects input:checkbox[name='project_ids[]']").each(function () {
+      // update all projects in the modal
+      if ($(this).is(":checked")){        
+        $("#project_nested_list input:checkbox[value='"+$(this).val()+"']").prop("checked", true);           
+      } else {
+        $("#project_nested_list input:checkbox[value='"+$(this).val()+"']").prop("checked", false);           
+      }
+    });
+
     function updateSelectedProjects() {
 
         $("select#<%= select_tag_id %> option").each(function () {
             this.selected = "";
         });
         
-       /* $("input:checkbox[name='project_ids[]']:checked").each(function () {
-          $("#<%= select_tag_id %> option[value=" + $(this).val() + "]").prop("selected", true);
-        });*/
+        
         var htmlContent = "";
         $("#project_nested_list input:checkbox[name='project_ids[]']").each(function () {
-          // update all projects in page/show div=allowed_projects
+          // update all projects in div=allowed_projects
           if ($(this).is(":checked")){        
             $("#allowed_projects input:checkbox[value='"+$(this).val()+"']").prop("checked", true);
             $("#<%= select_tag_id %> option[value=" + $(this).val() + "]").prop("selected", true);
