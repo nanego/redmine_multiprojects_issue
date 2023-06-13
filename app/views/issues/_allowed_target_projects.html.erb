@@ -46,3 +46,15 @@
 <div id="allowed_projects"  style="display:none;">
   <%= nested_projects_list %>
 </div>
+
+<div style="display: none;">
+  <% custom_fields.each do |field| %>
+    <%= select_tag field.id,
+                   options_for_select(options_for_selects[field.id]),
+                   :id => "select_#{field.id}",
+                   :data => {
+                     target: "projects-selection.select_for_#{field.id}"
+                   }
+    %>
+  <% end %>
+</div>

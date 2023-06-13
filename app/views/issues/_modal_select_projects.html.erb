@@ -1,11 +1,5 @@
 <%  
-   custom_fields = ProjectCustomField.where("name IN (?)", Setting["plugin_redmine_multiprojects_issue"]['custom_fields'])
-   custom_fields_ids = ProjectCustomField.where("name IN (?)", Setting["plugin_redmine_multiprojects_issue"]['custom_fields']).pluck(:id)
-    
-   options_for_selects = {}
-   custom_fields_ids.each do |field_id|
-     options_for_selects.merge!(field_id => [])
-   end   
+  custom_fields = ProjectCustomField.where("name IN (?)", Setting["plugin_redmine_multiprojects_issue"]['custom_fields'])    
 %>
 
 <h3 class="title"><%= l(:field_project).pluralize %></h3>
@@ -45,18 +39,7 @@
         <%= link_to "(#{l('button_delete')})", '#', class: 'hidden-if-first', data: { action: 'click->projects-selection#remove_filter' } %>
       </div>
       <%= link_to "+ #{l('add_a_filter')}", '#', data: { action: 'click->projects-selection#add_filter' } %>
-    </div>
-    <div style="display: none;">
-      <% custom_fields.each do |field| %>
-        <%= select_tag field.id,
-                       options_for_select(options_for_selects[field.id]),
-                       :id => "select_#{field.id}",
-                       :data => {
-                         target: "projects-selection.select_for_#{field.id}"
-                       }
-        %>
-      <% end %>
-    </div>
+    </div>    
   </div>
 
   <div class="projects_container">
