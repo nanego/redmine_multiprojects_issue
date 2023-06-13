@@ -16,9 +16,9 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
 
   private
 
-  def get_allowed_target_projects    
+  def get_allowed_target_projects
     @issue = Issue.find(params[:id]) unless @issue.present? 
-    @allowed_projects = @issue.present? ?  @issue.allowed_target_projects : Issue.find(params[:id])
+    @allowed_target_projects = @issue.present? ?  @issue.allowed_target_projects : Issue.find(params[:id])
   end
   
   def set_assignable_projects

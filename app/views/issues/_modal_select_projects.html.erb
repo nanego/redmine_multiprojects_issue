@@ -90,20 +90,29 @@
 </div>
 
 <script type="text/javascript">
-   
-    $("#project_nested_list").html($("#allowed_projects").html())
 
+    $("#project_nested_list").html($("#allowed_projects").html())
     function updateSelectedProjects() {
+
         $("select#<%= select_tag_id %> option").each(function () {
             this.selected = "";
         });
-
-        $("input:checkbox[name='project_ids[]']:checked").each(function () {
+        
+       /* $("input:checkbox[name='project_ids[]']:checked").each(function () {
+          $("#<%= select_tag_id %> option[value=" + $(this).val() + "]").prop("selected", true);
+        });*/
+        var htmlContent = "";
+        $("#project_nested_list input:checkbox[name='project_ids[]']").each(function () {
+          // update all projects in page/show div=allowed_projects
+          if ($(this).is(":checked")){        
+            $("#allowed_projects input:checkbox[value='"+$(this).val()+"']").prop("checked", true);
             $("#<%= select_tag_id %> option[value=" + $(this).val() + "]").prop("selected", true);
-
+          } else {
+            $("#allowed_projects input:checkbox[value='"+$(this).val()+"']").prop("checked", false);
+            $("#<%= select_tag_id %> option[value=" + $(this).val() + "]").prop("selected", false);
+          }
         });
-        var htmlContent = "";alert("htmlContent")
-        $("input:checkbox[name='project_ids[]']:checked").each(function () {
+        $("#project_nested_list input:checkbox[name='project_ids[]']:checked").each(function () {
             if ($(this).val() != <%= @issue.project.id %>) {
                 htmlContent += " <span class=\"list_projects_names\">" + $(this).closest('label').text() + "</span>";
             }
@@ -116,6 +125,8 @@
             $(".and_x_other_projects").css("display", "inline");
             $("#answers-on-secondary-projects").show()
         }
+       
+     
     }
 
 </script>
