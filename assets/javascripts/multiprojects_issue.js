@@ -1,6 +1,6 @@
 function update_checked_boxes_counter(){
   const counter_element = $('#selection_counter');
-  let counter_value = $("input:checkbox[name='project_ids[]']:checked").length;
+  let counter_value = $("#project_nested_list input:checkbox[name='project_ids[]']:checked").length;
   counter_element.html(counter_value);
 }
 
