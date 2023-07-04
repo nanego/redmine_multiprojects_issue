@@ -15,12 +15,15 @@
 
   <script>    
     $("#loadModalProjectsSelection").click(function (e) {
-      e.preventDefault();      
+      e.preventDefault();
       var project_ids = $('#issue_project_ids').val();
+      if (project_ids.length == 0) {
+        project_ids = ''
+      }
 
-      var allowed_projects = <%= allowed_projects.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt ).to_json.html_safe %>
+      var allowed_projects = <%= allowed_projects.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt).to_json.html_safe %>
       // TODO I don't know if it's necessary I'm thinking of deleting
-      var issue_projects = <%= @issue.projects.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt ).to_json.html_safe %>
+      var issue_projects = <%= @issue.projects.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt).to_json.html_safe %>
      
       $.ajax({
 
@@ -44,7 +47,7 @@
       });
       
       $('#ajax-indicator').show();
-    });     
+    });
   </script>
 
 <% end %>
