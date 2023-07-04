@@ -2,7 +2,7 @@
   <hr>
   <div id="current_projects_list" style="display: flex;">
     <span id="label_related_projects"><%= l("related_projects") %></span>
-    <%= render 'projects_list', issue: @issue, selected_projects: @issue.projects %>
+    <%= render 'projects_list', issue: @issue, selected_projects: @issue.projects, allowed_target_projects: @allowed_target_projects %>
   </div>
   <% unless @project.is_public? || User.current.admin? || User.current.member_of?(@project) %>
     <script>$('#sidebar').hide();</script>

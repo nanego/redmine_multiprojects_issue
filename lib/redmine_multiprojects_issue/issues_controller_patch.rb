@@ -8,8 +8,34 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
     if @issue.blank?
       @issue = Issue.new
     end
+
     @issue.project = @project
     @select_tag_id = params[:select_tag_id]
+
+    if params[:project_ids]
+      project_ids = params[:project_ids].split(',')
+      issue_projects = (project_ids.present? ? Project.find(project_ids).pluck(:id, :name, :status, :lft, :rgt).to_a : [])
+    else
+    # TODO I don't know if it's necessary I'm thinking of deleting 
+      vals = params[:issue_projects] ? params[:issue_projects].permit!.to_h.values : []
+      # convert to int 
+      issue_projects =  vals.map do |id, name, status, lft, rgt|
+        [id.to_i, name, status.to_i, lft.to_i, rgt.to_i] 
+      end
+    end
+    
+    issue_project_attribute = [@issue.project.id, @issue.project.name, @issue.project.status, @issue.project.lft, @issue.project.rgt]
+    @issue_projects = issue_projects | [issue_project_attribute]
+ 
+    vals = params[:allowed_projects].permit!.to_h.values
+    # convert to int 
+    allowed_target_projects = vals.map do |id, name, status, lft, rgt|
+      [id.to_i, name, status.to_i, lft.to_i, rgt.to_i] 
+    end
+ 
+    @allowed_target_projects = allowed_target_projects - [issue_project_attribute]
+
+    render json: { html: render_to_string(partial: 'modal_select_projects.html') }
   end
 
   private
@@ -62,6 +88,12 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
       super
     end
   end
+
+  def get_allowed_target_projects    
+    @issue = Issue.find(params[:id]) unless @issue.present?
+    @allowed_target_projects = @issue.present? ?  @issue.allowed_target_projects : Issue.find(params[:id])
+  end
+
 end
 
 IssuesController.prepend RedmineMultiprojectsIssue::IssuesControllerPatch
@@ -71,6 +103,7 @@ class IssuesController < ApplicationController
   before_action :authorize, :except => [:index, :new, :create, :load_projects_selection, :show]
   before_action :set_project, :only => [:load_projects_selection]
   append_before_action :set_assignable_projects, :only => [:create, :update]
+  append_before_action :get_allowed_target_projects, :only => [:show, :edit, :new]
 
   skip_forgery_protection only: :load_projects_selection
 

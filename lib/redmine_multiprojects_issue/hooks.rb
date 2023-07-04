@@ -22,6 +22,7 @@ module RedmineMultiprojectsIssue
       require_relative 'queries_helper_patch'
       require_relative 'activity_fetcher_patch.rb'
       require_relative 'acts_as_activity_provider_patch.rb'
+      require_relative 'application_helper_patch'
     end
   end
 
