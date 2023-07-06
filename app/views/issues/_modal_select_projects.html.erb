@@ -1,17 +1,17 @@
 <% 
   custom_fields = ProjectCustomField.where("name IN (?)", Setting["plugin_redmine_multiprojects_issue"]['custom_fields'])
   custom_fields_ids = ProjectCustomField.where("name IN (?)", Setting["plugin_redmine_multiprojects_issue"]['custom_fields']).pluck(:id)
-  custom_values = custom_values_by_attributes_projects(@allowed_target_projects, custom_fields)
+  custom_values = custom_values_by_attributes_projects(@allowed_target_projects_attributes_array, custom_fields)
   options_for_selects = {}
   custom_fields_ids.each do |field_id|
     options_for_selects.merge!(field_id => [])
   end
 
-  nested_projects_list = render_project_nested_lists_by_attributes(@allowed_target_projects | @issue_projects) do |project|
+  nested_projects_list = render_project_nested_lists_by_attributes(@allowed_target_projects_attributes_array | @issue_projects_attributes_array) do |project|
     # Project is these informations [:id, :name, :status, :lft, :rgt] 
     project_id = project[0]
     project_name = project[1]
-    project_allowed = @allowed_target_projects.include?(project)
+    project_allowed = @allowed_target_projects_attributes_array.include?(project)
     custom_fields_data = { 'name' => project_name }
     if project_allowed
       custom_fields_ids.each do |cf_id|
@@ -28,7 +28,7 @@
                 check_box_tag(
                   'project_ids[]',
                   project_id,
-                  @issue.present? && @issue_projects.include?(project),
+                  @issue.present? && @issue_projects_attributes_array.include?(project),
                   disabled: !project_allowed,
                   :class => "nested_project_#{project_id} #{"inactive" unless project_allowed}",
                   data: custom_fields_data

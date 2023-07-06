@@ -14,26 +14,26 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
 
     if params[:project_ids]
       project_ids = params[:project_ids].split(',')
-      issue_projects = (project_ids.present? ? Project.find(project_ids).pluck(:id, :name, :status, :lft, :rgt) : [])
+      issue_projects_attributes_array = (project_ids.present? ? Project.find(project_ids).pluck(:id, :name, :status, :lft, :rgt) : [])
     else
     # TODO I don't know if it's necessary I'm thinking of deleting 
       vals = params[:issue_projects] ? params[:issue_projects].permit!.to_h.values : []
       # convert to int 
-      issue_projects =  vals.map do |id, name, status, lft, rgt|
+      issue_projects_attributes_array =  vals.map do |id, name, status, lft, rgt|
         [id.to_i, name, status.to_i, lft.to_i, rgt.to_i] 
       end
     end
     
     issue_project_attribute = [@issue.project.id, @issue.project.name, @issue.project.status, @issue.project.lft, @issue.project.rgt]
-    @issue_projects = issue_projects | [issue_project_attribute]
+    @issue_projects_attributes_array = issue_projects_attributes_array | [issue_project_attribute]
  
     vals = Rails.env.test? ? JSON.parse(params[:allowed_projects]) : params[:allowed_projects].permit!.to_h.values
     # convert to int 
-    allowed_target_projects = vals.map do |id, name, status, lft, rgt|
+    allowed_target_projects_attributes_array = vals.map do |id, name, status, lft, rgt|
       [id.to_i, name, status.to_i, lft.to_i, rgt.to_i] 
     end
  
-    @allowed_target_projects = allowed_target_projects - [issue_project_attribute]
+    @allowed_target_projects_attributes_array = allowed_target_projects_attributes_array - [issue_project_attribute]
 
     render json: { html: render_to_string(partial: 'modal_select_projects.html') }
   end
