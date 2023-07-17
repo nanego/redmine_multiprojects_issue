@@ -15,13 +15,6 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
     if params[:project_ids]
       project_ids = params[:project_ids].split(',')
       issue_projects_attributes_array = (project_ids.present? ? Project.find(project_ids).pluck(:id, :name, :status, :lft, :rgt) : [])
-    else
-    # TODO I don't know if it's necessary I'm thinking of deleting 
-      vals = params[:issue_projects] ? params[:issue_projects].permit!.to_h.values : []
-      # convert to int 
-      issue_projects_attributes_array =  vals.map do |id, name, status, lft, rgt|
-        [id.to_i, name, status.to_i, lft.to_i, rgt.to_i] 
-      end
     end
     
     issue_project_attribute = [@issue.project.id, @issue.project.name, @issue.project.status, @issue.project.lft, @issue.project.rgt]
