@@ -1,7 +1,7 @@
 <% 
   custom_fields = ProjectCustomField.where("name IN (?)", Setting["plugin_redmine_multiprojects_issue"]['custom_fields'])
   custom_fields_ids = ProjectCustomField.where("name IN (?)", Setting["plugin_redmine_multiprojects_issue"]['custom_fields']).pluck(:id)
-  custom_values = custom_values_by_attributes_projects(@allowed_target_projects_attributes_array, custom_fields)
+  custom_values = custom_values_by_project_ids(@allowed_target_projects_attributes_array, custom_fields)
   options_for_selects = {}
   custom_fields_ids.each do |field_id|
     options_for_selects.merge!(field_id => [])

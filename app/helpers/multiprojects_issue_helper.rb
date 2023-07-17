@@ -1,6 +1,6 @@
 module MultiprojectsIssueHelper
 
-  def custom_values_by_attributes_projects(projects, custom_fields)
+  def custom_values_by_project_ids(projects, custom_fields)
     values_by_projects = {}
     projects.each do |project|
       project_id = project[0]
