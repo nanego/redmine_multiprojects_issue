@@ -13,7 +13,7 @@
     <label id=answers-on-secondary-projects class="inline answers-on-secondary-projects" style="<%= "display:none;" if @issue.projects.none? %>"><%= f.check_box :answers_on_secondary_projects, :no_label => true %><%= l(:field_answers_on_secondary_projects) %></label>
   </p>
 
-  <script>    
+  <script>
     $("#loadModalProjectsSelection").click(function (e) {
       e.preventDefault();
       var project_ids = $('#issue_project_ids').val();
@@ -21,8 +21,8 @@
         project_ids = ''
       }
 
-      var allowed_projects = <%= allowed_projects.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt).to_json.html_safe %>    
-     
+      var allowed_projects = <%= allowed_projects.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt).to_json.html_safe %>
+
       $.ajax({
 
         url: "<%=  plugin_multiprojects_issue_load_projects_selection_path(:issue_id => @issue.id, :project_id => @issue.project.id, :select_tag_id => "issue_project_ids" ) %>",
@@ -30,17 +30,14 @@
         data : { allowed_projects : allowed_projects, project_ids : project_ids },
         type: 'POST',
         success: function(response) {
-          $('#ajax-indicator').removeClass('bottom');
           if(response){
             $('#ajax-modal').html(response.html);
             $('#ajax-indicator').hide();
             showModal("ajax-modal", "1000px");
           }
-        },error: function(response) {
-          $('#ajax-indicator').removeClass('bottom');
-        },
+        }
       });
-      
+
       $('#ajax-indicator').show();
     });
   </script>

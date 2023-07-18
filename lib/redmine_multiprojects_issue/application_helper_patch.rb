@@ -3,6 +3,7 @@ require_dependency 'application_helper'
 module RedmineMultiprojectsIssue
   module ApplicationHelperPatch
 
+    # adapted from standard method "is_descendant_of?(other)"
     def is_descendant_of_by_attributes?(project, other_project)
       # project, other_project are represented by array [:id, :name, :status, :lft, :rgt]
       project_lft = project[3]
@@ -10,7 +11,7 @@ module RedmineMultiprojectsIssue
       other_project_lft = other_project[3]
       other_project_rgt = other_project[4]
 
-      other_project_lft < project_lft && other_project_rgt > project_rgt    	
+      other_project_lft < project_lft && other_project_rgt > project_rgt
     end
 
     # This function simulate  render_project_nested_lists, but projects are an array of attributes not activerecord
@@ -36,7 +37,7 @@ module RedmineMultiprojectsIssue
           end
           classes = (ancestors.empty? ? 'root' : 'child')
           # use the condition project_status ==  Project::STATUS_ARCHIVED instead of  project.archived?
-          classes += ' archived' if  project_status ==  Project::STATUS_ARCHIVED
+          classes += ' archived' if project_status == Project::STATUS_ARCHIVED
           s << "<li class='#{classes}'><div class='#{classes}'>"
           s << h(block_given? ? capture(project, &block) : project_name)
           s << "</div>\n"

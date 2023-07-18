@@ -16,16 +16,16 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
       project_ids = params[:project_ids].split(',')
       issue_projects_attributes_array = (project_ids.present? ? Project.find(project_ids).pluck(:id, :name, :status, :lft, :rgt) : [])
     end
-    
+
     issue_project_attribute = [@issue.project.id, @issue.project.name, @issue.project.status, @issue.project.lft, @issue.project.rgt]
     @issue_projects_attributes_array = issue_projects_attributes_array | [issue_project_attribute]
- 
+
     vals = Rails.env.test? ? JSON.parse(params[:allowed_projects]) : params[:allowed_projects].permit!.to_h.values
     # convert to int 
     allowed_target_projects_attributes_array = vals.map do |id, name, status, lft, rgt|
-      [id.to_i, name, status.to_i, lft.to_i, rgt.to_i] 
+      [id.to_i, name, status.to_i, lft.to_i, rgt.to_i]
     end
- 
+
     @allowed_target_projects_attributes_array = allowed_target_projects_attributes_array - [issue_project_attribute]
 
     render json: { html: render_to_string(partial: 'modal_select_projects.html') }
@@ -43,7 +43,7 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
       params[:issue][:project_ids].reject!(&:blank?)
       if params[:issue][:project_ids].present?
         Project.find(params[:issue][:project_ids]).each do |p|
-          @projects << p unless (params[:project_id] == p.id.to_s || params[:issue][:project_id]  == p.id.to_s)
+          @projects << p unless (params[:project_id] == p.id.to_s || params[:issue][:project_id] == p.id.to_s)
         end
       end
       @projects.uniq!
@@ -62,7 +62,7 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
     # projects added
     @current_journal.details << JournalDetail.new(:property => 'projects',
                                                   :old_value => nil,
-                                                  :value => (@projects - @projects_before_change).reject(&:blank?).join(","))  if (@projects - @projects_before_change - [@issue.project]).present?
+                                                  :value => (@projects - @projects_before_change).reject(&:blank?).join(",")) if (@projects - @projects_before_change - [@issue.project]).present?
   end
 
   def set_project
@@ -84,7 +84,7 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
 
   def get_allowed_target_projects
     @issue = Issue.find(params[:id]) unless @issue.present?
-    @allowed_target_projects =  @issue.allowed_target_projects
+    @allowed_target_projects = @issue.allowed_target_projects
   end
 
 end

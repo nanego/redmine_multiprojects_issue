@@ -19,4 +19,5 @@ module MultiprojectsIssueHelper
     end
     values_by_projects
   end
+
 end
