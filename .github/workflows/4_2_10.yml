@@ -86,9 +86,11 @@ jobs:
           repository: jbbarth/redmine_base_rspec
           path: redmine/plugins/redmine_base_rspec
 
+      # Stay on rails-dom-testing gem version "2.0.3", because "2.1.1" is not fully compatible with Redmine 4.2.10 - TODO Remove this when Redmine 4.2.11 is released
       - name: Prepare Redmine source
         working-directory: redmine
         run: |
+          sed -i -e 's/.*rails-dom-testing.*/  gem "rails-dom-testing", "~> 2.0.3"/' Gemfile
           sed -i '/rubocop/d' Gemfile
           rm -f .rubocop*
           cp plugins/redmine_base_rspec/spec/support/database-${{ matrix.db }}.yml config/database.yml
