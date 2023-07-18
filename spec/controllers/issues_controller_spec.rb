@@ -202,11 +202,22 @@ describe IssuesController, type: :controller do
 
   it "should load projects selection" do
     @request.session[:user_id] = 2
-    get :load_projects_selection, params: {format: :js, :issue_id => 1, :project_id => 1}
+
+    allowed_projects = Project.all.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt).to_json
+    issue_projects = Project.all.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt).to_json
+    project_ids = Project.all.map(&:id)
+
+    post :load_projects_selection, xhr: true, params: {
+                                                format: :js,
+                                                :issue_id => 1,
+                                                :project_id => 1,
+                                                :allowed_projects => allowed_projects,
+                                                :issue_projects => issue_projects,
+                                                :project_ids => project_ids }
     expect(response).to be_successful
-    assert_template 'load_projects_selection'
-    expect(response.media_type).to eq 'text/javascript'
-    expect(response.body).to include("$('#ajax-modal')")
+    assert_template 'issues/_modal_select_projects'
+    expect(response.media_type).to eq 'application/json'
+    expect(response.body).to include(Project.find(1).name)
     refute_nil assigns(:issue)
     expect(assigns(:issue).id).to eq 1
     expect(assigns(:project).id).to eq 1 # test set_project private method)).to eq 1
