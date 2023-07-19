@@ -7,21 +7,11 @@ RSpec.describe "/issue/id/edit", type: :system do
   fixtures :projects, :users, :issues, :workflows, :members, :member_roles, :roles
 
   before do
-    visit '/my/page'
-    expect(current_path).to eq '/login'
-
-    click_on("ou s'authentifier par login / mot de passe")
-
-    within('#login-form form') do
-      fill_in 'username', with: 'admin'
-      fill_in 'password', with: 'admin'
-      find('input[name=login]').click
-    end
-    expect(current_path).to eq '/my/page' 
+    log_user('admin', 'admin')
   end
 
   describe "Fail validation of issue" do
-    let!(:issue) { Issue.first }  
+    let!(:issue) { Issue.first }
 
     it "Should keep the selected projects" do
       # Related projects 0
