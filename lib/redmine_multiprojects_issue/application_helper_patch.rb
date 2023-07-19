@@ -39,7 +39,7 @@ module RedmineMultiprojectsIssue
           # use the condition project_status ==  Project::STATUS_ARCHIVED instead of  project.archived?
           classes += ' archived' if project_status == Project::STATUS_ARCHIVED
           s << "<li class='#{classes}'><div class='#{classes}'>"
-          s << h(block_given? ? capture(project, &block) : project_name)
+          s << ERB::Util.h(block_given? ? capture(project, &block) : project_name)
           s << "</div>\n"
           ancestors << project
         end
