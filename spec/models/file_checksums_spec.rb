@@ -11,8 +11,8 @@ describe "FileChecksums" do
   it "should core issue model checksum" do
     # "notified_users", "visible_condition" and "visible?" methods are overridden
     # and should be reviewed if this test breaks
-    # 4.2.10 and 5.0 are ok
-    assert_checksum %w(0d6adafb489d691bceb91a1afc784b6e a1f8ffdc9ec1124468d45780731a94a9), "app/models/issue.rb"
+    # 4.2.10 and 5.0.5 are ok
+    assert_checksum %w(0d6adafb489d691bceb91a1afc784b6e 8d888bd3386e7283b776cf2c4ef27132), "app/models/issue.rb"
   end
 
   it "should core query model checksum" do
@@ -20,15 +20,15 @@ describe "FileChecksums" do
     # and should be reviewed if this test breaks
     # "value_object" methods are completely overridden, for performance reasons
     # and should be reviewed if these tests breaks
-    # 5.0 & 4.2.10 are ok
-    assert_checksum %w(5f5afc5903e5d9ff99847c4efd9d539c 583977d5b4b9edb245ca5246a1550c98), "app/models/query.rb"
+    # 5.0.5 & 4.2.10 are ok
+    assert_checksum %w(b3a707882182a6f7270624010aa2cc55 583977d5b4b9edb245ca5246a1550c98), "app/models/query.rb"
   end
 
   it "should core issue query model checksum" do
     # "versions" method is overridden
     # and should be reviewed if this test breaks
-    # 5.0 & 4.2.10 are ok
-    assert_checksum %w(65a5f4f2f9e60ffcdc48af9be7106d5f 13ac2c6520f023c95a4e925d331dce4d), "app/models/issue_query.rb"
+    # 5.0.5 & 4.2.10 are ok
+    assert_checksum %w(d02b9237dda974bf8b00a8c10cdd2ec8 13ac2c6520f023c95a4e925d331dce4d), "app/models/issue_query.rb"
   end
 
   it "should core edit and new form js checksum" do

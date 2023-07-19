@@ -1,5 +1,5 @@
 require "spec_helper"
-require 'redmine_multiprojects_issue/application_helper_patch'
+require_relative '../../lib/redmine_multiprojects_issue/application_helper_patch'
 require 'erb' # to get "h" method
 include ERB::Util
 
