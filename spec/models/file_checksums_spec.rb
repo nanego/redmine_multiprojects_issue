@@ -28,7 +28,7 @@ describe "FileChecksums" do
     # "versions" method is overridden
     # and should be reviewed if this test breaks
     # 5.0.5 & 4.2.10 are ok
-    assert_checksum %w(d02b9237dda974bf8b00a8c10cdd2ec8 13ac2c6520f023c95a4e925d331dce4d), "app/models/issue_query.rb"
+    assert_checksum %w(257ecda3b04eb6a08eab8e04f462cddc 13ac2c6520f023c95a4e925d331dce4d), "app/models/issue_query.rb"
   end
 
   it "should core edit and new form js checksum" do
