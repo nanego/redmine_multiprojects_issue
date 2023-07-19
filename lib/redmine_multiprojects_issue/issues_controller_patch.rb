@@ -20,7 +20,8 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
     issue_project_attribute = [@issue.project.id, @issue.project.name, @issue.project.status, @issue.project.lft, @issue.project.rgt]
     @issue_projects_attributes_array = issue_projects_attributes_array | [issue_project_attribute]
 
-    vals = Rails.env.test? ? JSON.parse(params[:allowed_projects]) : params[:allowed_projects].permit!.to_h.values
+    # This condition(Rails.env.test? && params[:format] == 'js') for the IssuesController test, by post method
+    vals = Rails.env.test? && params[:format] == 'js' ? JSON.parse(params[:allowed_projects]) : params[:allowed_projects].permit!.to_h.values
     # convert to int 
     allowed_target_projects_attributes_array = vals.map do |id, name, status, lft, rgt|
       [id.to_i, name, status.to_i, lft.to_i, rgt.to_i]
