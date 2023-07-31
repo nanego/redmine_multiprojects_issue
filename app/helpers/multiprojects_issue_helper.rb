@@ -4,9 +4,11 @@ module MultiprojectsIssueHelper
     values_by_projects = {}
     enumerations_values_by_custom_fields = enumerations_values_by_custom_fields(custom_fields)
 
+    invalidation_cache_key = Project.maximum(:updated_on).to_i
+
     projects.each do |project|
       project_id = project[0]
-      values_by_projects[project_id] = Rails.cache.fetch("multiprojects-plugin-custom_values_by_project_ids-#{project_id}-#{custom_fields.map(&:id)}") do
+      values_by_projects[project_id] = Rails.cache.fetch("multiprojects-plugin-custom_values_by_project_ids-#{project_id}-#{custom_fields.map(&:id)}-#{invalidation_cache_key}") do
         custom_fields_values = {}
         custom_fields.each do |custom_field|
           values = custom_field.custom_values.select { |cv| cv.customized_id == project_id }
