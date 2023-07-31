@@ -31,7 +31,7 @@ describe "MultiprojectsIssueHelper" do
       hash = enumerations_values_by_custom_fields(custom_fields)
       expect(hash.size).to eq 1
       expect(hash.first.size).to eq 2
-      expect(hash[custom_fields.first.id]).to eq [[@valueb.id, "Value B"], [@valuea.id, "Value A"]]
+      expect(hash[custom_fields.first.id]).to eq({ @valueb.id => "Value B", @valuea.id => "Value A" })
     end
   end
 
