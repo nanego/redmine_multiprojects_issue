@@ -1,8 +1,8 @@
-name: Tests 5.0.5
+name: Tests 5.0.6
 
 env:
   PLUGIN_NAME: redmine_multiprojects_issue
-  REDMINE_VERSION: 5.0.5
+  REDMINE_VERSION: 5.0.6
   RAILS_ENV: test
 
 on:
@@ -86,11 +86,9 @@ jobs:
           repository: jbbarth/redmine_base_rspec
           path: redmine/plugins/redmine_base_rspec
 
-      # Stay on rails-dom-testing gem version "2.0.3", because "2.1.1" is not fully compatible with Redmine 5.0.5 - TODO Remove this when Redmine 5.0.6 is released
       - name: Prepare Redmine source
         working-directory: redmine
         run: |
-          sed -i -e 's/.*rails-dom-testing.*/  gem "rails-dom-testing", "~> 2.0.3"/' Gemfile
           sed -i '/rubocop/d' Gemfile
           rm -f .rubocop*
           cp plugins/redmine_base_rspec/spec/support/database-${{ matrix.db }}.yml config/database.yml
