@@ -16,6 +16,7 @@ fr:
   field_related_projects: "Projets liés"
   field_answers_on_secondary_projects: "Réponses autorisées"
   multiprojects_selection_available_custom_fields: "Champs personnalisés disponibles pour sélectionner les projets"
+  multiprojects_selection_available_trackers: "Trackers dans lesquels les tâches multi-projets doit être activées"
   select_filter: "Sélectionnez un champ"
   advanced_selection: "Sélection avancée"
   selected_projects: "Projets sélectionnés"
