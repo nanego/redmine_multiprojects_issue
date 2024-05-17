@@ -16,7 +16,7 @@ de:
   field_related_projects: "Verwandte Projekte"
   field_answers_on_secondary_projects: "Antworten erlaubt"
   multiprojects_selection_available_custom_fields: "Available custom fields to quickly select projects"
-  multiprojects_selection_available_trackers: "Trackers to activate multi-project issues"
+  multiprojects_selection_available_trackers: "Limit the viewing of multi-project issues to these trackers"
   select_filter: "Select a filter"
   advanced_selection: "Advanced selection"
   selected_projects: "Selected projects"
