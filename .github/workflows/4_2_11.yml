@@ -37,7 +37,7 @@ jobs:
 
     steps:
       - name: Checkout Redmine
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: redmine/redmine
           ref: ${{ env.REDMINE_VERSION }}
@@ -48,7 +48,7 @@ jobs:
 
       - name: Install package dependencies
         run: >
-          sudo apt-get install --yes --quiet
+          sudo apt-get update && sudo apt-get install --yes --quiet
           build-essential
           cmake
           libicu-dev
@@ -81,7 +81,7 @@ jobs:
         run: gem install bundler -v '~> 1.0'
 
       - name: Checkout dependencies - Base RSpec plugin
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: jbbarth/redmine_base_rspec
           path: redmine/plugins/redmine_base_rspec
@@ -89,6 +89,8 @@ jobs:
       - name: Prepare Redmine source
         working-directory: redmine
         run: |
+          # TODO Remove the following line when https://www.redmine.org/issues/40551 is fixed
+          sed -i -e 's/.*mocha.*/  gem "mocha", "2.1.0"/' Gemfile # Fix core tests not compatible with Mocha 2.2.0
           sed -i '/rubocop/d' Gemfile
           rm -f .rubocop*
           cp plugins/redmine_base_rspec/spec/support/database-${{ matrix.db }}.yml config/database.yml
@@ -114,19 +116,19 @@ jobs:
           bundle exec rails test:scm:setup:subversion
 
       - name: Checkout dependencies - Base Deface plugin
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: jbbarth/redmine_base_deface
           path: redmine/plugins/redmine_base_deface
 
       - name: Checkout dependencies - Base StimulusJS plugin
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: nanego/redmine_base_stimulusjs
           path: redmine/plugins/redmine_base_stimulusjs
 
       - name: Checkout plugin
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: redmine/plugins/${{ env.PLUGIN_NAME }}
 
