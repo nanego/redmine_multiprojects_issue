@@ -94,6 +94,7 @@ jobs:
           sed -i '/rubocop/d' Gemfile
           rm -f .rubocop*
           cp plugins/redmine_base_rspec/spec/support/database-${{ matrix.db }}.yml config/database.yml
+          echo 'gem "builder", "~> 3.2.4"' >> Gemfile
 
       - name: Install Ruby dependencies
         working-directory: redmine
