@@ -13,12 +13,21 @@
       <%= select_tag "settings[custom_fields]", options_for_select(options, Setting['plugin_redmine_multiprojects_issue']['custom_fields']), :id => "settings_custom_fields", :multiple => true, :size => 10 %>
     </td>
   </tr>
+  <tr>
+    <th style="text-align: right;"><%= l("multiprojects_selection_available_trackers") %> :</th>
+    <td>
+      <%= select_tag "settings[trackers]", options_for_select(Tracker.select("id, name").collect { |column| [column.name, column.id] }, Setting['plugin_redmine_multiprojects_issue']['trackers']), :id => "settings_trackers", :multiple => true, :size => 10 %>
+    </td>
+  </tr>
   </tbody>
 </table>
 <script type="text/javascript">
   $(function() {
     if ((typeof $().select2) === 'function') {
       $('#settings_custom_fields').select2({
+        containerCss: {minWidth: '300px'}
+      });
+      $('#settings_trackers').select2({
         containerCss: {minWidth: '300px'}
       });
     }

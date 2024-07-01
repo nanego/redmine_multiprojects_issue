@@ -10,7 +10,7 @@ Redmine::Plugin.register :redmine_multiprojects_issue do
   author_url 'mailto:contact@vincent-robert.com'
   requires_redmine_plugin :redmine_base_deface, :version_or_higher => '0.0.1'
   requires_redmine_plugin :redmine_base_stimulusjs, :version_or_higher => '1.0.1'
-  settings :default => { 'custom_fields' => []},
+  settings :default => { 'custom_fields' => [], 'trackers' => []},
            :partial => 'settings/redmine_plugin_multiprojects_issue_settings'
 
   activity_provider :issues_from_current_project_only, :class_name => ['Issue', 'Journal'] unless Rails.env.test?
