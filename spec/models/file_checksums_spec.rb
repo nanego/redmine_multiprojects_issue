@@ -11,8 +11,8 @@ describe "FileChecksums" do
   it "should core issue model checksum" do
     # "notified_users", "visible_condition" and "visible?" methods are overridden
     # and should be reviewed if this test breaks
-    # 4.2.10, 5.0.5, 5.1.3 are ok
-    assert_checksum %w(0d6adafb489d691bceb91a1afc784b6e 050e47f1677589a3a45fe54ddef0be5b 80e3cd16f786b0a1d61dc0a6a7355b41), "app/models/issue.rb"
+    # 5.0.5, 5.1.4 & 6.0.1 are ok
+    assert_checksum %w(0d6adafb489d691bceb91a1afc784b6e 050e47f1677589a3a45fe54ddef0be5b 80e3cd16f786b0a1d61dc0a6a7355b41 83351a1bf3463eb7832dcfff7aa4536c), "app/models/issue.rb"
   end
 
   it "should core query model checksum" do
@@ -20,15 +20,15 @@ describe "FileChecksums" do
     # and should be reviewed if this test breaks
     # "value_object" methods are completely overridden, for performance reasons
     # and should be reviewed if these tests break
-    # 5.1.3, 5.0.5 & 4.2.10 are ok
-    assert_checksum %w(61ad417ea93187ad21be61667cdcacdd 583977d5b4b9edb245ca5246a1550c98 719ec73a836c058f45eff8fad3487444), "app/models/query.rb"
+    # 6.0.1, 5.1.4, 5.0.5 & 4.2.10 are ok
+    assert_checksum %w(d038e878b6eaea27460a42695a6917f8 61ad417ea93187ad21be61667cdcacdd 583977d5b4b9edb245ca5246a1550c98 719ec73a836c058f45eff8fad3487444), "app/models/query.rb"
   end
 
   it "should core issue query model checksum" do
     # "versions" and "sql_for_any_searchable_field" methods are completely overridden
     # and should be reviewed & adapted if this test breaks
-    # 5.1.3 & 4.2.10 are ok
-    assert_checksum %w(18da20450d225893e06c4e2e8fa28444 13ac2c6520f023c95a4e925d331dce4d), "app/models/issue_query.rb"
+    # 6.0.1, 5.1.4 & 4.2.10 are ok
+    assert_checksum %w(d2722ad2a20e2d5be862e239e96e501b 18da20450d225893e06c4e2e8fa28444 13ac2c6520f023c95a4e925d331dce4d), "app/models/issue_query.rb"
   end
 
   it "should core edit and new form js checksum" do
@@ -42,15 +42,15 @@ describe "FileChecksums" do
   it "should check acts_as_activity_provider" do
     # "acts_as_activity_provider.rb" is completely overridden
     # and should be reviewed if these tests breaks
-    # 5.0 & 4.2 are ok
-    assert_checksum %w(d894d66234154c7c99eb0572e3eda713 f2eb81d694b0965968d5870a6ba7585a), "lib/plugins/acts_as_activity_provider/lib/acts_as_activity_provider.rb"
+    # 6.0 & 5.0 & 4.2 are ok
+    assert_checksum %w(83d04d01b335576ee26883e007f4d0bc d894d66234154c7c99eb0572e3eda713 f2eb81d694b0965968d5870a6ba7585a), "lib/plugins/acts_as_activity_provider/lib/acts_as_activity_provider.rb"
   end
 
   it "checks issue_custom_field model changes" do
     # "visibility_by_project_condition" method is completely overridden, for performance reasons
     # and should be reviewed if these tests breaks
-    # 5.0 && 4.2.10 are ok
-    assert_checksum %w(20207f79f8b518e982a55d983799d959 0d482e3fa86ff083a1847d0c193aabbd), "app/models/issue_custom_field.rb"
+    # 6.0, 5.0 & 4.2.10 are ok
+    assert_checksum %w(cd3eed0a50478ba316502f37e51cb43d 20207f79f8b518e982a55d983799d959 0d482e3fa86ff083a1847d0c193aabbd), "app/models/issue_custom_field.rb"
   end
 
 end

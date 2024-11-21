@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 require "active_support/testing/assertions"
 require_relative '../../lib/redmine_multiprojects_issue/issues_controller_patch.rb'
 require_relative '../../lib/redmine_multiprojects_issue/issue_patch.rb'
@@ -47,14 +47,14 @@ describe IssuesController, type: :controller do
     @request.session[:user_id] = 2
 
     assert_difference 'Issue.count', 1 do
-      post :create, params: {:project_id => 1,
-                              :issue => {:tracker_id => 3,
-                                        :subject => 'This is the test_new issue',
-                                        :description => 'This is the description',
-                                        :priority_id => 5,
-                                        :estimated_hours => '',
-                                        :project_ids => [1, 5, 2],
-                                        :custom_field_values => {'2' => 'Value for field 2'}}}
+      post :create, params: { :project_id => 1,
+                              :issue => { :tracker_id => 3,
+                                          :subject => 'This is the test_new issue',
+                                          :description => 'This is the description',
+                                          :priority_id => 5,
+                                          :estimated_hours => '',
+                                          :project_ids => [1, 5, 2],
+                                          :custom_field_values => { '2' => 'Value for field 2' } } }
     end
 
     expect(Issue.last.project_ids).to be_empty
@@ -65,14 +65,14 @@ describe IssuesController, type: :controller do
     @request.session[:user_id] = 2
 
     assert_difference 'Issue.count', 1 do
-      post :create, params: {:project_id => 1,
-                             :issue => {:tracker_id => 3,
-                                        :subject => 'This is the test_new issue',
-                                        :description => 'This is the description',
-                                        :priority_id => 5,
-                                        :estimated_hours => '',
-                                        :project_ids => [1, 5],
-                                        :custom_field_values => {'2' => 'Value for field 2'}}}
+      post :create, params: { :project_id => 1,
+                              :issue => { :tracker_id => 3,
+                                          :subject => 'This is the test_new issue',
+                                          :description => 'This is the description',
+                                          :priority_id => 5,
+                                          :estimated_hours => '',
+                                          :project_ids => [1, 5],
+                                          :custom_field_values => { '2' => 'Value for field 2' } } }
     end
     expect(response).to redirect_to(:controller => 'issues', :action => 'show', :id => Issue.last.id)
 
@@ -80,10 +80,10 @@ describe IssuesController, type: :controller do
 
     mails = ActionMailer::Base.deliveries
     field = Redmine::VERSION::MAJOR >= 5 ? 'to' : 'bcc'
-    notified_users = mails.map{|m|m[field].to_s}
+    notified_users = mails.map { |m| m[field].to_s }
     expect(notified_users).to include(User.find(2).mail)
     expect(notified_users).to include(User.find(3).mail)
-    expect(notified_users).to include(User.find(1).mail) #admin, member, but his role has no view_issue permission
+    expect(notified_users).to include(User.find(1).mail) # admin, member, but his role has no view_issue permission
     expect(notified_users).to_not include(User.find(8).mail) # member but notifications disabled
   end
 
@@ -92,14 +92,14 @@ describe IssuesController, type: :controller do
     @request.session[:user_id] = 2
 
     assert_difference 'Issue.count' do
-      post :create, params: {:project_id => 1,
-                             :issue => {:tracker_id => 3,
-                                        :subject => 'This is the test_new issue',
-                                        :description => 'This is the description',
-                                        :priority_id => 5,
-                                        :estimated_hours => '',
-                                        :project_ids => [1, 2, 3, 4, 6], # user 1 is member of project 5 only
-                                        :custom_field_values => {'2' => 'Value for field 2'}}}
+      post :create, params: { :project_id => 1,
+                              :issue => { :tracker_id => 3,
+                                          :subject => 'This is the test_new issue',
+                                          :description => 'This is the description',
+                                          :priority_id => 5,
+                                          :estimated_hours => '',
+                                          :project_ids => [1, 2, 3, 4, 6], # user 1 is member of project 5 only
+                                          :custom_field_values => { '2' => 'Value for field 2' } } }
     end
     expect(response).to redirect_to(:controller => 'issues', :action => 'show', :id => Issue.last.id)
 
@@ -107,7 +107,7 @@ describe IssuesController, type: :controller do
 
     mails = ActionMailer::Base.deliveries
     field = Redmine::VERSION::MAJOR >= 5 ? 'to' : 'bcc'
-    notified_users = mails.map{|m|m[field].to_s}
+    notified_users = mails.map { |m| m[field].to_s }
     expect(notified_users).to include(User.find(2).mail)
     expect(notified_users).to include(User.find(3).mail)
     expect(notified_users).to_not include(User.find(1).mail)
@@ -123,11 +123,11 @@ describe IssuesController, type: :controller do
     old_subject = issue.subject
     new_subject = 'Subject modified by IssuesControllerTest#test_post_edit'
 
-    put :update, params: {:id => 1, :issue => {:subject => new_subject,
-                                               :priority_id => '6',
-                                               :project_ids => [1, 5],
-                                               :category_id => '1' # no change
-    }}
+    put :update, params: { :id => 1, :issue => { :subject => new_subject,
+                                                 :priority_id => '6',
+                                                 :project_ids => [1, 5],
+                                                 :category_id => '1' # no change
+    } }
     issue.reload
 
     expect(ActionMailer::Base.deliveries.size).to eq 2
@@ -143,11 +143,11 @@ describe IssuesController, type: :controller do
     issue.assignable_projects = [Project.first]
     issue.save!
 
-    put :update, params: {:id => 1, :issue => {:subject => "new subject",
-                                               :priority_id => '6',
-                                               :project_ids => [1, 5],
-                                               :category_id => '1' 
-    }}
+    put :update, params: { :id => 1, :issue => { :subject => "new subject",
+                                                 :priority_id => '6',
+                                                 :project_ids => [1, 5],
+                                                 :category_id => '1'
+    } }
     issue.reload
 
     expect(issue.subject).to eq("new subject")
@@ -161,16 +161,16 @@ describe IssuesController, type: :controller do
     old_subject = issue.subject
     new_subject = 'Subject modified by IssuesControllerTest#test_post_edit'
 
-    put :update, params: {:id => 1, :issue => {:subject => new_subject,
-                                               :priority_id => '6',
-                                               :project_ids => [1, 5],
-                                               :category_id => '1' # no change
-    }}
+    put :update, params: { :id => 1, :issue => { :subject => new_subject,
+                                                 :priority_id => '6',
+                                                 :project_ids => [1, 5],
+                                                 :category_id => '1' # no change
+    } }
     expect(ActionMailer::Base.deliveries.size).to eq 3
 
     mails = ActionMailer::Base.deliveries
     field = Redmine::VERSION::MAJOR >= 5 ? 'to' : 'bcc'
-    notified_users = mails.map{|m|m[field].to_s}
+    notified_users = mails.map { |m| m[field].to_s }
     expect(notified_users).to include(User.find(2).mail)
     expect(notified_users).to include(User.find(3).mail)
     expect(notified_users).to include(User.find(1).mail)
@@ -184,16 +184,16 @@ describe IssuesController, type: :controller do
     old_subject = issue.subject
     new_subject = 'Subject modified by IssuesControllerTest#test_post_edit'
 
-    put :update, params: {:id => 1, :issue => {:subject => new_subject,
-                                               :priority_id => '6',
-                                               :project_ids => [1, 4],
-                                               :category_id => '1' # no change
-    }}
+    put :update, params: { :id => 1, :issue => { :subject => new_subject,
+                                                 :priority_id => '6',
+                                                 :project_ids => [1, 4],
+                                                 :category_id => '1' # no change
+    } }
     expect(ActionMailer::Base.deliveries.size).to eq 2
 
     mails = ActionMailer::Base.deliveries
     field = Redmine::VERSION::MAJOR >= 5 ? 'to' : 'bcc'
-    notified_users = mails.map{|m|m[field].to_s}
+    notified_users = mails.map { |m| m[field].to_s }
     expect(notified_users).to include(User.find(2).mail)
     expect(notified_users).to include(User.find(3).mail)
     expect(notified_users).to_not include(User.find(1).mail)
@@ -207,13 +207,16 @@ describe IssuesController, type: :controller do
     issue_projects = Project.all.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt).to_json
     project_ids = Project.all.map(&:id)
 
-    post :load_projects_selection, xhr: true, params: {
-                                                format: :js,
-                                                :issue_id => 1,
-                                                :project_id => 1,
-                                                :allowed_projects => allowed_projects,
-                                                :issue_projects => issue_projects,
-                                                :project_ids => project_ids }
+    post :load_projects_selection,
+         xhr: true,
+         params: {
+           format: :js,
+           :issue_id => 1,
+           :project_id => 1,
+           :allowed_projects => allowed_projects,
+           :issue_projects => issue_projects,
+           :project_ids => project_ids }
+
     expect(response).to be_successful
     assert_template 'issues/_modal_select_projects'
     expect(response.media_type).to eq 'application/json'
@@ -231,10 +234,10 @@ describe IssuesController, type: :controller do
     new_projects_ids = [1, 5]
     assert_difference 'Journal.count' do
       assert_difference('JournalDetail.count', 2) do
-        put :update, params: {:id => 1, :issue => {:priority_id => '6',
-                                                   :project_ids => new_projects_ids,
-                                                   :category_id => '1' # no change
-        }}
+        put :update, params: { :id => 1, :issue => { :priority_id => '6',
+                                                     :project_ids => new_projects_ids,
+                                                     :category_id => '1' # no change
+        } }
       end
     end
     expect(Issue.find(1).project_ids).to eq new_projects_ids
@@ -243,11 +246,12 @@ describe IssuesController, type: :controller do
     old_projects_ids = issue.project_ids
     new_projects_ids = [1, 3]
     assert_difference 'Journal.count' do
-      assert_difference('JournalDetail.count', 3) do # 3 changes : priority, added projects, deleted projects
-        put :update, params: {:id => 1, :issue => {:priority_id => '4',
-                                                   :project_ids => new_projects_ids,
-                                                   :category_id => '1' # no change
-        }}
+      assert_difference('JournalDetail.count', 3) do
+        # 3 changes : priority, added projects, deleted projects
+        put :update, params: { :id => 1, :issue => { :priority_id => '4',
+                                                     :project_ids => new_projects_ids,
+                                                     :category_id => '1' # no change
+        } }
       end
     end
     expect(Issue.find(1).project_ids.sort).to eq new_projects_ids
@@ -260,10 +264,10 @@ describe IssuesController, type: :controller do
     new_projects_ids = [issue.project_id]
     assert_difference 'Journal.count' do
       assert_difference('JournalDetail.count', 1) do
-        put :update, params: {:id => 1, :issue => {:priority_id => '6',
-                                                   :project_ids => new_projects_ids, #change, but no journal cause only main project
-                                                   :category_id => '1' # no change
-        }}
+        put :update, params: { :id => 1, :issue => { :priority_id => '6',
+                                                     :project_ids => new_projects_ids, # change, but no journal cause only main project
+                                                     :category_id => '1' # no change
+        } }
       end
     end
     expect(Issue.find(1).project_ids).to eq new_projects_ids
@@ -272,21 +276,21 @@ describe IssuesController, type: :controller do
   it "should put update status should not create projects journal details" do
     @request.session[:user_id] = 2
 
-    #setup multiprojects issue
+    # setup multiprojects issue
     new_projects_ids = [1, 5]
     assert_difference 'Journal.count' do
       assert_difference('JournalDetail.count', 2) do
-        put :update, params: {:id => 1, :issue => {:priority_id => '6',
-                                                   :project_ids => new_projects_ids,
-                                                   :category_id => '1' # no change
-        }}
+        put :update, params: { :id => 1, :issue => { :priority_id => '6',
+                                                     :project_ids => new_projects_ids,
+                                                     :category_id => '1' # no change
+        } }
       end
     end
     expect(Issue.find(1).project_ids).to eq new_projects_ids
 
     assert_difference 'Journal.count' do
       assert_difference('JournalDetail.count', 1) do
-        put :update, params: {:id => 1, :issue => {:status_id => '6'}}
+        put :update, params: { :id => 1, :issue => { :status_id => '6' } }
       end
     end
 
@@ -298,16 +302,16 @@ describe IssuesController, type: :controller do
 
   it "should edit link when issue allows answers on secondary projects" do
     prepare_context_where_user_can_only_update_through_secondary_project
-    #normally we shouldn't see a link without our Issue#editable? patch!
-    get :show, params: {:id => @issue.id}
+    # normally we shouldn't see a link without our Issue#editable? patch!
+    get :show, params: { :id => @issue.id }
     assert_select 'div.contextual a.icon-edit'
   end
 
   it "should edit link when issue doesnt answers on secondary projects" do
     prepare_context_where_user_can_only_update_through_secondary_project
-    #no link, since the issue doesn't authorize editing..!
+    # no link, since the issue doesn't authorize editing..!
     @issue.update_attribute(:answers_on_secondary_projects, false)
-    get :show, params: {:id => @issue.id}
+    get :show, params: { :id => @issue.id }
     assert_select 'div.contextual a.icon-edit', :count => 0
 
   end
@@ -315,7 +319,7 @@ describe IssuesController, type: :controller do
   it "should authorization patch that allows answers on secondary projects" do
     prepare_context_where_user_can_only_update_through_secondary_project
     assert_difference 'Journal.count', 1 do
-      put :update, params: {:id => @issue.id, :issue => {:notes => 'bla bla bla'}}
+      put :update, params: { :id => @issue.id, :issue => { :notes => 'bla bla bla' } }
     end
     expect(response).to redirect_to(:controller => 'issues', :action => 'show', :id => @issue.id)
     expect(@issue.reload.journals.last.notes).to eq 'bla bla bla'

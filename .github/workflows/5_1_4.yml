@@ -1,8 +1,8 @@
-name: Tests 4.2.11
+name: Tests 5.1.4
 
 env:
   PLUGIN_NAME: redmine_multiprojects_issue
-  REDMINE_VERSION: 4.2.11
+  REDMINE_VERSION: 5.1.4
   RAILS_ENV: test
 
 on:
@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        ruby: ['2.7']
+        ruby: ['3.2']
         db: ['postgres']
       fail-fast: false
 
@@ -89,12 +89,10 @@ jobs:
       - name: Prepare Redmine source
         working-directory: redmine
         run: |
-          # TODO Remove the following line when https://www.redmine.org/issues/40551 is fixed
-          sed -i -e 's/.*mocha.*/  gem "mocha", "2.1.0"/' Gemfile # Fix core tests not compatible with Mocha 2.2.0
+          rm -f test/integration/routing/plugins_test.rb # Fix routing tests # TODO Remove this line when https://www.redmine.org/issues/38707 is fixed
           sed -i '/rubocop/d' Gemfile
           rm -f .rubocop*
           cp plugins/redmine_base_rspec/spec/support/database-${{ matrix.db }}.yml config/database.yml
-          echo 'gem "builder", "~> 3.2.4"' >> Gemfile
 
       - name: Install Ruby dependencies
         working-directory: redmine

@@ -4,7 +4,7 @@ module RedmineMultiprojectsIssue
   module JournalPatch;end
 end
 
-class Journal < ActiveRecord::Base
+class Journal
 
   acts_as_activity_provider :type => 'issues_from_current_project_only',
                             :author_key => :user_id,

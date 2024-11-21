@@ -28,7 +28,7 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
 
     @allowed_target_projects_attributes_array = allowed_target_projects_attributes_array - [issue_project_attribute]
 
-    render json: { html: render_to_string(partial: 'modal_select_projects.html') }
+    render json: { html: render_to_string(partial: 'modal_select_projects') }
   end
 
   private
