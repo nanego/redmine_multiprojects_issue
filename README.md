@@ -1,8 +1,8 @@
 Redmine Multiprojects Issue plugin
 ======================
 
-[![5.1.4][1]][5]
-[![6.0.1][2]][5]
+[![5.1.5][1]][5]
+[![6.0.2][2]][5]
 
 This redmine plugin allows you to specify more than one project per issue.
 
@@ -52,12 +52,12 @@ And finally restart your Redmine instance.
 
 |Plugin branch| Redmine Version | Test Status       |
 |-------------|-----------------|-------------------|
-|master       | 5.1.4           | [![5.1.4][1]][5]  |
-|master       | 6.0.1           | [![6.0.1][2]][5]  |
+|master       | 5.1.5           | [![5.1.5][1]][5]  |
+|master       | 6.0.2           | [![6.0.2][2]][5]  |
 |master       | master          | [![master][4]][5] |
 
-[1]: https://github.com/nanego/redmine_multiprojects_issue/actions/workflows/5_1_4.yml/badge.svg
-[2]: https://github.com/nanego/redmine_multiprojects_issue/actions/workflows/6_0_1.yml/badge.svg
+[1]: https://github.com/nanego/redmine_multiprojects_issue/actions/workflows/5_1_5.yml/badge.svg
+[2]: https://github.com/nanego/redmine_multiprojects_issue/actions/workflows/6_0_2.yml/badge.svg
 [4]: https://github.com/nanego/redmine_multiprojects_issue/actions/workflows/master.yml/badge.svg
 [5]: https://github.com/nanego/redmine_multiprojects_issue/actions
 
