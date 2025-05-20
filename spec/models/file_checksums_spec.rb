@@ -20,8 +20,8 @@ describe "FileChecksums" do
     # and should be reviewed if this test breaks
     # "value_object" methods are completely overridden, for performance reasons
     # and should be reviewed if these tests break
-    # 6.0.1, 5.1.4, 5.0.5 & 4.2.10 are ok
-    assert_checksum %w(d038e878b6eaea27460a42695a6917f8 61ad417ea93187ad21be61667cdcacdd 583977d5b4b9edb245ca5246a1550c98 719ec73a836c058f45eff8fad3487444), "app/models/query.rb"
+    # 6.0.5, 5.1.4, 5.0.5 & 4.2.10 are ok
+    assert_checksum %w(37abce7cdc7110240c36af23f6785d05 61ad417ea93187ad21be61667cdcacdd 583977d5b4b9edb245ca5246a1550c98 719ec73a836c058f45eff8fad3487444), "app/models/query.rb"
   end
 
   it "should core issue query model checksum" do
