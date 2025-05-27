@@ -14,19 +14,18 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
 
     if params[:project_ids]
       project_ids = params[:project_ids].split(',')
-      issue_projects_attributes_array = (project_ids.present? ? Project.find(project_ids).pluck(:id, :name, :status, :lft, :rgt) : [])
+      issue_projects_attributes_array = (project_ids.present? ? Project.where(id: project_ids).pluck(:id, :name, :status, :lft, :rgt) : [])
     end
 
     issue_project_attribute = [@issue.project.id, @issue.project.name, @issue.project.status, @issue.project.lft, @issue.project.rgt]
     @issue_projects_attributes_array = issue_projects_attributes_array | [issue_project_attribute]
 
-    vals = Rails.env.test? ? JSON.parse(params[:allowed_projects]) : params[:allowed_projects].permit!.to_h.values
-    # convert to int 
-    allowed_target_projects_attributes_array = vals.map do |id, name, status, lft, rgt|
-      [id.to_i, name, status.to_i, lft.to_i, rgt.to_i]
-    end
+    allowed_projects = @issue.allowed_target_projects
+    allowed_target_projects_attributes_array = allowed_projects.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt)
 
-    @allowed_target_projects_attributes_array = allowed_target_projects_attributes_array - [issue_project_attribute]
+    @allowed_target_projects_attributes_array = allowed_target_projects_attributes_array.reject do |attrs|
+      attrs[0] == @issue.project.id # exclusion du projet principal
+    end
 
     render json: { html: render_to_string(partial: 'modal_select_projects') }
   end
@@ -42,7 +41,7 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
       @projects = []
       params[:issue][:project_ids].reject!(&:blank?)
       if params[:issue][:project_ids].present?
-        Project.find(params[:issue][:project_ids]).each do |p|
+        Project.where(id: params[:issue][:project_ids]).each do |p|
           @projects << p unless (params[:project_id] == p.id.to_s || params[:issue][:project_id] == p.id.to_s)
         end
       end
@@ -72,7 +71,7 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
     render_404
   end
 
-  # Override #authorize method locally to handle answers on secondary project
+  # Overrides #authorize method locally to handle answers on the secondary project
   # Note that this is NOT a good idea if other plugins override it :/
   def authorize(ctrl = params[:controller], action = params[:action], global = false)
     if ctrl == "issues" && action == "update"
