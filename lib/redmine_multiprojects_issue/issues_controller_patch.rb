@@ -39,9 +39,14 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
     end
     if params[:issue] && params[:issue][:project_ids]
       @projects = []
-      params[:issue][:project_ids].reject!(&:blank?)
-      if params[:issue][:project_ids].present?
-        Project.where(id: params[:issue][:project_ids]).each do |p|
+      requested_project_ids = params[:issue][:project_ids].reject(&:blank?)
+
+      if requested_project_ids.present?
+
+        allowed_project_ids = @issue.allowed_target_projects.pluck(:id).map(&:to_s) # Current user allowed projects
+        validated_project_ids = requested_project_ids.select { |id| allowed_project_ids.include?(id.to_s) }
+
+        Project.where(id: validated_project_ids).each do |p|
           @projects << p unless (params[:project_id] == p.id.to_s || params[:issue][:project_id] == p.id.to_s)
         end
       end

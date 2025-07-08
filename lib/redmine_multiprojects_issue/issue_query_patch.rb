@@ -5,7 +5,8 @@ module RedmineMultiprojectsIssue::IssueQueryPatch
     project_clauses = super()
     allowed = User.current.allowed_to?(:view_related_issues_in_secondary_projects, nil, :global => true)
     if project_clauses && project && with_multiprojects && allowed
-      "((#{project_clauses}) OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE project_id = #{project.id}))"
+      sanitized_project_id = ActiveRecord::Base.connection.quote(project.id) # Avoid SQL injection
+      "((#{project_clauses}) OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE project_id = #{sanitized_project_id}))"
     else
       project_clauses
     end
