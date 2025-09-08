@@ -247,7 +247,7 @@ describe IssuesController, type: :controller do
     new_projects_ids = [1, 3]
     assert_difference 'Journal.count' do
       assert_difference('JournalDetail.count', 3) do
-        # 3 changes : priority, added projects, deleted projects
+        # 3 changes: priority, added projects, deleted projects
         put :update, params: { :id => 1, :issue => { :priority_id => '4',
                                                      :project_ids => new_projects_ids,
                                                      :category_id => '1' # no change
@@ -323,6 +323,86 @@ describe IssuesController, type: :controller do
     end
     expect(response).to redirect_to(:controller => 'issues', :action => 'show', :id => @issue.id)
     expect(@issue.reload.journals.last.notes).to eq 'bla bla bla'
+  end
+
+  context "when parameter project_ids is blank or user has no permission to use it" do
+
+    it "keeps current linked projects when user has no permission" do
+      Role.find_by_name("Manager").remove_permission!(:link_other_projects_to_issue)
+      @request.session[:user_id] = 2
+
+      issue = Issue.find(1)
+      issue.assignable_projects = [Project.first]
+      issue.save!
+
+      put :update, params: { :id => 1, :issue => { :subject => "new subject",
+                                                   :priority_id => '6',
+                                                   :project_ids => [1, 5],
+                                                   :category_id => '1'
+      } }
+      issue.reload
+
+      expect(issue.subject).to eq("new subject")
+      expect(issue.project_ids).to eq([1])
+    end
+
+    it "preserves existing associated projects when no project_ids parameter is provided" do
+      @request.session[:user_id] = 2
+
+      issue = Issue.find(1)
+      initial_projects = [Project.find(1), Project.find(2)]
+      issue.assignable_projects = initial_projects
+      issue.save!
+
+      initial_project_ids = issue.reload.project_ids
+      expect(initial_project_ids).to include(1, 2)
+
+      # Update the issue WITHOUT providing project_ids
+      put :update, params: {
+        :id => 1,
+        :issue => {
+          :subject => "Updated subject without project_ids",
+          :priority_id => '6',
+          :category_id => '1'
+        }
+      }
+
+      issue.reload
+
+      expect(issue.subject).to eq("Updated subject without project_ids")
+
+      expect(issue.project_ids.sort).to eq(initial_project_ids.sort)
+    end
+
+    it "preserves existing associated projects when user has limited permissions and no project_ids is provided" do
+      Role.find_by_name("Manager").remove_permission!(:link_other_projects_to_issue)
+      @request.session[:user_id] = 2
+
+      issue = Issue.find(1)
+      initial_projects = [Project.find(1), Project.find(2)]
+      issue.assignable_projects = initial_projects
+      issue.save!
+
+      initial_project_ids = issue.reload.project_ids
+      expect(initial_project_ids).to include(1, 2)
+
+      # Update the issue WITHOUT providing project_ids
+      put :update, params: {
+        :id => 1,
+        :issue => {
+          :subject => "Updated subject with limited permissions",
+          :priority_id => '6',
+          :category_id => '1'
+        }
+      }
+
+      issue.reload
+
+      expect(issue.subject).to eq("Updated subject with limited permissions")
+
+      expect(issue.project_ids.sort).to eq(initial_project_ids.sort)
+    end
+
   end
 
   private

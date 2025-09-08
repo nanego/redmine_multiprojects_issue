@@ -33,23 +33,28 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
   private
 
   def set_assignable_projects
+
     if !User.current.admin? && !User.current.allowed_to?(:link_other_projects_to_issue, @issue.project)
       @issue.assignable_projects = @issue.projects
       return
     end
+
     if params[:issue] && params[:issue][:project_ids]
       @projects = []
       requested_project_ids = params[:issue][:project_ids].reject(&:blank?)
 
       if requested_project_ids.present?
-
-        allowed_project_ids = @issue.allowed_target_projects.pluck(:id).map(&:to_s) # Current user allowed projects
+        allowed_project_ids = @issue.projects.pluck(:id).map(&:to_s) | @issue.allowed_target_projects.pluck(:id).map(&:to_s) # Current user allowed projects
+        if Redmine::Plugin.installed?(:redmine_multiprojects_issue) && @issue.issue_template.present?
+          allowed_project_ids |= @issue.issue_template.secondary_projects.pluck(:id).map(&:to_s)
+        end
         validated_project_ids = requested_project_ids.select { |id| allowed_project_ids.include?(id.to_s) }
 
         Project.where(id: validated_project_ids).each do |p|
           @projects << p unless (params[:project_id] == p.id.to_s || params[:issue][:project_id] == p.id.to_s)
         end
       end
+
       @projects.uniq!
       update_journal_with_projects unless @issue.new_record?
       @issue.assignable_projects = @projects
