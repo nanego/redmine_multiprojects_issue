@@ -45,7 +45,7 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
 
       if requested_project_ids.present?
         allowed_project_ids = @issue.projects.ids.map(&:to_s) | @issue.allowed_target_projects.ids.map(&:to_s) # Current-user allowed projects
-        if Redmine::Plugin.installed?(:redmine_multiprojects_issue)
+        if Redmine::Plugin.installed?(:redmine_templates)
           allowed_project_ids |= @issue.issue_template.secondary_projects.ids.map(&:to_s) if @issue.issue_template
         end
         validated_project_ids = requested_project_ids.select { |id| allowed_project_ids.include?(id.to_s) }
