@@ -31,7 +31,6 @@ module RedmineMultiprojectsIssue
   end
 end
 
-QueriesHelper.include IssuesHelper
 QueriesHelper.prepend RedmineMultiprojectsIssue::QueriesHelperPatch
 ActionView::Base.prepend QueriesHelper
 IssuesController.prepend QueriesHelper
