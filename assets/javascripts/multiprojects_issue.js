@@ -24,11 +24,9 @@ $(document).ready(function(){
 });
 
 (function() {
-  stimulus_application.register("projects-selection", class extends Stimulus.Controller {
+  Stimulus.register("projects-selection", class extends Stimulus.Controller {
 
-    static get targets() {
-        return [ "filters", "filter", "hide_projects_button", "show_projects_button" ]
-    }
+    static targets = [ "filters", "filter", "hide_projects_button", "show_projects_button" ]
 
     initialize() {
       update_checked_boxes_counter();

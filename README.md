@@ -36,9 +36,8 @@ Please apply general instructions for plugins [here](http://www.redmine.org/wiki
 Note that this plugin depends on:
 
 * **redmine_base_deface** which can be found [here](https://github.com/jbbarth/redmine_base_deface)
-* **redmine_base_stimulusjs** which can be found [here](https://github.com/nanego/redmine_base_stimulusjs)
 
-These plugins must be installed first.
+This plugin must be installed first.
 
 Then, download the source or clone the plugin and put it in the "plugins/" directory of your redmine instance. Note that this is crucial that the directory is named 'redmine_multiprojects_issue'!
 
