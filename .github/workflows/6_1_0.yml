@@ -120,12 +120,6 @@ jobs:
           repository: jbbarth/redmine_base_deface
           path: redmine/plugins/redmine_base_deface
 
-      - name: Checkout dependencies - Base StimulusJS plugin
-        uses: actions/checkout@v4
-        with:
-          repository: nanego/redmine_base_stimulusjs
-          path: redmine/plugins/redmine_base_stimulusjs
-
       - name: Checkout plugin
         uses: actions/checkout@v4
         with:
