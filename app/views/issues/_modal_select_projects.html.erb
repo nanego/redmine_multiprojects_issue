@@ -54,8 +54,8 @@
     |
     <%= link_to l("advanced_selection"), '#', id: "link_advanced_selection", :data => { :action => 'click->projects-selection#toggle_advanced_selection' } %>
 
-    <div class="advanced_selection hidden" data-target="projects-selection.filters">
-      <div data-target="projects-selection.filter" class="first">
+    <div class="advanced_selection hidden" data-projects-selection-target="filters">
+      <div data-projects-selection-target="filter" class="first">
         <%= select_tag 'filter_name',
                        options_for_select(custom_fields.map { |cf| [cf.name, cf.id] }),
                        :prompt => l("select_filter"),
@@ -81,7 +81,7 @@
                        options_for_select(options_for_selects[field.id]),
                        :id => "select_#{field.id}",
                        :data => {
-                         target: "projects-selection.select_for_#{field.id}"
+                         'projects-selection-target': "select_for_#{field.id}"
                        }
         %>
       <% end %>
@@ -96,17 +96,17 @@
 
   <p>
     <%= l("selected_projects") %>:
-    <span id="selection_counter" data-target="projects-selection.counter"></span>
+    <span id="selection_counter" data-projects-selection-target="counter"></span>
     <span style="margin-left: 5px;">
       (<%= link_to l("hide_non_selected_projects"),
                    '#',
                    data: { action: 'click->projects-selection#hide_non_selected_projects',
-                           target: 'projects-selection.hide_projects_button' },
+                           'projects-selection-target': 'hide_projects_button' },
                    style: 'display: inline-block'
     %><%= link_to l("show_all_projects"),
                   '#',
                   data: { action: 'click->projects-selection#show_all_projects',
-                          target: 'projects-selection.show_projects_button' },
+                          'projects-selection-target': 'show_projects_button' },
                   style: 'display: none'
     %>)
     </span>

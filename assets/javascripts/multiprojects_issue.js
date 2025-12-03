@@ -4,6 +4,39 @@ function update_checked_boxes_counter(){
   counter_element.html(counter_value);
 }
 
+function getSelectedValues(select) {
+    var result = [];
+    var options = select && select.options;
+    var opt;
+
+    for (var i=0, iLen=options.length; i<iLen; i++) {
+        opt = options[i];
+
+        if (opt.selected) {
+            result.push(opt.value || opt.text);
+        }
+    }
+    return result;
+}
+
+function exists(value){
+    if( value != undefined && (value > 0 || value.length > 0 || typeof value === "boolean" || typeof value === "object") ){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function last_of(array) {
+  return array && array.length > 0 ? array[array.length - 1] : null;
+}
+
+function insertBefore(newNode, referenceNode) {
+  if (referenceNode && referenceNode.parentNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode);
+  }
+}
+
 $(document).ready(function(){
   // To deal with journal details
   $('.details').on("click", ".show_journal_details", function(e) {
@@ -36,7 +69,7 @@ $(document).ready(function(){
 
   Stimulus.register("projects-selection", class extends Controller {
 
-    static targets = [ "filters", "filter", "hide_projects_button", "show_projects_button" ]
+    static targets = [ "filters", "filter", "hide_projects_button", "show_projects_button", "counter" ]
 
     initialize() {
       update_checked_boxes_counter();
@@ -44,26 +77,28 @@ $(document).ready(function(){
 
     toggle_advanced_selection(event) {
       event.preventDefault();
-      this.targets.find("filters").classList.toggle('hidden');
+      this.filtersTarget.classList.toggle('hidden');
     }
 
-    select_filter(event){
-      const select_values_element = event.target.nextElementSibling;
-      const target_id = "select_"+event.target.value;
-      const targeted_select = document.getElementById(target_id);
-      if (exists(event.target.value)){
-        select_values_element.innerHTML = targeted_select.innerHTML;
-      }else{
-        select_values_element.innerHTML = "";
-      }
+    select_filter(event) {
+        const container = event.target.nextElementSibling;
+        const value = event.target.value?.trim();
+
+        if (!value) {
+            container.innerHTML = "";
+            return;
+        }
+
+        const source = document.getElementById(`select_${value}`);
+        container.innerHTML = source ? source.innerHTML : "";
     }
 
-    select_filter_values(event){
+      select_filter_values(event){
 
       event.preventDefault();
       this.select_none(event);
 
-      const filters_elements = this.targets.findAll("filter");
+      const filters_elements = this.filterTargets;
       let filters = {};
       for (let i = 0, len = filters_elements.length; i < len; i++) {
         const filter_element = filters_elements[i];
@@ -147,9 +182,9 @@ $(document).ready(function(){
 
     add_filter(event){
       event.preventDefault();
-      const last_filter = last_of(this.targets.findAll("filter"));
+      const last_filter = last_of(this.filterTargets);
       let new_filter = document.createElement('div');
-      new_filter.dataset.target = "projects-selection.filter";
+      new_filter.dataset.projectsSelectionTarget = "filter";
       new_filter.innerHTML = last_filter.innerHTML;
       new_filter.querySelector("#select_values").innerHTML = "";
       insertBefore(new_filter, event.target);
@@ -171,14 +206,16 @@ $(document).ready(function(){
       this.hide_projects_buttonTarget.style.display = 'none';
     }
 
-    hide_by_name(event){
-        this.show_all_projects(event)
-        if(exists(event.target.value)){
-            $("#project_nested_list input[name='project_ids[]']:not([data-name*='"+event.target.value+"' i])").each(function()
-            {
-                $(this).parent().hide()
-            })
-        }
+    hide_by_name(event) {
+        this.show_all_projects(event);
+
+        const value = event.target.value?.trim().toLowerCase();
+        if (!value) return;
+
+        $("#project_nested_list input[name='project_ids[]']").each(function () {
+            const name = $(this).data("name")?.toLowerCase() || "";
+            $(this).parent().toggle(name.includes(value));
+        });
     }
 
     show_all_projects(event){
