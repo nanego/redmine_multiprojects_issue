@@ -61,13 +61,7 @@ $(document).ready(function(){
   while (typeof Stimulus === 'undefined') {
     await new Promise(resolve => setTimeout(resolve, 100));
   }
-
-  // Import Controller from Stimulus module
-  const { Controller } = await import('@hotwired/stimulus');
-
-  console.log('Registering projects-selection controller');
-
-  Stimulus.register("projects-selection", class extends Controller {
+  Stimulus.register("projects-selection", class extends Stimulus.Controller {
 
     static targets = [ "filters", "filter", "hide_projects_button", "show_projects_button", "counter" ]
 
