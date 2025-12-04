@@ -56,12 +56,32 @@ $(document).ready(function(){
   });
 });
 
-(async function() {
-  // Wait for Stimulus application to be available
-  while (typeof Stimulus === 'undefined') {
-    await new Promise(resolve => setTimeout(resolve, 100));
+// Register the projects-selection Stimulus controller
+async function registerProjectsSelectionController() {
+  if (typeof window.Stimulus === 'undefined') {
+    return false;
   }
-  Stimulus.register("projects-selection", class extends Stimulus.Controller {
+
+  let Controller;
+
+  try {
+    // Try to dynamically import Controller from @hotwired/stimulus
+    const stimulus = await import('@hotwired/stimulus');
+    Controller = stimulus.Controller;
+  } catch (error) {
+    // Fallback: extract Controller from existing Redmine controller
+    if (window.Stimulus.application?.router?.modulesByIdentifier?.size > 0) {
+      const modules = Array.from(window.Stimulus.application.router.modulesByIdentifier.values());
+      const existingController = modules[0].definition.controllerConstructor;
+      Controller = Object.getPrototypeOf(existingController.prototype).constructor;
+    } else {
+      console.warn('Could not get Stimulus Controller class');
+      return false;
+    }
+  }
+
+  try {
+    window.Stimulus.register("projects-selection", class extends Controller {
 
     static targets = [ "filters", "filter", "hide_projects_button", "show_projects_button", "counter" ]
 
@@ -222,5 +242,27 @@ $(document).ready(function(){
       this.hide_projects_buttonTarget.style.display = 'inline-block';
     }
 
-  })
-})();
+  });
+
+    return true;
+  } catch (error) {
+    console.error('Error registering projects-selection controller:', error);
+    return false;
+  }
+}
+
+// Register controller after DOM and Stimulus are loaded
+function tryRegisterController() {
+  let attempts = 0;
+  const interval = setInterval(async function() {
+    if (await registerProjectsSelectionController() || attempts++ > 30) {
+      clearInterval(interval);
+    }
+  }, 200);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => setTimeout(tryRegisterController, 1000));
+} else {
+  setTimeout(tryRegisterController, 1000);
+}
