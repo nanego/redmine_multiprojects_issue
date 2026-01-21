@@ -1,8 +1,8 @@
-name: Tests 6.0.7
+name: Tests 6.1.1
 
 env:
   PLUGIN_NAME: redmine_multiprojects_issue
-  REDMINE_VERSION: 6.0.7
+  REDMINE_VERSION: 6.1.1
   RAILS_ENV: test
 
 on:
@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        ruby: ['3.3']
+        ruby: [ '3.4' ]
         db: ['postgres']
       fail-fast: false
 
