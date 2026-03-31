@@ -11,8 +11,8 @@ describe "FileChecksums" do
   it "should core issue model checksum" do
     # "notified_users", "visible_condition" and "visible?" methods are overridden
     # and should be reviewed if this test breaks
-    # 5.0.5, 5.1.4, 6.0.1 & 6.1.0 are ok
-    assert_checksum %w(76ac12461d069c7d2aa53126b8219647 0d6adafb489d691bceb91a1afc784b6e 050e47f1677589a3a45fe54ddef0be5b 80e3cd16f786b0a1d61dc0a6a7355b41 83351a1bf3463eb7832dcfff7aa4536c 42fedbeb2e533adb3f2f196ee7572f2e), "app/models/issue.rb"
+    # 5.0.5, 5.1.4, 6.0.1, 6.1.0 & 6.1.2 are ok
+    assert_checksum %w(76ac12461d069c7d2aa53126b8219647 0d6adafb489d691bceb91a1afc784b6e 050e47f1677589a3a45fe54ddef0be5b 80e3cd16f786b0a1d61dc0a6a7355b41 83351a1bf3463eb7832dcfff7aa4536c 42fedbeb2e533adb3f2f196ee7572f2e f9ea07ba4dfa08b93e0dc813ea8d1176), "app/models/issue.rb"
   end
 
   it "should core query model checksum" do
@@ -34,8 +34,8 @@ describe "FileChecksums" do
   it "should core edit and new form js checksum" do
     # "new.js.erb" and "edit.js.erb" are completely overridden
     # and should be reviewed if these tests breaks
-    # 5.0 & 4.2 are ok
-    assert_checksum %w(76796d4f9c44b39a842c4f616c84d6c5 1fd7f7770d15713675b475d07dd2d364), "app/views/issues/new.js.erb"
+    # 5.0, 4.2 & 6.1.2 are ok
+    assert_checksum %w(76796d4f9c44b39a842c4f616c84d6c5 1fd7f7770d15713675b475d07dd2d364 01e29fb257e5700dff94051420a4440a), "app/views/issues/new.js.erb"
     assert_checksum %w(76796d4f9c44b39a842c4f616c84d6c5 0a92d0609b883d43daf5e825bc08cb01), "app/views/issues/edit.js.erb"
   end
 
