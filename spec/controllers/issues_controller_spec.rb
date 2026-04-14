@@ -203,9 +203,9 @@ describe IssuesController, type: :controller do
   it "should load projects selection" do
     @request.session[:user_id] = 2
 
-    allowed_projects = Project.all.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt).to_json
-    issue_projects = Project.all.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt).to_json
-    project_ids = Project.all.map(&:id)
+    allowed_projects = Project.order(:lft).pluck(:id, :name, :status, :lft, :rgt).to_json
+    issue_projects = Project.order(:lft).pluck(:id, :name, :status, :lft, :rgt).to_json
+    project_ids = Project.ids
 
     post :load_projects_selection,
          xhr: true,
