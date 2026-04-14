@@ -21,7 +21,7 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
     @issue_projects_attributes_array = issue_projects_attributes_array | [issue_project_attribute]
 
     allowed_projects = @issue.allowed_target_projects
-    allowed_target_projects_attributes_array = allowed_projects.sort_by(&:lft).pluck(:id, :name, :status, :lft, :rgt)
+    allowed_target_projects_attributes_array = allowed_projects.order(:lft).pluck(:id, :name, :status, :lft, :rgt)
 
     @allowed_target_projects_attributes_array = allowed_target_projects_attributes_array.reject do |attrs|
       attrs[0] == @issue.project.id # exclusion du projet principal
