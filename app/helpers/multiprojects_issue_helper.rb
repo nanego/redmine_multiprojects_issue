@@ -11,7 +11,7 @@ module MultiprojectsIssueHelper
                  invalidation_cache_key].join('-')
 
     all_values = Rails.cache.fetch(cache_key) do
-      map = Hash.new { |h, k| h[k] = {} }
+      map = {}
       CustomValue
         .where(customized_type: 'Project', custom_field_id: custom_fields.map(&:id))
         .each do |cv|
@@ -23,7 +23,9 @@ module MultiprojectsIssueHelper
           else
             cv.value
           end
-          map[cv.customized_id][cv.custom_field_id] = value if value.present?
+          next unless value.present?
+          map[cv.customized_id] ||= {}
+          map[cv.customized_id][cv.custom_field_id] = value
         end
       map
     end
