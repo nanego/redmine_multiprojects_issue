@@ -85,7 +85,7 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
   # Note that this is NOT a good idea if other plugins override it :/
   def authorize(ctrl = params[:controller], action = params[:action], global = false)
     if ctrl == "issues" && action == "update"
-      @issue.editable?
+      deny_access unless @issue.editable?
     else
       super
     end
