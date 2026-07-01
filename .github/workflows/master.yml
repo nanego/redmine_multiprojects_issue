@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        ruby: ['3.4']
+        ruby: [ '4.0' ]
         db: ['postgres']
       fail-fast: false
 
@@ -77,9 +77,6 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
-      - name: Setup Bundler
-        run: gem install bundler -v '~> 1.0'
-
       - name: Checkout dependencies - Base RSpec plugin
         uses: actions/checkout@v4
         with:
@@ -97,7 +94,8 @@ jobs:
       - name: Install Ruby dependencies
         working-directory: redmine
         run: |
-          bundle install --jobs=4 --retry=3 --without development
+          bundle config set --local without 'development'
+          bundle install --jobs=4 --retry=3
 
       - name: Generate session store secret
         env:
@@ -130,7 +128,8 @@ jobs:
           RAILS_ENV: test
         working-directory: redmine
         run: |
-          bundle install --jobs=4 --retry=3 --without development
+          bundle config set --local without 'development'
+          bundle install --jobs=4 --retry=3
           bundle exec rake redmine:plugins:migrate
           # cp -i plugins/*/spec/fixtures/*yml test/fixtures/
           bundle exec rails db:fixtures:load
