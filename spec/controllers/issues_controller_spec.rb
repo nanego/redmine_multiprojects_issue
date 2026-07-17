@@ -325,6 +325,34 @@ describe IssuesController, type: :controller do
     expect(@issue.reload.journals.last.notes).to eq 'bla bla bla'
   end
 
+  it "denies updating an issue whose secondary projects do not allow answers" do
+    prepare_context_where_user_can_only_update_through_secondary_project
+    @issue.update_attribute(:answers_on_secondary_projects, false)
+
+    assert_no_difference 'Journal.count' do
+      put :update, params: { :id => @issue.id, :issue => { :notes => 'bla bla bla' } }
+    end
+    # the user of this context is the anonymous one, whom a denial sends to the login page
+    expect(response.location).to include('/login')
+  end
+
+  it "leaves the core in charge of a permission restricted to some trackers" do
+    @request.session[:user_id] = 2
+    role = Role.find_by_name("Manager")
+    role.remove_permission! :edit_issues
+    role.remove_permission! :edit_own_issues
+    role.add_permission! :add_issue_notes
+    # the note is not addable on tracker 1, but the core still lets the request through
+    role.permissions_all_trackers = { 'add_issue_notes' => '0' }
+    role.permissions_tracker_ids = { 'add_issue_notes' => ['2'] }
+    role.save!
+
+    assert_no_difference 'Journal.count' do
+      put :update, params: { :id => 1, :issue => { :notes => 'bla bla bla' } }
+    end
+    expect(response).to redirect_to(:controller => 'issues', :action => 'show', :id => 1)
+  end
+
   context "when parameter project_ids is blank or user has no permission to use it" do
 
     it "keeps current linked projects when user has no permission" do

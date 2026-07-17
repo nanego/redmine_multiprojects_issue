@@ -82,10 +82,11 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
   end
 
   # Overrides #authorize method locally to handle answers on the secondary project
-  # Note that this is NOT a good idea if other plugins override it :/
+  # Only widens the core authorization,
+  # anything it does not allow is left to the core, denials included
   def authorize(ctrl = params[:controller], action = params[:action], global = false)
-    if ctrl == "issues" && action == "update"
-      deny_access unless @issue.editable?
+    if ctrl == "issues" && action == "update" && @issue.present? && @issue.editable?
+      true
     else
       super
     end
