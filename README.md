@@ -1,13 +1,17 @@
 Redmine Multiprojects Issue plugin
 ======================
 
-[![6.1.3][2]][5]
-[![7.0.0][1]][5]
+[![6.1.4][2]][5]
+[![7.0.1][1]][5]
 [![master][3]][5]
 
 This redmine plugin allows you to specify more than one project per issue.
 
-Cross-projects issues appear in all related projects. They can be viewed by every users who have enough permission on at least one related project, but can be updated only by users who have enough permissions on the main project (the project used to create the issue).
+Cross-projects issues appear in all related projects.
+They can be viewed by every user who has enough permission on at least one related project,
+but can be updated only by users who have enough permissions on the main project (the project used to create the issue).
+
+Role issues visibility (all, default, own) and private issues are enforced on related projects the same way as on the main project.
 
 Do not forget to add the "View multi-projects issues" permission to authorized roles.
 
@@ -52,12 +56,12 @@ And finally restart your Redmine instance.
 
 |Plugin branch| Redmine Version | Test Status       |
 |-------------|-----------------|-------------------|
-|master       | 6.1.3           | [![6.1.3][2]][5]  |
-|master       | 7.0.0           | [![7.0.0][1]][5]  |
+|master       | 6.1.4           | [![6.1.4][2]][5]  |
+|master       | 7.0.1           | [![7.0.1][1]][5]  |
 |master       | master          | [![master][3]][5] |
 
-[1]: https://github.com/nanego/redmine_multiprojects_issue/actions/workflows/7_0_0.yml/badge.svg
-[2]: https://github.com/nanego/redmine_multiprojects_issue/actions/workflows/6_1_3.yml/badge.svg
+[1]: https://github.com/nanego/redmine_multiprojects_issue/actions/workflows/7_0_1.yml/badge.svg
+[2]: https://github.com/nanego/redmine_multiprojects_issue/actions/workflows/6_1_4.yml/badge.svg
 [3]: https://github.com/nanego/redmine_multiprojects_issue/actions/workflows/master.yml/badge.svg
 [5]: https://github.com/nanego/redmine_multiprojects_issue/actions
 

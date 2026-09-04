@@ -1,8 +1,8 @@
-name: Tests 6.1.3
+name: Tests 6.1.4
 
 env:
   PLUGIN_NAME: redmine_multiprojects_issue
-  REDMINE_VERSION: 6.1.3
+  REDMINE_VERSION: 6.1.4
   RAILS_ENV: test
 
 on:

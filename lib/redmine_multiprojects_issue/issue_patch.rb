@@ -18,19 +18,70 @@ module RedmineMultiprojectsIssue
 
     module ClassMethods
       def visible_condition(user, options = {})
-        allowed_projects_ids = []
-        user.projects_by_role.each do |role, projects|
-          projects = projects & [options[:project]] if options[:project]
-          if projects.any? && role.allowed_to?(:view_related_issues_in_secondary_projects)
-            allowed_projects_ids << projects.map(&:id)
+        return super if user.admin? || !user.allowed_to_globally?(:view_related_issues_in_secondary_projects)
+
+        statements = related_issues_visible_statements(user, options)
+        statements.empty? ? super : "(#{super} OR #{statements.join(' OR ')})"
+      end
+
+      private
+
+      # Issues linked to a secondary project where the user is allowed to view related issues,
+      # applying the same per-role rules as the core Issue.visible_condition.
+      # Project ids are resolved upfront and matched with an EXISTS on the (issue_id, project_id)
+      # index: cheap per-row probes keep paginated lists fast, unlike a materialized IN subquery.
+      def related_issues_visible_statements(user, options)
+        related_project_ids_by_visibility(user, options).filter_map do |visibility, project_ids|
+          next if visibility == '1=0' || project_ids.empty?
+
+          "(#{visibility} AND EXISTS (SELECT 1 FROM issues_projects" \
+            " WHERE issues_projects.issue_id = #{table_name}.id" \
+            " AND issues_projects.project_id IN (#{project_ids.join(',')})))"
+        end
+      end
+
+      def related_project_ids_by_visibility(user, options)
+        cache_key = options.values_at(:project, :with_subprojects, :member, :skip_pre_condition).map { |v| v.respond_to?(:id) ? v.id : v }
+        user.related_issues_project_ids_cache[cache_key] ||= begin
+          permission = :view_related_issues_in_secondary_projects
+          roles = []
+          Project.allowed_to_condition(user, permission, options) { |role, _| roles << role; nil }
+
+          roles.group_by { |role| issues_visibility_statement(role, user) }.transform_values do |visibility_roles|
+            projects_condition = Project.allowed_to_condition(user, permission, options) do |role, _|
+              '1=0' unless visibility_roles.include?(role)
+            end
+            Project.where(projects_condition).order(:id).pluck(:id)
           end
         end
-        if allowed_projects_ids.present?
-          authorized_project_statement =  "project_id IN (#{allowed_projects_ids.flatten.uniq.sort.join(',')})"
-          "(#{super} OR #{Issue.table_name}.id IN (SELECT issue_id FROM issues_projects WHERE (#{authorized_project_statement}) ))"
-        else
-          super
+      end
+
+      def issues_visibility_statement(role, user)
+        sql =
+          if user.id && user.logged?
+            case role.issues_visibility
+            when 'all'
+              '1=1'
+            when 'default'
+              user_ids = [user.id] + user.groups.pluck(:id).compact
+              "(#{table_name}.is_private = #{connection.quoted_false} " \
+                "OR #{table_name}.author_id = #{user.id} " \
+                "OR #{table_name}.assigned_to_id IN (#{user_ids.join(',')}))"
+            when 'own'
+              user_ids = [user.id] + user.groups.pluck(:id).compact
+              "(#{table_name}.author_id = #{user.id} OR " \
+                "#{table_name}.assigned_to_id IN (#{user_ids.join(',')}))"
+            else
+              '1=0'
+            end
+          else
+            "(#{table_name}.is_private = #{connection.quoted_false})"
+          end
+        unless role.permissions_all_trackers?(:view_issues)
+          tracker_ids = role.permissions_tracker_ids(:view_issues)
+          sql = tracker_ids.any? ? "(#{sql} AND #{table_name}.tracker_id IN (#{tracker_ids.join(',')}))" : '1=0'
         end
+        sql
       end
     end
 
