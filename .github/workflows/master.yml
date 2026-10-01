@@ -55,6 +55,7 @@ jobs:
           libpq-dev
           ghostscript
           gsfonts
+          subversion
 
       - name: Set up chromedriver
         uses: nanasess/setup-chromedriver@master

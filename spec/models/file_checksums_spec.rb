@@ -11,8 +11,8 @@ describe "FileChecksums" do
   it "should core issue model checksum" do
     # "notified_users", "visible_condition" and "visible?" methods are overridden
     # and should be reviewed if this test breaks
-    # 6.0.0 to 6.0.6, 6.0.8 to 6.0.10, 6.1.0, 6.1.2, 6.1.3, 7.0.0 & master r6f3e103ef are ok
-    assert_checksum %w(83351a1bf3463eb7832dcfff7aa4536c 848ce825cb3c355adc1f9d70f31047c5 42fedbeb2e533adb3f2f196ee7572f2e f9ea07ba4dfa08b93e0dc813ea8d1176 0536315fbd103e7368057d8f7d4a965c 1ea192415a94d2b9c26eb9308f43dc31), "app/models/issue.rb"
+    # 6.0.0 to 6.0.6, 6.0.8 to 6.0.10, 6.1.0 to 6.1.5, 7.0.0 to 7.0.2 & master r6f3e103ef are ok
+    assert_checksum %w(83351a1bf3463eb7832dcfff7aa4536c 848ce825cb3c355adc1f9d70f31047c5 42fedbeb2e533adb3f2f196ee7572f2e f9ea07ba4dfa08b93e0dc813ea8d1176 0536315fbd103e7368057d8f7d4a965c 1ea192415a94d2b9c26eb9308f43dc31 bffd93131f594e95bc456bfd20e16451 803824e202d35bf3a8da35e3e01eaa33), "app/models/issue.rb"
   end
 
   it "should core query model checksum" do
