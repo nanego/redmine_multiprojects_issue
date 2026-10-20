@@ -129,7 +129,7 @@
         var htmlContent = "";
         $("input:checkbox[name='project_ids[]']:checked").each(function () {
             if ($(this).val() != <%= @issue.project.id %>) {
-                htmlContent += " <span class=\"list_projects_names\">" + $(this).closest('label').text() + "</span>";
+                htmlContent += " " + $('<span class="list_projects_names"></span>').text($(this).closest('label').text()).prop('outerHTML');
             }
         });
         $("#projects_form #list_of_projects_per_issue").html(htmlContent);
