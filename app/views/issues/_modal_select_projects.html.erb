@@ -120,11 +120,8 @@
 
 <script type="text/javascript">
     function updateSelectedProjects() {
-        $("select#<%= @select_tag_id %> option").each(function () {
-            this.selected = "";
-        });
-        $("input:checkbox[name='project_ids[]']:checked").each(function () {
-            $("#<%= @select_tag_id %> option[value=" + $(this).val() + "]").prop("selected", true);
+        $("input:checkbox[name='project_ids[]']").each(function () {
+            $("select#<%= @select_tag_id %> option[value=" + $(this).val() + "]").prop("selected", this.checked);
         });
         var htmlContent = "";
         $("input:checkbox[name='project_ids[]']:checked").each(function () {
@@ -135,11 +132,10 @@
         $("#projects_form #list_of_projects_per_issue").html(htmlContent);
         if (htmlContent == "") {
             $(".and_x_other_projects").css("display", "none");
-            $("#answers-on-secondary-projects").hide()
         } else {
             $(".and_x_other_projects").css("display", "inline");
-            $("#answers-on-secondary-projects").show()
         }
+        $("#answers-on-secondary-projects").toggle($("select#<%= @select_tag_id %> option:selected").length > 0);
     }
 
 </script>

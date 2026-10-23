@@ -2,19 +2,22 @@ require_dependency 'issues_controller'
 
 module RedmineMultiprojectsIssue::IssuesControllerPatch
   def load_projects_selection
+    return deny_access unless User.current.allowed_to?(:link_other_projects_to_issue, @project)
+
     if params[:issue_id]
-      @issue = Issue.where(id: params[:issue_id]).first
+      @issue = Issue.visible.find_by(id: params[:issue_id])
+      return render_404 if @issue.nil?
     end
-    if @issue.blank?
-      @issue = Issue.new
-    end
+    @issue ||= Issue.new
 
     @issue.project = @project
-    @select_tag_id = params[:select_tag_id]
+    @select_tag_id = params[:select_tag_id].to_s.gsub(/[^\w-]/, '')
 
-    if params[:project_ids]
-      project_ids = params[:project_ids].split(',')
-      issue_projects_attributes_array = (project_ids.present? ? Project.where(id: project_ids).pluck(:id, :name, :status, :lft, :rgt) : [])
+    # Projects the user cannot see are left out of the modal, which keeps them selected in the form
+    issue_projects_attributes_array = []
+    project_ids = Array(params[:project_ids]).flat_map { |ids| ids.to_s.split(',') }
+    if project_ids.present?
+      issue_projects_attributes_array = Project.visible.where(id: project_ids).pluck(:id, :name, :status, :lft, :rgt)
     end
 
     issue_project_attribute = [@issue.project.id, @issue.project.name, @issue.project.status, @issue.project.lft, @issue.project.rgt]
@@ -46,7 +49,8 @@ module RedmineMultiprojectsIssue::IssuesControllerPatch
       if requested_project_ids.present?
         allowed_project_ids = @issue.projects.ids.map(&:to_s) | @issue.allowed_target_projects.ids.map(&:to_s) # Current-user allowed projects
         if Redmine::Plugin.installed?(:redmine_templates)
-          allowed_project_ids |= @issue.issue_template.secondary_projects.ids.map(&:to_s) if @issue.issue_template
+          template = @issue.issue_template
+          allowed_project_ids |= template.secondary_projects.ids.map(&:to_s) if template&.allowed_for?(project: @issue.project)
         end
         validated_project_ids = requested_project_ids.select { |id| allowed_project_ids.include?(id.to_s) }
 
@@ -107,7 +111,5 @@ class IssuesController < ApplicationController
   before_action :set_project, :only => [:load_projects_selection]
   append_before_action :set_assignable_projects, :only => [:create, :update]
   append_before_action :get_allowed_target_projects, :only => [:show, :edit, :new]
-
-  skip_forgery_protection only: :load_projects_selection
 
 end

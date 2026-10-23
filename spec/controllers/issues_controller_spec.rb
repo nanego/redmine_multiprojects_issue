@@ -226,6 +226,124 @@ describe IssuesController, type: :controller do
     expect(assigns(:project).id).to eq 1 # test set_project private method)).to eq 1
   end
 
+  describe "linking the secondary projects of an issue template" do
+    before do
+      skip "redmine_templates is not installed" unless Redmine::Plugin.installed?(:redmine_templates)
+      Role.find(2).add_permission! :link_other_projects_to_issue # Developer, dlopper's role on project 1 only
+      @request.session[:user_id] = 3
+    end
+
+    def create_template(template_projects)
+      IssueTemplate.create!(template_title: 'Template with a private secondary project',
+                            tracker_id: 1, status_id: 1, author_id: 1, project_id: 1,
+                            template_projects: template_projects,
+                            secondary_projects: [Project.find(2)])
+    end
+
+    def post_create_with_template(template)
+      post :create, params: { project_id: 1,
+                              issue: { tracker_id: 1, subject: 'Issue from a template',
+                                       issue_template_id: template.id,
+                                       project_ids: ['2'] } }
+    end
+
+    it "links the secondary projects of a template allowed for the issue project" do
+      template = create_template([Project.find(1)])
+
+      assert_difference 'Issue.count', 1 do
+        post_create_with_template(template)
+      end
+
+      expect(Issue.last.project_ids).to eq [2]
+    end
+
+    it "ignores the secondary projects of a template not allowed for the issue project" do
+      template = create_template([Project.find(2)])
+
+      assert_difference 'Issue.count', 1 do
+        post_create_with_template(template)
+      end
+
+      expect(Issue.last.project_ids).to be_empty
+    end
+  end
+
+  describe "load_projects_selection access control" do
+    before do
+      Role.find(2).add_permission! :link_other_projects_to_issue # Developer, dlopper's role on project 1 only
+      @request.session[:user_id] = 3
+    end
+
+    it "does not disclose the names of requested projects the user cannot see" do
+      post :load_projects_selection, xhr: true,
+           params: { project_id: 1, project_ids: '2,5,3', select_tag_id: 'issue_project_ids' }
+
+      expect(response).to be_successful
+      expect(response.body).to include(Project.find(3).name)
+      expect(response.body).to_not include(Project.find(2).name)
+      expect(response.body).to_not include(Project.find(5).name)
+    end
+
+    it "leaves projects linked to the issue that the user cannot see out of the modal" do
+      Issue.find(1).projects << Project.find(2)
+
+      post :load_projects_selection, xhr: true,
+           params: { project_id: 1, issue_id: 1, project_ids: '2,3', select_tag_id: 'issue_project_ids' }
+
+      expect(response).to be_successful
+      expect(response.body).to include(Project.find(3).name)
+      expect(response.body).to_not include(Project.find(2).name)
+    end
+
+    it "only accepts an element id as select_tag_id" do
+      post :load_projects_selection, xhr: true,
+           params: { project_id: 1, select_tag_id: 'x");alert(1);//' }
+
+      expect(response).to be_successful
+      expect(response.body).to_not include('alert(1)')
+    end
+
+    it "denies access on a project where the user cannot link other projects" do
+      post :load_projects_selection, xhr: true, params: { project_id: 2, project_ids: '2' }
+
+      expect(response).to have_http_status(:forbidden)
+      expect(response.body).to_not include(Project.find(2).name)
+    end
+
+    it "denies access without the link_other_projects_to_issue permission" do
+      Role.find(2).remove_permission! :link_other_projects_to_issue
+
+      post :load_projects_selection, xhr: true, params: { project_id: 1 }
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "denies access on an archived project" do
+      Project.find(1).archive
+
+      post :load_projects_selection, xhr: true, params: { project_id: 1 }
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "returns 404 for an issue the user cannot see" do
+      post :load_projects_selection, xhr: true, params: { project_id: 1, issue_id: 4 } # issue 4 is in private project 2
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "requires a valid authenticity token" do
+      ActionController::Base.allow_forgery_protection = true
+      begin
+        post :load_projects_selection, xhr: true, params: { project_id: 1 }
+      ensure
+        ActionController::Base.allow_forgery_protection = false
+      end
+
+      expect(response).to have_http_status(:unprocessable_content)
+    end
+  end
+
   it "should put update should create journals and journal details" do
     @request.session[:user_id] = 2
 
