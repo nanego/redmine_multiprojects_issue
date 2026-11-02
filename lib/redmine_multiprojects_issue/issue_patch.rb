@@ -189,8 +189,9 @@ class Issue
 
   def user_tracker_permission_on_other_projects?(user, permission)
     # Check roles permissions on other projects
+    oauth_scope = user.try(:oauth_scope)
     answers_on_secondary_projects && projects.any? { |p|
-      user.roles_for_project(p).select { |r| r.has_permission?(permission) }.any? { |r| r.permissions_all_trackers?(permission) || r.permissions_tracker_ids?(permission, tracker_id) }
+      user.roles_for_project(p).select { |r| r.allowed_to?(permission, oauth_scope) }.any? { |r| r.permissions_all_trackers?(permission) || r.permissions_tracker_ids?(permission, tracker_id) }
     }
   end
 

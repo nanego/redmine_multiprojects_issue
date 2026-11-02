@@ -241,4 +241,16 @@ describe "IssueMultiprojectsPatch" do
     assert !issue.editable?(user), "user(4) should be able to edit issue(4) as it is editable on secondary projects"
     assert !issue.safe_attribute_names(user).include?("notes")
   end
+
+  it "ignores the secondary projects when the OAuth scope does not include the permission" do
+    issue = Issue.find(4)
+    issue.update_attribute(:answers_on_secondary_projects, true)
+    user = User.find(4) #member of project(5)
+
+    user.oauth_scope = [:view_issues]
+    expect(issue.send(:user_tracker_permission_on_other_projects?, user, :edit_issues)).to be(false)
+
+    user.oauth_scope = [:edit_issues]
+    expect(issue.send(:user_tracker_permission_on_other_projects?, user, :edit_issues)).to be(true)
+  end
 end
