@@ -12,7 +12,7 @@ on:
 jobs:
   test:
     name: ${{ github.workflow }} ${{ matrix.db }} ruby-${{ matrix.ruby }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     strategy:
       matrix:
@@ -54,6 +54,7 @@ jobs:
           libicu-dev
           libpq-dev
           ghostscript
+          imagemagick
           gsfonts
 
       - name: Set up chromedriver
@@ -68,8 +69,9 @@ jobs:
           echo '<policymap>' > policy.xml
           echo '<policy domain="coder" rights="read | write" pattern="PDF" />' >> policy.xml
           echo '</policymap>' >> policy.xml
-          sudo rm /etc/ImageMagick-6/policy.xml
-          sudo mv policy.xml /etc/ImageMagick-6/policy.xml
+          policy_dir=$(ls -d /etc/ImageMagick-*)
+          sudo mv policy.xml "$policy_dir/policy.xml"
+          convert -version
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
